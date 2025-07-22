@@ -37,7 +37,7 @@ const faqs = [
 
 const FAQs = () => {
   return (
-    <div className="max-w-[1200px] mx-auto flex items-center justify-center flex-col gap-6 p-8 py-12">
+    <div className="max-w-[1300px] mx-auto flex items-center justify-center flex-col gap-6 p-8 py-12">
       <h2 className="font-bold text-2xl text-primary">FAQs</h2>
       <div className="grid grid-cols-2 items-center gap-x-6 gap-y-4 justify-center transition-all duration-100">
         {faqs.map((faq, i) => (

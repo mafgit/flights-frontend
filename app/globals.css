@@ -46,8 +46,8 @@ body {
 
 button {
   cursor: pointer;
+  /* transition: all 0.2s ease-in-out; */
 }
-
 
 ::-webkit-scrollbar {
   border-radius: 6px;
@@ -57,4 +57,13 @@ button {
 ::-webkit-scrollbar-thumb {
   background: var(--color-secondary);
   border-radius: 10px;
+}
+
+.search-btn:hover > div {
+  width: 100%;
+
+}
+
+.search-btn:hover {
+  color: var(--primary);
 }

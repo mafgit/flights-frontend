@@ -12,17 +12,17 @@ const Hero = () => {
 
   return (
     <div className="bg-gradient-to-r from-primary via-primary-shade to-primary-shade-2">
-      <div className="flex flex-col gap-4 p-8 py-12 max-w-[1200px] mx-auto">
+      <div className="flex flex-col gap-8 p-8 py-12 max-w-[1300px] mx-auto">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-start gap-3">
+          <div className="flex items-center justify-start gap-3 ">
             {/* <Image src={"/next.svg"} width={100} height={100} alt="logo" className="inline" /> */}
-            <FaPlaneDeparture className="text-5xl text-foreground" />
-            <h1 className="font-bold text-3xl inline">Flight Booker</h1>
+            <FaPlaneDeparture className="text-6xl text-foreground" />
+            <h1 className="font-bold text-4xl inline">Flight Booker</h1>
           </div>
-          <h1 className="font-semibold text-xl">
+          <h2 className="font-semibold text-2xl">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem
             eos quisquam officia voluptas perspiciatis aliquam.
-          </h1>
+          </h2>
         </div>
 
         <div className="">
