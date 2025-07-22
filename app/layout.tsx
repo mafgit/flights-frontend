@@ -1,22 +1,43 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-outfit",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-// todo: change font
+const appTitle = "Flight Booker"; // todo: metadata
+const appDescription = "Book flights with ease and comfort.";
 
 export const metadata: Metadata = {
-  title: "Flight Booker",
-  description: "App that helps you book flights with ease and comfort.",
-  // todo: add more metadat
+  title: appTitle,
+  description: appDescription,
+  keywords: ["flight", "booking", "airline", "tour"],
+  authors: [
+    { name: "Mohammad Abdullah Farooqui", url: "https://github.com/mafgit" },
+  ],
+  creator: "Mohammad Abdullah Farooqui",
+  publisher: "Mohammad Abdullah Farooqui",
+  openGraph: {
+    title: appTitle,
+    description: appDescription,
+    url: "", // todo: metadata
+    siteName: appTitle,
+    images: [], // todo: metadata
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: appTitle,
+    description: appDescription,
+    // creator: '@...',
+    images: [], // todo: metadata
+  },
+  // todo: add more metadata
 };
 
 export default function RootLayout({
@@ -26,11 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`${outfit.variable} antialiased`}>{children}</body>
     </html>
   );
 }

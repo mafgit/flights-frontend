@@ -1,9 +1,9 @@
 const Loading = () => {
   return (
-    <div>
-      
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="animate-spin border-r-1 border-l-1 border-primary w-[30px] h-[30px] rounded-full"></div>
     </div>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;

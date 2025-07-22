@@ -20,22 +20,28 @@ const useStore = create<IStoreState>((set, get) => ({
   fetchUser: async () => {
     const { hasFetched } = get();
     if (!hasFetched) {
-      set({ loading: true });
-      const { userId, role } = await fetchMe();
-      if (userId && role)
-        set({
-          userId,
-          role,
-          loading: false,
-          hasFetched: true,
-        });
+      try {
+        set({ loading: true });
+        const { userId, role } = await fetchMe();
+        if (userId && role)
+          set({
+            userId,
+            role,
+            loading: false,
+            hasFetched: true,
+          });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        set({ loading: false });
+      }
     }
   },
 
   logout: async () => {
-    await logoutUser()
-    window.location.reload()
+    await logoutUser();
+    window.location.reload();
   },
 }));
 
-export default useStore
+export default useStore;

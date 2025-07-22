@@ -23,16 +23,22 @@ const AuthWrapper = ({
   }, []);
 
   useEffect(() => {
-    if (allowedRoles.includes("all") || (role && allowedRoles.includes(role))) {
-      return;
-    }
+    if (!loading) {
+      if (allowedRoles.length === 0 && !role) return;
+      if (
+        allowedRoles.includes("all") ||
+        (role && allowedRoles.includes(role))
+      ) {
+        return;
+      }
 
-    if (window.history.state && window.history.state.idx > 0) {
-      router.back();
-    } else {
-      router.push("/"); // todo: or replace
+      if (window.history.state && window.history.state.idx > 0) {
+        router.back();
+      } else {
+        router.push("/"); // todo: or replace
+      }
     }
-  }, [role]);
+  }, [role, loading]);
 
   return loading ? <Loading /> : <div>{children}</div>;
 };
