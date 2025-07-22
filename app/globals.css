@@ -3,11 +3,12 @@
 :root {
   --background: #1f1f1f;
   --foreground: #f7f7f7;
-  --foreground-black: #3f3f3f;
+  --foreground-black: #333333;
   --label: #585858;
 
   --primary: #425be9;
   --primary-shade: #427ce9;
+  --primary-shade-2: #6b46f3;
 
   --secondary: #ff8623;
   --secondary-shade: #ffb223;
@@ -19,9 +20,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-foreground-black: var(--foreground-black);
   --color-label: var(--label);
   --color-primary: var(--primary);
   --color-primary-shade: var(--primary-shade);
+  --color-primary-shade-2: var(--primary-shade-2);
   --color-secondary: var(--secondary);
   --color-secondary-shade: var(--secondary-shade);
   --color-success: var(--success);
@@ -48,7 +51,7 @@ button {
 
 ::-webkit-scrollbar {
   border-radius: 6px;
-  width: 10px !important;
+  width: 8px !important;
 }
 
 ::-webkit-scrollbar-thumb {

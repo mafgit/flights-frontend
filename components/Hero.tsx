@@ -11,7 +11,7 @@ const Hero = () => {
   >({ value: "One-way", label: "One-way" });
 
   return (
-    <div className="bg-primary ">
+    <div className="bg-gradient-to-r from-primary via-primary-shade to-primary-shade-2">
       <div className="flex flex-col gap-4 p-8 py-12 max-w-[1200px] mx-auto">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-start gap-3">

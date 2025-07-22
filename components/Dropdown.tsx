@@ -1,5 +1,12 @@
 "use client";
-import { Dispatch, useState } from "react";
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FaArrowRight, FaChevronDown, FaChevronUp } from "react-icons/fa6";
 
 export interface DropdownSelectedOption<T> {
@@ -17,9 +24,30 @@ const Dropdown = <T,>({
   setSelectedOption: Dispatch<React.SetStateAction<DropdownSelectedOption<T>>>;
 }) => {
   const [opened, setOpened] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      console.log("out");
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        console.log("in");
+
+        setOpened(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="bg-foreground text-background rounded-md relative w-max">
+    <div
+      className="bg-foreground text-foreground-black rounded-md relative w-max"
+      ref={ref}
+    >
       <button
         className="flex items-center justify-between w-max px-2 py-1 gap-2"
         onClick={() => setOpened(!opened)}

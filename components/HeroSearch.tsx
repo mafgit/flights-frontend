@@ -60,6 +60,12 @@ const HeroSearch = () => {
   >({});
   const [toText, setToText] = useState("");
 
+  const swapFromAndTo = () => {
+    const temp = selectedToOption;
+    setSelectedToOption(selectedFromOption);
+    setSelectedFromOption(temp);
+  };
+
   return (
     <div className="flex flex-col gap-2 mt-2">
       <div className="flex gap-2">
@@ -74,7 +80,11 @@ const HeroSearch = () => {
             placeholder={"Airport, city or country"}
           />
 
-          <button className="p-2 rounded-full" onClick={() => {}}>
+          <button
+            className="p-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!selectedFromOption.value && !selectedToOption.value}
+            onClick={swapFromAndTo}
+          >
             <FaRightLeft />
           </button>
 
