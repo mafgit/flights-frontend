@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import FormField from "./FormField";
-import Button from "./basic/Button";
+import Button from "./Button";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");

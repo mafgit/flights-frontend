@@ -2,13 +2,13 @@ import Navbar from "@/components/navbar/Navbar";
 import AuthWrapper from "@/utils/AuthWrapper";
 import { ReactNode } from "react";
 
-const LoginLayout = ({ children }: { children: ReactNode }) => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <AuthWrapper allowedRoles={[]}>
-      <Navbar />
+      <Navbar animate={false} />
       {children}
     </AuthWrapper>
   );
 };
 
-export default LoginLayout;
+export default MainLayout;

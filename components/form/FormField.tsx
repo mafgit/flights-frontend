@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler } from "react";
-import Input from "./basic/Input";
+import Input from "./Input";
 
 const FormField = (props: {
   label: string;

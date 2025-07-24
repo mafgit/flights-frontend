@@ -1,17 +1,9 @@
 import { fetchMe, logoutUser } from "@/app/services/auth";
 import { create } from "zustand/react";
+import { IStoreState } from "@/types/IStoreState";
+import { ISearchFlight } from "@/types/ISearchFlight";
 
-export type IRole = "super_admin" | "admin" | "user";
-
-export interface IStoreState {
-  userId?: number;
-  role?: IRole;
-  loading: boolean;
-  hasFetched: boolean;
-  fetchUser: () => Promise<void>;
-}
-
-const useStore = create<IStoreState>((set, get) => ({
+const useMyStore = create<IStoreState>((set, get) => ({
   userId: undefined,
   role: undefined,
   loading: true,
@@ -31,7 +23,7 @@ const useStore = create<IStoreState>((set, get) => ({
             hasFetched: true,
           });
       } catch (err) {
-        console.error(err);
+        console.log(err);
       } finally {
         set({ loading: false });
       }
@@ -42,6 +34,11 @@ const useStore = create<IStoreState>((set, get) => ({
     await logoutUser();
     window.location.reload();
   },
+
+  searchFlightsSegments: [],
+  setSearchFlightSegments: async (searchFlightsQuery: ISearchFlight[]) => {
+    set({ searchFlightsSegments: searchFlightsQuery });
+  },
 }));
 
-export default useStore;
+export default useMyStore;

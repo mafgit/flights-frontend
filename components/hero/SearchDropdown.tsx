@@ -1,13 +1,7 @@
 "use client";
+import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
 import { Dispatch, useEffect, useRef, useState } from "react";
-import { FaArrowRight, FaXmark } from "react-icons/fa6";
-
-export interface SearchDropdownOption {
-  value: number;
-  city: string;
-  country: string;
-  code: string;
-}
+import { FaLocationArrow, FaXmark } from "react-icons/fa6";
 
 const SearchDropdown = ({
   searchText,
@@ -19,30 +13,27 @@ const SearchDropdown = ({
   placeholder,
 }: {
   label: string;
-  options: SearchDropdownOption[];
-  selectedOption: Partial<SearchDropdownOption>;
+  options: ISearchDropdownOption[];
+  selectedOption: Partial<ISearchDropdownOption>;
   searchText: string;
   placeholder: string;
   setSearchText: Dispatch<React.SetStateAction<string>>;
   setSelectedOption: Dispatch<
-    React.SetStateAction<Partial<SearchDropdownOption>>
+    React.SetStateAction<Partial<ISearchDropdownOption>>
   >;
 }) => {
   const [opened, setOpened] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [shownOptions, setShownOptions] = useState(options);
-const ref = useRef<HTMLDivElement>(null)
+  const [shownOptions, setShownOptions] = useState<ISearchDropdownOption[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      console.log("out");
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        console.log("in");
-
         setOpened(false);
       }
     };
-    
+
     document.addEventListener("click", handleClickOutside);
 
     return () => {
@@ -50,6 +41,9 @@ const ref = useRef<HTMLDivElement>(null)
     };
   }, []);
 
+  useEffect(() => {
+    setShownOptions(options);
+  }, [options]);
 
   useEffect(() => {
     const text = searchText.trim().toLowerCase();
@@ -73,10 +67,13 @@ const ref = useRef<HTMLDivElement>(null)
   }, [searchText]);
 
   return (
-    <div className="bg-foreground text-foreground-black rounded-md relative w-max" ref={ref}>
+    <div
+      className="bg-[#fffdf3] text-foreground-opposite rounded-md relative w-max "
+      ref={ref}
+    >
       <div className="relative">
         <label
-          className="absolute top-[8px] left-[8px] text-sm text-secondary"
+          className="absolute top-[8px] left-[8px] text-sm text-primary-shade"
           htmlFor={label}
         >
           {label}
@@ -114,7 +111,7 @@ const ref = useRef<HTMLDivElement>(null)
       </div>
       <ul
         className={
-          `z-[20] bg-foreground overflow-y-auto max-h-[300px] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%] p-[2px] ` +
+          `z-[20] bg-[#fffdf3] overflow-y-auto max-h-[300px] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%]  shadow-2xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -123,13 +120,13 @@ const ref = useRef<HTMLDivElement>(null)
         {shownOptions.map((option) => (
           <li
             key={String(option.value)}
-            className="rounded-md bg-foreground min-w-full flex items-center justify-start gap-[5px] px-2 py-1 cursor-pointer w-max h-full hover:brightness-90 transition-all duration-100 ease-in"
+            className="rounded-md bg-[#fffdf3] min-w-full flex items-center justify-start gap-3 px-2 py-1 cursor-pointer w-max h-full hover:brightness-90 transition-all duration-100 ease-in"
             onClick={() => {
               setSelectedOption(option);
               setOpened(false);
             }}
           >
-            <FaArrowRight className="text-secondary" />{" "}
+            <FaLocationArrow className="text-primary" />{" "}
             <div className="flex flex-col">
               <span>{option.city + " (" + option.code + ")"}</span>
               <span className="text-sm">{option.country}</span>

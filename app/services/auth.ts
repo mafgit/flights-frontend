@@ -1,14 +1,16 @@
-export const API_BASE_URL = "http://localhost:5000/api";
+import { API_BASE_URL } from "./endpoints";
+
+const baseUrl = API_BASE_URL + "/auth";
 
 export const fetchMe = async () => {
-  const { userId, role } = await fetch(API_BASE_URL + "/me", {
+  const { userId, role } = await fetch(baseUrl + "/me", {
     credentials: "include",
   }).then((res) => res.json());
   return { userId, role };
 };
 
 export const logoutUser = async () => {
-  await fetch(API_BASE_URL + "/logout", {
+  await fetch(baseUrl + "/logout", {
     method: "POST",
     credentials: "include",
   }).then((res) => res.json());

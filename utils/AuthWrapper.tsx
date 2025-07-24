@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import useMyStore, { IRole } from "./useMyStore";
+import useMyStore from "./useMyStore";
+import { IRole } from "@/types/IRole";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
 
@@ -14,12 +15,12 @@ const AuthWrapper = ({
 }) => {
   const role = useMyStore((state) => state.role);
   const loading = useMyStore((state) => state.loading);
-  const fetchMe = useMyStore((state) => state.fetchUser);
+  const fetchUser = useMyStore((state) => state.fetchUser);
 
   const router = useRouter();
 
   useEffect(() => {
-    fetchMe();
+    fetchUser();
   }, []);
 
   useEffect(() => {
