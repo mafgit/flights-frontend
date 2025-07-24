@@ -38,7 +38,7 @@ const Dropdown = <T,>({
 
   return (
     <div
-      className="bg-[#fffdf3] text-foreground-opposite rounded-md relative w-max"
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-max"
       ref={ref}
     >
       <button
@@ -61,7 +61,7 @@ const Dropdown = <T,>({
       </button>
       <ul
         className={
-          `z-[20] bg-[#fffdf3] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%] shadow-xl shadow-black/50 ` +
+          `z-[20] bg-dropdown absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%] shadow-xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -70,7 +70,7 @@ const Dropdown = <T,>({
         {options.map((option) => (
           <li
             key={String(option.value)}
-            className="rounded-md bg-[#fffdf3] flex items-center justify-start gap-2 px-2 py-1 cursor-pointer w-full h-full hover:brightness-90 transition-all duration-100 ease-in"
+            className="rounded-md bg-dropdown flex items-center justify-start gap-2 px-2 py-1 cursor-pointer w-full h-full hover:brightness-90 transition-all duration-100 ease-in"
             onClick={() => {
               setSelectedOption(option);
               setOpened(false);

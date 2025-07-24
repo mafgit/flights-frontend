@@ -11,6 +11,7 @@
 
   --primary: #ffb223;
   --primary-shade: #e99700;
+  --dropdown: #fffdf3;
 
   /* --secondary: #ffb223;
   --secondary-shade: #e99700; */
@@ -26,7 +27,7 @@
   --color-label: var(--label);
   --color-dark: var(--dark);
   --color-light: var(--light);
-
+  --color-dropdown: var(--dropdown);
   --color-primary: var(--primary);
   --color-primary-shade: var(--primary-shade);
   /* --color-primary-shade-2: var(--primary-shade-2); */

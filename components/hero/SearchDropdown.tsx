@@ -68,7 +68,7 @@ const SearchDropdown = ({
 
   return (
     <div
-      className="bg-[#fffdf3] text-foreground-opposite rounded-md relative w-max "
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-max "
       ref={ref}
     >
       <div className="relative">
@@ -111,7 +111,7 @@ const SearchDropdown = ({
       </div>
       <ul
         className={
-          `z-[20] bg-[#fffdf3] overflow-y-auto max-h-[300px] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%]  shadow-2xl shadow-black/50 ` +
+          `z-[20] bg-dropdown overflow-y-auto max-h-[300px] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-1 top-[110%]  shadow-2xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -120,7 +120,7 @@ const SearchDropdown = ({
         {shownOptions.map((option) => (
           <li
             key={String(option.value)}
-            className="rounded-md bg-[#fffdf3] min-w-full flex items-center justify-start gap-3 px-2 py-1 cursor-pointer w-max h-full hover:brightness-90 transition-all duration-100 ease-in"
+            className="rounded-md bg-dropdown min-w-full flex items-center justify-start gap-3 px-2 py-1 cursor-pointer w-max h-full hover:brightness-90 transition-all duration-100 ease-in"
             onClick={() => {
               setSelectedOption(option);
               setOpened(false);

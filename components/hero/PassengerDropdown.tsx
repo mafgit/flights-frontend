@@ -40,7 +40,7 @@ const PassengerDropdown = ({
 
   return (
     <div
-      className="bg-[#fffdf3] text-foreground-opposite rounded-md relative w-[170px]"
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px]"
       ref={ref}
     >
       <div className="relative">
@@ -84,7 +84,7 @@ const PassengerDropdown = ({
 
       <ul
         className={
-          `z-[20] bg-[#fffdf3] absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-2 shadow-xl shadow-black/50 ` +
+          `z-[20] bg-dropdown absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-2 shadow-xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")

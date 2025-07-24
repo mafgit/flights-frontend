@@ -70,7 +70,7 @@ const DatePicker = ({
 
   return (
     <div
-      className="bg-[#fffdf3] text-foreground-opposite rounded-md relative w-[170px] "
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px] "
       ref={ref}
     >
       <div className="relative">
@@ -113,7 +113,7 @@ const DatePicker = ({
       </div>
       <div
         className={
-          `z-[20] bg-[#fffdf3] overflow-y-auto absolute transition-all duration-100 ease-in w-max min-w-full rounded-md top-[110%] p-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
+          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max min-w-full rounded-md top-[110%] p-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
