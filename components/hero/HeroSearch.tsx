@@ -46,6 +46,12 @@ const HeroSearch = ({
     segmentsDataFromParams
   );
 
+  const [airportOptions, setAirportOptions] = useState<ISearchDropdownOption[]>(
+    []
+  );
+
+  const router = useRouter();
+
   const updateSegment = (segmentIdx: number, field: any, value: any) => {
     setSegmentsData((prev) => {
       return prev.map((segment, i) => {
@@ -67,15 +73,53 @@ const HeroSearch = ({
     });
   };
 
-  const setSearchFlightSegments = useMyStore(
-    (state) => state.setSearchFlightSegments
-  );
+  const search = () => {
+    // todo: validation
+    if (
+      !segmentsData.some((segment) => {
+        if (
+          segment.arrival_airport === undefined ||
+          segment.departure_airport === undefined
+        ) {
+          return false;
+        }
 
-  const [airportOptions, setAirportOptions] = useState<ISearchDropdownOption[]>(
-    []
-  );
+        if (
+          segment.passengers === undefined ||
+          segment.departure_time === undefined ||
+          segment.seat_class === undefined
+        ) {
+          return false;
+        }
 
-  const router = useRouter();
+        if (
+          segment.departure_time.day === undefined ||
+          segment.departure_time.month === undefined ||
+          segment.departure_time.year === undefined
+        ) {
+          return false;
+        }
+
+        if (
+          typeFromParams.value === "Round-trip" &&
+          segment.return_time === undefined
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+    ) {
+      return alert("Fill all the fields");
+    }
+
+    router.push(
+      "/search?type=" +
+        encodeURIComponent(JSON.stringify(typeFromParams)) +
+        "&segments=" +
+        encodeURIComponent(JSON.stringify(segmentsData))
+    );
+  };
 
   useEffect(() => {
     fetchAirportOptions().then((airports) => {
@@ -89,9 +133,6 @@ const HeroSearch = ({
       );
     });
   }, []);
-
-  console.log("segmentsDataFromParams", segmentsDataFromParams);
-  console.log("segmentsDataFromParams", segmentsDataFromParams);
 
   return (
     <div className="flex flex-col gap-2 mt-2 justify-between">
@@ -124,54 +165,7 @@ const HeroSearch = ({
         </button>
       )}
       <button
-        onClick={() => {
-          // todo: validation
-          if (
-            !segmentsData.some((segment) => {
-              if (
-                segment.arrival_airport === undefined ||
-                segment.departure_airport === undefined
-              ) {
-                return false;
-              }
-
-              if (
-                segment.passengers === undefined ||
-                segment.departure_time === undefined ||
-                segment.seat_class === undefined
-              ) {
-                return false;
-              }
-
-              if (
-                segment.departure_time.day === undefined ||
-                segment.departure_time.month === undefined ||
-                segment.departure_time.year === undefined
-              ) {
-                return false;
-              }
-
-              if (
-                typeFromParams.value === "Round-trip" &&
-                segment.return_time === undefined
-              ) {
-                return false;
-              }
-
-              return true;
-            })
-          ) {
-            return alert("Fill all the fields");
-          }
-
-          setSearchFlightSegments(segmentsData as ISearchFlight[]);
-          router.push(
-            "/search?type=" +
-              encodeURIComponent(JSON.stringify(typeFromParams)) +
-              "&segments=" +
-              encodeURIComponent(JSON.stringify(segmentsData))
-          );
-        }}
+        onClick={search}
         className="search-btn relative mt-4 w-full bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 "
       >
         <div

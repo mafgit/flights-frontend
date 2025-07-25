@@ -54,6 +54,24 @@ const DatePicker = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
+  const decrementMonth = () => {
+    if (onMonth <= 1) {
+      setOnMonth(12);
+      setOnYear(onYear - 1);
+    } else {
+      setOnMonth(onMonth - 1);
+    }
+  };
+
+  const incrementMonth = () => {
+    if (onMonth >= 12) {
+      setOnMonth(1);
+      setOnYear(onYear + 1);
+    } else {
+      setOnMonth(onMonth + 1);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -123,14 +141,7 @@ const DatePicker = ({
           <button
             className="disabled:opacity-0"
             disabled={onMonth <= 1 && onYear <= y}
-            onClick={() => {
-              if (onMonth <= 1) {
-                setOnMonth(12);
-                setOnYear(onYear - 1);
-              } else {
-                setOnMonth(onMonth - 1);
-              }
-            }}
+            onClick={decrementMonth}
           >
             <FaChevronLeft className="text-sm text-gray-600" />
           </button>
@@ -142,14 +153,7 @@ const DatePicker = ({
           <button
             className="disabled:opacity-0"
             disabled={onMonth >= 12 && onYear > y}
-            onClick={() => {
-              if (onMonth >= 12) {
-                setOnMonth(1);
-                setOnYear(onYear + 1);
-              } else {
-                setOnMonth(onMonth + 1);
-              }
-            }}
+            onClick={incrementMonth}
           >
             <FaChevronRight className="text-sm text-gray-600" />
           </button>

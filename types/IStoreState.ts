@@ -1,6 +1,4 @@
-import { ISearchFlight } from "./ISearchFlight";
 import { IRole } from "./IRole";
-
 
 export interface IStoreState {
   userId?: number;
@@ -8,9 +6,4 @@ export interface IStoreState {
   loading: boolean;
   hasFetched: boolean;
   fetchUser: () => Promise<void>;
-
-  searchFlightsSegments: ISearchFlight[];
-  setSearchFlightSegments: (
-    searchFlightsQuery: ISearchFlight[]
-  ) => Promise<any>;
 }

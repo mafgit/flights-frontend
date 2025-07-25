@@ -1,7 +1,6 @@
 import { fetchMe, logoutUser } from "@/app/services/auth";
 import { create } from "zustand/react";
 import { IStoreState } from "@/types/IStoreState";
-import { ISearchFlight } from "@/types/ISearchFlight";
 
 const useMyStore = create<IStoreState>((set, get) => ({
   userId: undefined,
@@ -33,11 +32,6 @@ const useMyStore = create<IStoreState>((set, get) => ({
   logout: async () => {
     await logoutUser();
     window.location.reload();
-  },
-
-  searchFlightsSegments: [],
-  setSearchFlightSegments: async (searchFlightsQuery: ISearchFlight[]) => {
-    set({ searchFlightsSegments: searchFlightsQuery });
   },
 }));
 

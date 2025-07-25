@@ -7,23 +7,29 @@ const baseUrl = API_BASE_URL + "/flights";
 
 export const searchFlights = async (
   type: ITripType,
-  flights: ISearchFlight[]
+  flights: ISearchFlight[],
+  // totalDuration: number | undefined,
+  departureTimes: { min: number; max: number }[],
+  airlineIds: number[]
 ) => {
   if (flights.length === 0) throw new Error("No segments selected");
 
-  if (type === "Round-trip") {
-    if (!flights[0].return_time)
-      throw new Error("No return time selected for round-trip");
-    flights = [
-      { ...flights[0], return_time: undefined },
-      {
-        ...flights[0],
-        arrival_airport: flights[0].departure_airport,
-        departure_airport: flights[0].arrival_airport,
-        departure_time: flights[0].return_time,
-      },
-    ];
-  }
+  // if (type === "Round-trip") {
+  //   if (!flights[0].return_time)
+  //     throw new Error("No return time selected for round-trip");
+
+  //   flights = [
+  //     { ...flights[0], return_time: undefined },
+  //     {
+  //       ...flights[0],
+  //       arrival_airport: flights[0].departure_airport,
+  //       departure_airport: flights[0].arrival_airport,
+  //       departure_time: flights[0].return_time,
+  //     },
+  //   ];
+
+  //   departureTimes = [departureTimes[0], departureTimes[0]];
+  // }
   let mappedFlights: {
     arrival_airport_id: number;
     departure_airport_id: number;
@@ -50,7 +56,12 @@ export const searchFlights = async (
   try {
     const { data } = await fetch(baseUrl + "/search", {
       method: "POST",
-      body: JSON.stringify({ flights: mappedFlights }),
+      body: JSON.stringify({
+        flights: mappedFlights,
+        // totalDuration: totalDuration,
+        departureTimes,
+        airlineIds,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -70,9 +81,9 @@ export const fetchAirportOptions = async () => {
   return data;
 };
 
-export const fetchSomeAirlines = async () => {
-  const { data } = await fetch(API_BASE_URL + "/airlines?limit=5").then((res) =>
-    res.json()
-  );
+export const fetchSomeAirlines = async (limit = 0) => {
+  const { data } = await fetch(
+    API_BASE_URL + `/airlines${limit <= 0 ? "" : `?limit=${limit}`}`
+  ).then((res) => res.json());
   return data;
 };

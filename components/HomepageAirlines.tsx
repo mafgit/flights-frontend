@@ -8,7 +8,7 @@ const HomepageAirlines = () => {
   const [airlines, setAirlines] = useState([]);
 
   useEffect(() => {
-    fetchSomeAirlines().then((airlines) => {
+    fetchSomeAirlines(5).then((airlines) => {
       setAirlines(airlines.map((a: { logo_url: string }) => a.logo_url));
     });
   }, []);

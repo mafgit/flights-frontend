@@ -1,33 +1,77 @@
 "use client";
 
 import { searchFlights } from "@/app/services/search";
-import HeroSearch from "@/components/hero/HeroSearch";
 import Loading from "@/components/Loading";
 import SearchFilters from "@/components/SearchFilters";
 import SearchFlightsForm from "@/components/SearchFlightsForm";
 import SearchResult from "@/components/SearchResult";
+import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
+import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchResult } from "@/types/ISearchResult";
 import { ITripType } from "@/types/ITripType";
-import useMyStore from "@/utils/useMyStore";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBan, FaPlaneDeparture } from "react-icons/fa6";
 
+const MAX_TOTAL_DURATION = 50;
+
 const SearchPage = () => {
-  const searchFlightSegments = useMyStore((s) => s.searchFlightsSegments);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<ISearchResult[][]>([]);
   const params = useSearchParams();
+  const [segments, setSegments] = useState<ISearchFlight[]>([]);
+  const [type, setType] = useState<IDropdownSelectedOption<ITripType>>({});
+
+  const [departureTimes, setDepartureTimes] = useState<
+    { min: number; max: number }[]
+  >([]);
+  const [totalDuration, setTotalDuration] = useState(MAX_TOTAL_DURATION);
+  const [airlinesSelected, setAirlinesSelected] = useState<number[]>([]);
 
   useEffect(() => {
-    console.log("===", params.get("type"));
-    console.log("[[[", JSON.parse(params.get("type") ?? "{}"));
+    let flights = JSON.parse(params.get("segments") || "[]") as ISearchFlight[];
 
-    if (searchFlightSegments.length === 0) return;
+    const tripType = JSON.parse(
+      params.get("type") || "{}"
+    ) as IDropdownSelectedOption<ITripType>;
+
+    setType(tripType);
+
+    let depTimes = new Array(flights.length).fill({ min: 0, max: 24 });
+
+    if (tripType.value === "Round-trip") {
+      if (!flights[0].return_time)
+        throw new Error("No return time selected for round-trip");
+
+      flights = [
+        { ...flights[0], return_time: undefined },
+        {
+          ...flights[0],
+          arrival_airport: flights[0].departure_airport,
+          departure_airport: flights[0].arrival_airport,
+          departure_time: flights[0].return_time,
+        },
+      ];
+
+      depTimes = [departureTimes[0], departureTimes[0]];
+    }
+
+    setDepartureTimes(depTimes);
+
+    setSegments(flights);
+    setDepartureTimes(depTimes);
+  }, [params]);
+
+  useEffect(() => {
+    if (segments.length === 0 || !type.value || airlinesSelected.length === 0)
+      return;
     setLoading(true);
     searchFlights(
-      JSON.parse(params.get("type") || "{}").value as ITripType,
-      searchFlightSegments
+      type.value,
+      segments,
+      departureTimes,
+      airlinesSelected
+      //  totalDuration === MAX_TOTAL_DURATION ? undefined : totalDuration
     )
       .then((results) => {
         console.log("results:", results);
@@ -35,7 +79,7 @@ const SearchPage = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [searchFlightSegments]);
+  }, [airlinesSelected, departureTimes]);
 
   return (
     <div className="mx-auto flex flex-col items-center">
@@ -62,7 +106,7 @@ const SearchPage = () => {
         <div className="w-full p-4 max-w-[1300px] mx-auto">
           {" "}
           <SearchFlightsForm
-            typeFromParams={JSON.parse(params.get("type") ?? "{}")}
+            typeFromParams={type}
             segmentsDataFromParams={JSON.parse(params.get("segments") ?? "[]")}
           />
         </div>
@@ -71,7 +115,18 @@ const SearchPage = () => {
 
       <div className="w-full">
         <div className="flex gap-6 h-full items-center justify-start w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto">
-          <SearchFilters />
+          {segments.length && departureTimes.length && (
+            <SearchFilters
+              segments={segments}
+              setTotalDuration={setTotalDuration}
+              totalDuration={totalDuration}
+              MAX_TOTAL_DURATION={MAX_TOTAL_DURATION}
+              departureTimes={departureTimes}
+              setDepartureTimes={setDepartureTimes}
+              airlinesSelected={airlinesSelected}
+              setAirlinesSelected={setAirlinesSelected}
+            />
+          )}
           <div className="flex items-center justify-start gap-3 flex-col h-full  self-start">
             {loading ? (
               <Loading />

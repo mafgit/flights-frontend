@@ -1,5 +1,8 @@
-import { useState } from "react";
+"use client";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Separator from "./Separator";
+import { fetchSomeAirlines } from "@/app/services/search";
+import { ISearchFlight } from "@/types/ISearchFlight";
 
 const valToTime = (val: number) => {
   if (val === 24) return `23:59`;
@@ -10,25 +13,38 @@ const valToTime = (val: number) => {
   }
 };
 
-const airlines = [
-  { id: 1, name: "Airline 1" },
-  { id: 2, name: "Airline 2" },
-  { id: 3, name: "Airline 3" },
-];
+const SearchFilters = ({
+  segments,
+  totalDuration,
+  setTotalDuration,
+  MAX_TOTAL_DURATION,
+  departureTimes,
+  setDepartureTimes,
+  airlinesSelected,
+  setAirlinesSelected,
+}: {
+  segments: ISearchFlight[];
+  totalDuration: number;
+  setTotalDuration: Dispatch<SetStateAction<number>>;
+  MAX_TOTAL_DURATION: number | undefined;
+  departureTimes: { min: number; max: number }[];
+  setDepartureTimes: Dispatch<SetStateAction<{ min: number; max: number }[]>>;
+  airlinesSelected: number[];
+  setAirlinesSelected: Dispatch<SetStateAction<number[]>>;
+}) => {
+  const [airlines, setAirlines] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
 
-const SearchFilters = () => {
-  const maxTotalDuration = 100;
-  const [totalDuration, setTotalDuration] = useState(maxTotalDuration);
-  const [segments, setSegments] = useState([{}, {}, {}]);
-  const [segmentValues, setSegmentValues] = useState([
-    { min: 0, max: 24 },
-    { min: 0, max: 24 },
-    { min: 0, max: 24 },
-  ]);
-
-  const [airlinesSelected, setAirlinesSelected] = useState(
-    airlines.map((a) => a.id)
-  );
+  useEffect(() => {
+    fetchSomeAirlines().then((airlines) => {
+      setAirlines(airlines);
+      setAirlinesSelected(airlines.map((a: { id: number }) => a.id));
+    });
+  }, []);
 
   return (
     <div className="min-h-full bg-foreground-opposite w-[270px] rounded-md p-3 py-6 flex flex-col gap-6 items-center justify-start">
@@ -38,7 +54,7 @@ const SearchFilters = () => {
         <div className="w-full flex flex-col gap-2">
           <h4 className="text-xl font-semibold">Max Total Duration</h4>
           <p>
-            {totalDuration === maxTotalDuration
+            {totalDuration === MAX_TOTAL_DURATION
               ? "No limit"
               : `${totalDuration} hours`}
           </p>
@@ -47,7 +63,7 @@ const SearchFilters = () => {
             className="w-full"
             value={totalDuration}
             min={0}
-            max={100}
+            max={MAX_TOTAL_DURATION}
             step={0.5}
             onChange={(e) => setTotalDuration(parseFloat(e.target.value))}
           />
@@ -66,8 +82,8 @@ const SearchFilters = () => {
                 <div className="">
                   <h4>Segment {s}:</h4>
                   <p>
-                    {valToTime(segmentValues[s].min)} -{" "}
-                    {valToTime(segmentValues[s].max)}
+                    {valToTime(departureTimes[s].min)} -{" "}
+                    {valToTime(departureTimes[s].max)}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -75,13 +91,13 @@ const SearchFilters = () => {
                   <input
                     type="range"
                     className="w-full"
-                    value={segmentValues[s].min}
+                    value={departureTimes[s].min}
                     min={0}
-                    max={segmentValues[s].max}
+                    max={departureTimes[s].max}
                     step={0.5}
                     onChange={(e) =>
-                      setSegmentValues(
-                        segmentValues.map((a, i) =>
+                      setDepartureTimes(
+                        departureTimes.map((a, i) =>
                           i === s
                             ? { ...a, min: parseFloat(e.target.value) }
                             : a
@@ -96,13 +112,13 @@ const SearchFilters = () => {
                   <input
                     type="range"
                     className="w-full"
-                    value={segmentValues[s].max}
-                    min={segmentValues[s].min}
+                    value={departureTimes[s].max}
+                    min={departureTimes[s].min}
                     max={24}
                     step={0.5}
                     onChange={(e) =>
-                      setSegmentValues(
-                        segmentValues.map((a, i) =>
+                      setDepartureTimes(
+                        departureTimes.map((a, i) =>
                           i === s
                             ? { ...a, max: parseFloat(e.target.value) }
                             : a
@@ -124,8 +140,7 @@ const SearchFilters = () => {
             <div key={"airline-filter-" + airline.id} className="flex gap-2">
               <input
                 type="checkbox"
-                name=""
-                id=""
+                id={"check-" + airline.id}
                 checked={airlinesSelected.includes(airline.id)}
                 onChange={(e) => {
                   if (e.target.checked) {
@@ -137,7 +152,7 @@ const SearchFilters = () => {
                   }
                 }}
               />
-              <label htmlFor="">{airline.name}</label>
+              <label htmlFor={"check-" + airline.id}>{airline.name}</label>
             </div>
           ))}
         </div>
