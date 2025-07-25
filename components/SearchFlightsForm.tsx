@@ -9,16 +9,24 @@ import {
 } from "react-icons/fa6";
 import HeroSearch from "./hero/HeroSearch";
 import { ITripType } from "@/types/ITripType";
+import { ISearchFlight } from "@/types/ISearchFlight";
 
 const typeOptions: Required<IDropdownSelectedOption<ITripType>>[] = [
   { label: "One-way", value: "One-way", icon: FaSquareArrowUpRight },
   { label: "Round-trip", value: "Round-trip", icon: FaRotate },
   { label: "Multi-city", value: "Multi-city", icon: FaMapLocationDot },
 ];
-const SearchFlightsForm = ({ showBtn = true }: { showBtn?: boolean }) => {
-  const [selectedTypeOption, setSelectedTypeOption] = useState<
-    IDropdownSelectedOption<ITripType>
-  >(typeOptions[0]);
+const SearchFlightsForm = ({
+  typeFromParams = typeOptions[0],
+  segmentsDataFromParams = [{}],
+}: {
+  typeFromParams?: IDropdownSelectedOption<ITripType>;
+  segmentsDataFromParams?: Partial<ISearchFlight>[];
+}) => {
+  const [selectedTypeOption, setSelectedTypeOption] =
+    useState<IDropdownSelectedOption<ITripType>>(typeFromParams);
+
+  console.log("selectedtype", selectedTypeOption);
 
   return (
     <div className={"w-full "}>
@@ -29,8 +37,8 @@ const SearchFlightsForm = ({ showBtn = true }: { showBtn?: boolean }) => {
       />
 
       <HeroSearch
-        type={selectedTypeOption.value ?? "One-way"}
-        showBtn={showBtn}
+        typeFromParams={selectedTypeOption}
+        segmentsDataFromParams={segmentsDataFromParams}
       />
     </div>
   );

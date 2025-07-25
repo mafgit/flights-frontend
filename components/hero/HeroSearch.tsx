@@ -36,15 +36,15 @@ const classOptions: Required<
 ];
 
 const HeroSearch = ({
-  type,
-  showBtn = true,
+  typeFromParams,
+  segmentsDataFromParams = [{}],
 }: {
-  type: ITripType;
-  showBtn?: boolean;
+  typeFromParams: IDropdownSelectedOption<ITripType>;
+  segmentsDataFromParams?: Partial<ISearchFlight>[];
 }) => {
-  const [segmentsData, setSegmentsData] = useState<Partial<ISearchFlight>[]>([
-    {},
-  ]);
+  const [segmentsData, setSegmentsData] = useState<Partial<ISearchFlight>[]>(
+    segmentsDataFromParams
+  );
 
   const updateSegment = (segmentIdx: number, field: any, value: any) => {
     setSegmentsData((prev) => {
@@ -90,15 +90,18 @@ const HeroSearch = ({
     });
   }, []);
 
+  console.log("segmentsDataFromParams", segmentsDataFromParams);
+  console.log("segmentsDataFromParams", segmentsDataFromParams);
+
   return (
     <div className="flex flex-col gap-2 mt-2 justify-between">
       <div className="flex flex-col gap-2">
         {segmentsData
-          .slice(0, type === "Multi-city" ? undefined : 1)
+          .slice(0, typeFromParams.value === "Multi-city" ? undefined : 1)
           .map((segment, idx) => (
             <HeroSearchSegment
               key={idx}
-              type={type}
+              type={typeFromParams.value!}
               airportOptions={airportOptions}
               classOptions={classOptions}
               segmentIdx={idx}
@@ -109,7 +112,7 @@ const HeroSearch = ({
             />
           ))}
       </div>
-      {type === "Multi-city" && (
+      {typeFromParams.value === "Multi-city" && (
         <button
           className="flex gap-2 items-center justify-center p-2 rounded-md"
           onClick={() => {
@@ -120,15 +123,16 @@ const HeroSearch = ({
           <span>Add Segment</span>
         </button>
       )}
-      {showBtn && (
-        <button
-          onClick={() => {
-            segmentsData.forEach((segment) => {
+      <button
+        onClick={() => {
+          // todo: validation
+          if (
+            !segmentsData.some((segment) => {
               if (
-                segment.arrival_airport_id === undefined ||
-                segment.departure_airport_id === undefined
+                segment.arrival_airport === undefined ||
+                segment.departure_airport === undefined
               ) {
-                return;
+                return false;
               }
 
               if (
@@ -136,7 +140,7 @@ const HeroSearch = ({
                 segment.departure_time === undefined ||
                 segment.seat_class === undefined
               ) {
-                return;
+                return false;
               }
 
               if (
@@ -144,25 +148,42 @@ const HeroSearch = ({
                 segment.departure_time.month === undefined ||
                 segment.departure_time.year === undefined
               ) {
-                return;
+                return false;
               }
-            });
-            setSearchFlightSegments(segmentsData as ISearchFlight[]);
-            router.push("/search");
-          }}
-          className="search-btn relative mt-4 w-full bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 "
-        >
-          <div
-            className={
-              "z-[5] bg-foreground h-full w-0 absolute top-0 left-0 transition-all duration-200 rounded-md "
-            }
-          ></div>
-          <FaMagnifyingGlass className="z-[10] transition-all duration-200" />
-          <span className="z-[10] transition-all duration-200">
-            Search Flights
-          </span>
-        </button>
-      )}
+
+              if (
+                typeFromParams.value === "Round-trip" &&
+                segment.return_time === undefined
+              ) {
+                return false;
+              }
+
+              return true;
+            })
+          ) {
+            return alert("Fill all the fields");
+          }
+
+          setSearchFlightSegments(segmentsData as ISearchFlight[]);
+          router.push(
+            "/search?type=" +
+              encodeURIComponent(JSON.stringify(typeFromParams)) +
+              "&segments=" +
+              encodeURIComponent(JSON.stringify(segmentsData))
+          );
+        }}
+        className="search-btn relative mt-4 w-full bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 "
+      >
+        <div
+          className={
+            "z-[5] bg-foreground h-full w-0 absolute top-0 left-0 transition-all duration-200 rounded-md "
+          }
+        ></div>
+        <FaMagnifyingGlass className="z-[10] transition-all duration-200" />
+        <span className="z-[10] transition-all duration-200">
+          Search Flights
+        </span>
+      </button>
     </div>
   );
 };

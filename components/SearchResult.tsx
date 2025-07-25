@@ -1,6 +1,7 @@
 import { ISearchResult } from "@/types/ISearchResult";
 import Image from "next/image";
 import { FaPlane } from "react-icons/fa6";
+import Separator from "./Separator";
 
 function getDateAndTime(iso: string) {
   let date = new Date(iso);
@@ -70,8 +71,8 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
         })}
       </div>
 
-      <div className="w-[1px] min-h-full bg-foreground/30 rounded-full"></div>
-
+      <Separator />
+      
       <div className="flex flex-col items-center justify-center gap-3">
         <h3 className="font-bold text-xl w-full">
           {"PKR " +
@@ -83,7 +84,9 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
 
         <button className="relative bg-primary-shade rounded-md p-2 w-full group flex items-center justify-center">
           <div className="top-0 left-0 absolute h-full bg-foreground rounded-md z-[5] w-0 transition-all duration-200 group-hover:w-full"></div>
-          <p className="z-[10] transition-all duration-200 block group-hover:text-primary-shade">Book</p>
+          <p className="z-[10] transition-all duration-200 block group-hover:text-primary-shade">
+            Book
+          </p>
         </button>
       </div>
     </div>
