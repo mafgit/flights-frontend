@@ -1,16 +1,16 @@
 "use client";
-import { fetchSomeAirlines } from "@/app/services/search";
+import { fetchSomeAirlines } from "@/app/services/airlines";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaEllipsis, FaPlus } from "react-icons/fa6";
+import { FaEllipsis } from "react-icons/fa6";
 
 const HomepageAirlines = () => {
   const [airlines, setAirlines] = useState([]);
 
   useEffect(() => {
-    fetchSomeAirlines(5).then((airlines) => {
-      setAirlines(airlines.map((a: { logo_url: string }) => a.logo_url));
-    });
+    fetchSomeAirlines(5).then((returnedAirlines) => {
+      setAirlines(returnedAirlines.map((a: { logo_url: string }) => a.logo_url));
+    })
   }, []);
 
   return (

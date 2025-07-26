@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { FaRightLeft, FaTrash } from "react-icons/fa6";
-import SearchDropdown from "./SearchDropdown";
+import SearchDropdown from "../form/SearchDropdown";
 import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
-import DatePicker from "./DatePicker";
-import PassengerDropdown from "./PassengerDropdown";
+import DatePicker from "../form/DatePicker";
+import PassengerDropdown from "../form/PassengerDropdown";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
-import Dropdown from "./Dropdown";
+import Dropdown from "../form/Dropdown";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISelectedDate } from "@/types/ISelectedDate";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISeatClass } from "@/types/ISeatClass";
 import { ITripType } from "@/types/ITripType";
 
-const HeroSearchSegment = ({
+const FlightSearchSegment = ({
   type,
   airportOptions,
   classOptions,
@@ -186,4 +186,4 @@ const HeroSearchSegment = ({
   );
 };
 
-export default HeroSearchSegment;
+export default FlightSearchSegment;

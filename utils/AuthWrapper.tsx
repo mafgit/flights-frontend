@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import useMyStore from "./useMyStore";
 import { IRole } from "@/types/IRole";
-import Loading from "@/components/Loading";
+import Loading from "@/components/misc/Loading";
 import { useRouter } from "next/navigation";
 
 const AuthWrapper = ({

@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar/Navbar";
+import Navbar from "@/components/layout/navbar/Navbar";
 import AuthWrapper from "@/utils/AuthWrapper";
 import { ReactNode } from "react";
 

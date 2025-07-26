@@ -2,7 +2,7 @@ import {
   FaPlaneDeparture,
 } from "react-icons/fa6";
 import Typing from "./Typing";
-import SearchFlightsForm from "../SearchFlightsForm";
+import FlightSearchForm from "../flight-search/FlightSearchForm";
 
 const Hero = () => {
   return (
@@ -20,7 +20,7 @@ const Hero = () => {
           <Typing />
         </div>
 
-        <SearchFlightsForm />
+        <FlightSearchForm />
       </div>
     </div>
   );

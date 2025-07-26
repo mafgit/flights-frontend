@@ -1,7 +1,7 @@
-import FAQs from "@/components/faqs/FAQs";
-import Features from "@/components/features/Features";
+import FAQs from "@/components/home/faqs/FAQs";
+import Features from "@/components/home/features/Features";
 import Hero from "@/components/hero/Hero";
-import HomepageAirlines from "@/components/HomepageAirlines";
+import HomepageAirlines from "@/components/home/HomepageAirlines";
 
 export default function Home() {
   return (

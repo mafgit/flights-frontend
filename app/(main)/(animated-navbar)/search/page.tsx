@@ -1,10 +1,10 @@
 "use client";
 
-import { searchFlights } from "@/app/services/search";
-import Loading from "@/components/Loading";
-import SearchFilters from "@/components/SearchFilters";
-import SearchFlightsForm from "@/components/SearchFlightsForm";
-import SearchResult from "@/components/SearchResult";
+import { searchFlights } from "@/app/services/flights";
+import Loading from "@/components/misc/Loading";
+import SearchFilters from "@/components/flight-search/FlightSearchFilters";
+import FlightSearchForm from "@/components/flight-search/FlightSearchForm";
+import SearchResult from "@/components/flight-search/FlightSearchResult";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchResult } from "@/types/ISearchResult";
@@ -105,7 +105,7 @@ const SearchPage = () => {
         </h1>
         <div className="w-full p-4 max-w-[1300px] mx-auto">
           {" "}
-          <SearchFlightsForm
+          <FlightSearchForm
             typeFromParams={type}
             segmentsDataFromParams={JSON.parse(params.get("segments") ?? "[]")}
           />

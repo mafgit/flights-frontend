@@ -1,17 +1,23 @@
-import { API_BASE_URL } from "./endpoints";
-
-const baseUrl = API_BASE_URL + "/auth";
+import { AUTH_BASE_URL } from "./endpoints";
 
 export const fetchMe = async () => {
-  const { userId, role } = await fetch(baseUrl + "/me", {
+  const res = await fetch(AUTH_BASE_URL + "/me", {
     credentials: "include",
-  }).then((res) => res.json());
+  });
+  const { userId, role } = await res.json();
   return { userId, role };
 };
 
 export const logoutUser = async () => {
-  await fetch(baseUrl + "/logout", {
-    method: "POST",
-    credentials: "include",
-  }).then((res) => res.json());
+  try {
+    const res = await fetch(AUTH_BASE_URL + "/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    const { success } = await res.json();
+    return success;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 };

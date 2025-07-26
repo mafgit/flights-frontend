@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Separator from "./Separator";
-import { fetchSomeAirlines } from "@/app/services/search";
+import Separator from "../misc/Separator";
+import { fetchSomeAirlines } from "@/app/services/airlines";
 import { ISearchFlight } from "@/types/ISearchFlight";
 
 const valToTime = (val: number) => {

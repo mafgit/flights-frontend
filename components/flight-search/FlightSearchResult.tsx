@@ -1,7 +1,7 @@
 import { ISearchResult } from "@/types/ISearchResult";
 import Image from "next/image";
 import { FaPlane } from "react-icons/fa6";
-import Separator from "./Separator";
+import Separator from "../misc/Separator";
 
 function getDateAndTime(iso: string) {
   let date = new Date(iso);
