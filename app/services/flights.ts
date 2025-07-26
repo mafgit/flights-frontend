@@ -2,6 +2,7 @@ import { ISearchFlight } from "@/types/ISearchFlight";
 import { FLIGHTS_BASE_URL } from "./endpoints";
 import { ISeatClass } from "@/types/ISeatClass";
 import { ITripType } from "@/types/ITripType";
+import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
 
 export const searchFlights = async (
   type: ITripType,
@@ -10,6 +11,7 @@ export const searchFlights = async (
   departureTimes: { min: number; max: number }[],
   airlineIds: number[]
 ) => {
+  console.log('searchFlights', flights)
   if (flights.length === 0) throw new Error("No segments selected");
 
   let mappedFlights: {
@@ -22,6 +24,7 @@ export const searchFlights = async (
     };
     seat_class: ISeatClass;
     passengers: { adults: number; children: number; infants: number };
+    departure_flexibility_days: IFlexibilityDays;
   }[] = flights.map((f) => ({
     // todo: validate here too?
     arrival_airport_id: f.arrival_airport.value!,
@@ -30,11 +33,9 @@ export const searchFlights = async (
     seat_class: f.seat_class.value!,
     passengers: f.passengers!,
     arrival_time: f.return_time,
+    departure_flexibility_days: f.departure_flexibility_days,
   }));
 
-  if (type === "Round-trip") {
-    mappedFlights = mappedFlights;
-  }
   try {
     const res = await fetch(FLIGHTS_BASE_URL + "/search", {
       method: "POST",

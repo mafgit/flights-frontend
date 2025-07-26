@@ -1,7 +1,15 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaXmark } from "react-icons/fa6";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaMinus,
+  FaPlus,
+  FaXmark,
+} from "react-icons/fa6";
 import { ISelectedDate } from "@/types/ISelectedDate";
+import Separator from "../misc/Separator";
+import { IFlexibilityDays } from "../flight-search/FlightSearchSegment";
 
 const months = [
   "January",
@@ -42,11 +50,15 @@ const DatePicker = ({
   placeholder,
   dateSelected,
   setDateSelected,
+  flexibilityDays,
+  setFlexibilityDays,
 }: {
   label: string;
   placeholder: string;
   dateSelected: ISelectedDate;
   setDateSelected: Dispatch<SetStateAction<ISelectedDate>>;
+  flexibilityDays: IFlexibilityDays;
+  setFlexibilityDays: Dispatch<SetStateAction<IFlexibilityDays>>;
 }) => {
   const [opened, setOpened] = useState(false);
   const [onMonth, setOnMonth] = useState(m);
@@ -88,7 +100,7 @@ const DatePicker = ({
 
   return (
     <div
-      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px] "
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px] grow-[1] shrink-[1] basis-[170px]"
       ref={ref}
     >
       <div className="relative">
@@ -99,6 +111,7 @@ const DatePicker = ({
           {label}
         </label>
         <input
+          autoComplete="off"
           type="text"
           id={label}
           placeholder={placeholder}
@@ -129,9 +142,10 @@ const DatePicker = ({
           </button>
         )}
       </div>
+
       <div
         className={
-          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max min-w-full rounded-md top-[110%] p-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
+          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max rounded-md top-[110%] p-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -158,6 +172,9 @@ const DatePicker = ({
             <FaChevronRight className="text-sm text-gray-600" />
           </button>
         </div>
+
+        {/* <Separator horizontal dark /> */}
+
         <ul className="grid grid-cols-7 items-center justify-center place-items-center gap-1">
           {new Array(onMonth === 2 && onYear % 4 === 0 ? 29 : days[onMonth - 1])
             .fill(0)
@@ -191,6 +208,35 @@ const DatePicker = ({
               </button>
             ))}
         </ul>
+
+        <div className="h-[1px] w-[90%] bg-dark/20 rounded-full my-1"></div>
+
+        <div className="flex flex-col items-center justify-center gap-2 w-[85%] mx-auto">
+          <h3 className="text-lg font-semibold">Flexibility Days</h3>
+          <div className="text-sm flex flex-wrap justify-center items-center gap-2">
+            {([0, 3, 7, 30] as IFlexibilityDays[]).map((option, i) => (
+              <button
+                onClick={() => setFlexibilityDays(option)}
+                key={"flexibility-option-" + i}
+                className={`${
+                  flexibilityDays === option
+                    ? "bg-primary-shade text-light"
+                    : "bg-light text-primary-shade transition-all duration-150 hover:bg-primary-shade/20"
+                } border-1 border-primary-shade rounded-md p-1`}
+              >
+                {option === 0 ? "Today" : "+/- " + option + " days"}
+              </button>
+            ))}
+          </div>
+          {/* <div className="flex gap-1">
+            <button className="bg-primary text-light rounded-l-md p-[2px]">
+              <FaMinus />
+            </button>
+            <button className="bg-primary text-light rounded-r-md p-[2px]">
+              <FaPlus />
+            </button>
+          </div> */}
+        </div>
       </div>
     </div>
   );

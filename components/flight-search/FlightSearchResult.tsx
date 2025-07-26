@@ -3,11 +3,12 @@ import Image from "next/image";
 import { FaPlane } from "react-icons/fa6";
 import Separator from "../misc/Separator";
 
-function getDateAndTime(iso: string) {
+function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
   let date = new Date(iso);
 
   let date2 = date.toLocaleString("en-US", {
-    timeZone: "Asia/Dubai",
+    timeZone:
+      timezoneOfDisplay ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     day: "numeric",
     month: "short",
     // year: 'numeric',
@@ -72,7 +73,7 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
       </div>
 
       <Separator />
-      
+
       <div className="flex flex-col items-center justify-center gap-3">
         <h3 className="font-bold text-xl w-full">
           {"PKR " +

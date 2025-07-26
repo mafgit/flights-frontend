@@ -46,6 +46,9 @@ const SearchFilters = ({
     });
   }, []);
 
+  useEffect(() => {
+    console.log(departureTimes);
+  }, [departureTimes]);
   return (
     <div className="min-h-full bg-foreground-opposite w-[270px] rounded-md p-3 py-6 flex flex-col gap-6 items-center justify-start">
       <h3 className="text-2xl font-bold">Filters</h3>
@@ -160,5 +163,7 @@ const SearchFilters = ({
     </div>
   );
 };
+
+// todo: fix dep times issues
 
 export default SearchFilters;

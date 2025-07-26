@@ -68,7 +68,7 @@ const SearchDropdown = ({
 
   return (
     <div
-      className="bg-dropdown text-foreground-opposite rounded-md relative w-max "
+      className="bg-dropdown text-foreground-opposite rounded-md relative w-max  grow-[1] shrink-[1] basis-[170px]"
       ref={ref}
     >
       <div className="relative">

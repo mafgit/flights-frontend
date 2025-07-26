@@ -12,6 +12,8 @@ import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISeatClass } from "@/types/ISeatClass";
 import { ITripType } from "@/types/ITripType";
 
+export type IFlexibilityDays = 0 | 3 | 7 | 30;
+
 const FlightSearchSegment = ({
   type,
   airportOptions,
@@ -57,7 +59,14 @@ const FlightSearchSegment = ({
   const [departureDate, setDepartureDate] = useState<ISelectedDate>(
     segment.departure_time ?? {}
   );
-  const [returnDate, setReturnDate] = useState<ISelectedDate>(segment.return_time ?? {});
+  const [returnDate, setReturnDate] = useState<ISelectedDate>(
+    segment.return_time ?? {}
+  );
+
+  const [departureFlexibilityDays, setDepartureFlexibilityDays] =
+    useState<IFlexibilityDays>(7);
+  const [returnFlexibilityDays, setReturnFlexibilityDays] =
+    useState<IFlexibilityDays>(7);
 
   const swapFromAndTo = () => {
     const temp = selectedToOption;
@@ -80,6 +89,15 @@ const FlightSearchSegment = ({
   useEffect(() => {
     updateSegment(segmentIdx, "passengers", passengersSelected);
   }, [passengersSelected]);
+
+  useEffect(() => {
+    updateSegment(segmentIdx, "return_flexibility_days", returnFlexibilityDays);
+  }, [returnFlexibilityDays]);
+
+  useEffect(() => {
+    setReturnFlexibilityDays(departureFlexibilityDays);
+    updateSegment(segmentIdx, "departure_flexibility_days", departureFlexibilityDays);
+  }, [departureFlexibilityDays]);
 
   // useEffect(() => {
   //   updateSegment(segmentIdx, "departure_time", departureDate);
@@ -114,7 +132,7 @@ const FlightSearchSegment = ({
 
   return (
     <div className="flex gap-6 flex-wrap items-center justify-start">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center grow-[1] shrink-[1]">
         <SearchDropdown
           options={airportOptions}
           searchText={fromText}
@@ -146,12 +164,14 @@ const FlightSearchSegment = ({
 
       {/*  */}
 
-      <div className="flex justify-between items-center gap-6">
+      <div className="flex justify-end items-center gap-6 grow-[1] shrink-[1]">
         <DatePicker
           label={"Departure"}
           placeholder={"Choose date"}
           setDateSelected={setDepartureDate}
           dateSelected={departureDate}
+          flexibilityDays={departureFlexibilityDays}
+          setFlexibilityDays={setDepartureFlexibilityDays}
         />
         {type === "Round-trip" && (
           <DatePicker
@@ -159,20 +179,22 @@ const FlightSearchSegment = ({
             placeholder={"Choose date"}
             setDateSelected={setReturnDate}
             dateSelected={returnDate}
+            flexibilityDays={returnFlexibilityDays}
+            setFlexibilityDays={setReturnFlexibilityDays}
           />
         )}
         <PassengerDropdown
           passengersSelected={passengersSelected}
           setPassengersSelected={setPassengersSelected}
         />
-      </div>
 
-      <Dropdown<ISeatClass>
-        selectedOption={selectedClass}
-        setSelectedOption={setSelectedClass}
-        options={classOptions}
-        placeholder="Select Class"
-      />
+        <Dropdown<ISeatClass>
+          selectedOption={selectedClass}
+          setSelectedOption={setSelectedClass}
+          options={classOptions}
+          placeholder="Select Class"
+        />
+      </div>
 
       {type === "Multi-city" && numSegments > 1 && (
         <button

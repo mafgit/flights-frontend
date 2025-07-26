@@ -66,6 +66,16 @@ input:focus {
   outline: none !important;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+  -webkit-text-fill-color: #000;
+  transition: background-color 5000s ease-in-out 0s; /* old hack */
+  border-radius: 10px !important;
+}
+
 ::-webkit-scrollbar {
   border-radius: 6px;
   width: 8px !important;

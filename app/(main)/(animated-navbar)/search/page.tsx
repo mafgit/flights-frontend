@@ -35,21 +35,34 @@ const SearchPage = () => {
       params.get("type") || "{}"
     ) as IDropdownSelectedOption<ITripType>;
 
-    setType(tripType);
+    console.log("tripType", tripType);
+
+    setType({ ...tripType });
 
     let depTimes = new Array(flights.length).fill({ min: 0, max: 24 });
 
     if (tripType.value === "Round-trip") {
-      if (!flights[0].return_time)
-        throw new Error("No return time selected for round-trip");
+      if (
+        !flights[0].return_time ||
+        flights[0].return_flexibility_days === undefined
+      ) {
+        // throw new Error("No return time selected for round-trip");
+        alert("No return time or flexibility days selected for round-trip");
+        return;
+      }
 
       flights = [
-        { ...flights[0], return_time: undefined },
+        {
+          ...flights[0],
+          return_time: undefined,
+          return_flexibility_days: undefined,
+        },
         {
           ...flights[0],
           arrival_airport: flights[0].departure_airport,
           departure_airport: flights[0].arrival_airport,
           departure_time: flights[0].return_time,
+          departure_flexibility_days: flights[0].return_flexibility_days,
         },
       ];
 
@@ -75,7 +88,7 @@ const SearchPage = () => {
     )
       .then((results) => {
         console.debug("results:", results);
-        setResults(results);
+        setResults(results ?? []);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
@@ -105,10 +118,12 @@ const SearchPage = () => {
         </h1>
         <div className="w-full p-4 max-w-[1300px] mx-auto">
           {" "}
-          <FlightSearchForm
-            typeFromParams={type}
-            segmentsDataFromParams={JSON.parse(params.get("segments") ?? "[]")}
-          />
+          {type.value && segments && segments.length > 0 && (
+            <FlightSearchForm
+              typeFromParams={type}
+              segmentsDataFromParams={segments}
+            />
+          )}
         </div>
       </div>
       {/* <div className="w-full h-[1px] rounded-full bg-foreground/20 mt-4 mb-0 bg-gradient-to-r from-foreground-opposite via-foreground/30 to-foreground-opposite"></div> */}
@@ -148,3 +163,7 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+
+// todo: currency
+// todo: max total duration
+// todo: fake seeder
