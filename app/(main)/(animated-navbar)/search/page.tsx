@@ -74,7 +74,7 @@ const SearchPage = () => {
       //  totalDuration === MAX_TOTAL_DURATION ? undefined : totalDuration
     )
       .then((results) => {
-        console.log("results:", results);
+        console.debug("results:", results);
         setResults(results);
       })
       .catch((err) => console.log(err))
