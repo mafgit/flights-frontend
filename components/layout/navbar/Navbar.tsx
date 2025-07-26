@@ -6,7 +6,7 @@ import { FaHome, FaInfoCircle } from "react-icons/fa";
 import { FaLockOpen, FaPlaneDeparture } from "react-icons/fa6";
 
 const Navbar = ({ animate = false }: { animate?: boolean }) => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(animate ? false : true);
 
   useEffect(() => {
@@ -38,13 +38,13 @@ const Navbar = ({ animate = false }: { animate?: boolean }) => {
           <Link
             href={"/"}
             className={
-              "flex gap-3 transition-all duration-700 ease-out "
+              "flex gap-3 transition-all items-center justify-center duration-700 ease-out "
               // (scrolled && window.location.pathname === "/"
               //   ? "opacity-100"
               //   : "opacity-0")
             }
           >
-            {pathname !== "/" && (
+            {pathname !== "/" && animate && (
               <FaHome
                 className={
                   "text-lg transition-all duration-700 ease-out " +
@@ -52,15 +52,17 @@ const Navbar = ({ animate = false }: { animate?: boolean }) => {
                 }
               />
             )}
-            <div
-              className={
-                "flex gap-3 transition-all duration-700 ease-out " +
-                (scrolled ? "opacity-100" : "opacity-0")
-              }
-            >
-              <FaPlaneDeparture className="text-3xl" />
-              <h1 className={"text-2xl font-bold "}>Flight Booker</h1>
-            </div>
+            {(pathname === "/" || !animate) && (
+              <div
+                className={
+                  "flex gap-3 transition-all duration-700 ease-out " +
+                  (scrolled ? "opacity-100" : "opacity-0")
+                }
+              >
+                <FaPlaneDeparture className="text-3xl" />
+                <h1 className={"text-2xl font-bold "}>Flight Booker</h1>
+              </div>
+            )}
           </Link>
 
           <ul className="flex gap-4 items-center justify-center">

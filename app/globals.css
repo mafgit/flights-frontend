@@ -155,3 +155,8 @@ input:-webkit-autofill:active {
 input {
   accent-color: var(--primary-shade);
 }
+
+/* input[type="range"] {
+  outline: none !important;
+  border: none !important;
+} */

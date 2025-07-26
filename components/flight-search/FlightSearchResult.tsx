@@ -1,6 +1,6 @@
 import { ISearchResult } from "@/types/ISearchResult";
 import Image from "next/image";
-import { FaPlane } from "react-icons/fa6";
+import { FaClock, FaCreditCard, FaDollarSign, FaMoneyBill, FaPlane } from "react-icons/fa6";
 import Separator from "../misc/Separator";
 
 function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
@@ -20,9 +20,9 @@ function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
   return [day + " " + month, time + " " + am];
 }
 
-const SearchResult = ({ result }: { result: ISearchResult[] }) => {
+const FlightSearchResult = ({ result }: { result: ISearchResult[] }) => {
   return (
-    <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-md">
+    <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-lg shadow-md shadow-gray-900/40">
       <div className="flex flex-col gap-2 items-center justify-center">
         {result.map((segment, i) => {
           const [departureDate, departureTime] = getDateAndTime(
@@ -35,7 +35,7 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
           return (
             <div
               key={"result-segment-" + i}
-              className="flex gap-4 items-center justify-center"
+              className="flex gap-4 items-center justify-between w-full"
             >
               <div className="flex items-center justify-center gap-5">
                 <Image
@@ -43,27 +43,37 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
                   width={40}
                   src={segment.airline_logo_url || "/pia.webp"}
                   alt="airline-logo"
-                  className="bg-foreground rounded-full"
+                  className="min-w-[40px] min-h-[40px] w-[40px] h-[40px] object-cover bg-foreground rounded-full"
                 />
 
-                <div className="flex items-center justify-center gap-4">
-                  <div className="flex flex-col items-center justify-center gap-1">
-                    <p className="font-semibold">{segment.departure_city}</p>
-                    <p className="text-sm text-gray-300">{departureTime}</p>
-                    <p className="text-sm text-gray-300">{departureDate}</p>
+                <div className="flex items-center justify-between gap-4 basis-[290px] shrink-0 grow-[1]">
+                  <div className="flex flex-col items-center justify-center gap-1 shrink-[1] grow-[1] basis-[100px] text-center">
+                    <p className="font-semibold w-max">
+                      {segment.departure_city}
+                    </p>
+                    <p className="text-sm text-gray-300 w-max">
+                      {departureTime}
+                    </p>
+                    <p className="text-sm text-gray-300 w-max">
+                      {departureDate}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-center gap-1">
-                    <div className="w-[40px] h-[1px] rounded-full bg-primary/50"></div>
-                    <p className="text-sm">{segment.duration + "h"}</p>
-                    <div className="w-[40px] h-[1px] rounded-full bg-primary/50"></div>
-                    <FaPlane className="text-xs text-primary" />
+                    <div className="basis-[40px] shrink-0 grow-[1] h-[1px] rounded-full bg-primary/50"></div>
+                    <p className="text-sm w-[30px] text-center">
+                      {segment.duration + "h"}
+                    </p>
+                    <div className="basis-[40px] grow-[1] shrink-0 h-[1px] rounded-full bg-primary/50"></div>
+                    <FaPlane className="text-xs text-primary ml-[1px]" />
                   </div>
 
-                  <div className="flex flex-col items-center justify-center gap-1 text-center">
-                    <p className="font-semibold">{segment.arrival_city}</p>
-                    <p className="text-sm text-gray-300">{arrivalTime}</p>
-                    <p className="text-sm text-gray-300">{arrivalDate}</p>
+                  <div className="flex flex-col items-center justify-center gap-1 text-center shrink-[1] grow-[1] basis-[100px]">
+                    <p className="font-semibold w-max">
+                      {segment.arrival_city}
+                    </p>
+                    <p className="text-sm text-gray-300 w-max">{arrivalTime}</p>
+                    <p className="text-sm text-gray-300 w-max">{arrivalDate}</p>
                   </div>
                 </div>
               </div>
@@ -83,10 +93,18 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
             )}
         </h3>
 
+        <h4 className="flex items-center justify-center gap-[5px]">
+          <FaClock className="" />
+          <span>
+            {result.reduce((a: number, b: ISearchResult) => a + b.duration, 0) +
+              "h"}
+          </span>
+        </h4>
+
         <button className="relative bg-primary-shade rounded-md p-2 w-full group flex items-center justify-center">
           <div className="top-0 left-0 absolute h-full bg-foreground rounded-md z-[5] w-0 transition-all duration-200 group-hover:w-full"></div>
-          <p className="z-[10] transition-all duration-200 block group-hover:text-primary-shade">
-            Book
+          <p className="z-[10] transition-all duration-200 group-hover:text-primary-shade flex items-center justify-center gap-[5px]">
+            <FaCreditCard /> <span>Book</span>
           </p>
         </button>
       </div>
@@ -94,4 +112,4 @@ const SearchResult = ({ result }: { result: ISearchResult[] }) => {
   );
 };
 
-export default SearchResult;
+export default FlightSearchResult;

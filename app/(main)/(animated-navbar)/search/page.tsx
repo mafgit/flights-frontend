@@ -4,7 +4,7 @@ import { searchFlights } from "@/app/services/flights";
 import Loading from "@/components/misc/Loading";
 import SearchFilters from "@/components/flight-search/FlightSearchFilters";
 import FlightSearchForm from "@/components/flight-search/FlightSearchForm";
-import SearchResult from "@/components/flight-search/FlightSearchResult";
+import FlightSearchResult from "@/components/flight-search/FlightSearchResult";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchResult } from "@/types/ISearchResult";
@@ -12,19 +12,20 @@ import { ITripType } from "@/types/ITripType";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBan, FaPlaneDeparture } from "react-icons/fa6";
+import { IDepartureTimes } from "@/types/IDepartureTimes";
 
 const MAX_TOTAL_DURATION = 50;
 
 const SearchPage = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<ISearchResult[][]>([]);
   const params = useSearchParams();
   const [segments, setSegments] = useState<ISearchFlight[]>([]);
   const [type, setType] = useState<IDropdownSelectedOption<ITripType>>({});
 
-  const [departureTimes, setDepartureTimes] = useState<
-    { min: number; max: number }[]
-  >([]);
+  const [departureTimes, setDepartureTimes] = useState<IDepartureTimes[]>([
+    { min: 0, max: 24 },
+  ]);
   const [totalDuration, setTotalDuration] = useState(MAX_TOTAL_DURATION);
   const [airlinesSelected, setAirlinesSelected] = useState<number[]>([]);
 
@@ -39,9 +40,12 @@ const SearchPage = () => {
 
     setType({ ...tripType });
 
-    let depTimes = new Array(flights.length).fill({ min: 0, max: 24 });
+    let depTimes: IDepartureTimes[] = new Array(flights.length).fill({
+      min: 0,
+      max: 24,
+    });
 
-    if (tripType.value === "Round-trip") {
+    if (tripType.value === "Return") {
       if (
         !flights[0].return_time ||
         flights[0].return_flexibility_days === undefined
@@ -54,8 +58,8 @@ const SearchPage = () => {
       flights = [
         {
           ...flights[0],
-          return_time: undefined,
-          return_flexibility_days: undefined,
+          // return_time: undefined,
+          // return_flexibility_days: undefined,
         },
         {
           ...flights[0],
@@ -76,15 +80,17 @@ const SearchPage = () => {
   }, [params]);
 
   useEffect(() => {
-    if (segments.length === 0 || !type.value || airlinesSelected.length === 0)
+    if (segments.length === 0 || !type.value || airlinesSelected.length === 0) {
+      setLoading(false);
       return;
+    }
+
     setLoading(true);
     searchFlights(
-      type.value,
       segments,
       departureTimes,
-      airlinesSelected
-      //  totalDuration === MAX_TOTAL_DURATION ? undefined : totalDuration
+      airlinesSelected,
+      totalDuration === MAX_TOTAL_DURATION ? undefined : totalDuration
     )
       .then((results) => {
         console.debug("results:", results);
@@ -92,7 +98,7 @@ const SearchPage = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [airlinesSelected, departureTimes]);
+  }, [airlinesSelected, departureTimes, totalDuration]);
 
   return (
     <div className="mx-auto flex flex-col items-center">
@@ -142,7 +148,7 @@ const SearchPage = () => {
               setAirlinesSelected={setAirlinesSelected}
             />
           )}
-          <div className="flex items-center justify-start gap-3 flex-col h-full  self-start">
+          <div className="flex items-center justify-start gap-3 flex-col h-full self-start">
             {loading ? (
               <Loading />
             ) : results !== undefined && results.length === 0 ? (
@@ -152,7 +158,7 @@ const SearchPage = () => {
               </h3>
             ) : (
               results.map((r, i) => (
-                <SearchResult result={r} key={"result-" + i} />
+                <FlightSearchResult result={r} key={"result-" + i} />
               ))
             )}
           </div>

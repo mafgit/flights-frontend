@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Separator from "../misc/Separator";
 import { fetchSomeAirlines } from "@/app/services/airlines";
 import { ISearchFlight } from "@/types/ISearchFlight";
+import { IDepartureTimes } from "@/types/IDepartureTimes";
+import { FaPlaneDeparture } from "react-icons/fa6";
 
 const valToTime = (val: number) => {
   if (val === 24) return `23:59`;
@@ -27,8 +29,8 @@ const SearchFilters = ({
   totalDuration: number;
   setTotalDuration: Dispatch<SetStateAction<number>>;
   MAX_TOTAL_DURATION: number | undefined;
-  departureTimes: { min: number; max: number }[];
-  setDepartureTimes: Dispatch<SetStateAction<{ min: number; max: number }[]>>;
+  departureTimes: IDepartureTimes[];
+  setDepartureTimes: Dispatch<SetStateAction<IDepartureTimes[]>>;
   airlinesSelected: number[];
   setAirlinesSelected: Dispatch<SetStateAction<number[]>>;
 }) => {
@@ -47,16 +49,17 @@ const SearchFilters = ({
   }, []);
 
   useEffect(() => {
-    console.log(departureTimes);
+    console.log("asd", departureTimes);
   }, [departureTimes]);
+
   return (
-    <div className="min-h-full bg-foreground-opposite w-[270px] rounded-md p-3 py-6 flex flex-col gap-6 items-center justify-start">
+    <div className="min-h-full bg-foreground-opposite min-w-[300px] rounded-lg px-5 py-6 flex flex-col gap-6 items-center justify-start  shadow-md shadow-gray-900/40">
       <h3 className="text-2xl font-bold">Filters</h3>
 
       <div className="flex flex-col items-center justify-center w-full px-1 gap-3">
         <div className="w-full flex flex-col gap-2">
           <h4 className="text-xl font-semibold">Max Total Duration</h4>
-          <p>
+          <p className="text-gray-300">
             {totalDuration === MAX_TOTAL_DURATION
               ? "No limit"
               : `${totalDuration} hours`}
@@ -82,15 +85,23 @@ const SearchFilters = ({
                 key={"segment-departure-time-filter-" + s}
                 className="flex flex-col gap-2"
               >
-                <div className="">
-                  <h4>Segment {s}:</h4>
-                  <p>
+                <div className="flex justify-between gap-2">
+                  <h4 className="flex items-center justify-center gap-[5px]">
+                    <FaPlaneDeparture className="text-sm" />
+                    <span>
+                      {segment.departure_airport.code} -{" "}
+                      {segment.arrival_airport.code}:
+                    </span>
+                  </h4>
+                  <p className="text-gray-300">
                     {valToTime(departureTimes[s].min)} -{" "}
                     {valToTime(departureTimes[s].max)}
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <label htmlFor="">Min</label>
+                  <label htmlFor="" className="text-gray-300">
+                    Min
+                  </label>
                   <input
                     type="range"
                     className="w-full"
@@ -111,7 +122,9 @@ const SearchFilters = ({
                 </div>
 
                 <div className="flex gap-2">
-                  <label htmlFor="">Max</label>
+                  <label htmlFor="" className="text-gray-300">
+                    Max
+                  </label>
                   <input
                     type="range"
                     className="w-full"

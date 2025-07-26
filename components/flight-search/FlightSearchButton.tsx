@@ -8,7 +8,7 @@ const FlightSearchButton = ({
   return (
     <button
       onClick={onSearchClick}
-      className="search-btn relative mt-4 w-full bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 "
+      className="search-btn relative mt-2 w-full bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 "
     >
       <div
         className={

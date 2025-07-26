@@ -8,8 +8,8 @@ const Separator = ({
   return (
     <div
       className={
-        `bg-${dark ? 'background' : 'light'}/30 rounded-full ` +
-        (!horizontal ? "w-[1px] min-h-full" : "h-[1px] min-w-full")
+        `${dark ? 'bg-background/20' : 'bg-foreground/30'} rounded-full ` +
+        (!horizontal ? "w-[1px] min-h-full mx-2" : "h-[1px] my-2 min-w-full")
       }
     ></div>
   );

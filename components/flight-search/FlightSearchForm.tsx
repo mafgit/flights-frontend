@@ -19,6 +19,8 @@ const FlightSearchForm = ({
     segmentsDataFromParams
   );
 
+  // console.trace('typeFromParams', typeFromParams)
+
   const [selectedTypeOption, setSelectedTypeOption] =
     useState<IDropdownSelectedOption<ITripType>>(typeFromParams);
 
@@ -52,7 +54,7 @@ const FlightSearchForm = ({
         }
 
         if (
-          typeFromParams.value === "Round-trip" &&
+          selectedTypeOption.value === "Return" &&
           segment.return_time === undefined
         ) {
           return false;
@@ -66,14 +68,14 @@ const FlightSearchForm = ({
 
     router.push(
       "/search?type=" +
-        encodeURIComponent(JSON.stringify(typeFromParams)) +
+        encodeURIComponent(JSON.stringify(selectedTypeOption)) +
         "&segments=" +
         encodeURIComponent(JSON.stringify(segmentsData))
     );
   };
 
   return (
-    <div className={"w-full "}>
+    <div className={"w-full flex flex-col gap-4 "}>
       <Dropdown<ITripType>
         options={tripTypeOptions}
         selectedOption={selectedTypeOption}
@@ -86,7 +88,7 @@ const FlightSearchForm = ({
         setSegmentsData={setSegmentsData}
       />
 
-      <FlightSearchButton onSearchClick={onSearchClick}/>
+      <FlightSearchButton onSearchClick={onSearchClick} />
     </div>
   );
 };

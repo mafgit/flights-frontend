@@ -48,8 +48,10 @@ const FlightSearchSegments = ({
       setAirportOptions(
         airports.map(
           (a: { code: string; city: string; country: string; id: number }) => ({
-            ...a,
             value: a.id,
+            code: a.code,
+            city: a.city,
+            country: a.country,
           })
         )
       );
@@ -57,8 +59,8 @@ const FlightSearchSegments = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 mt-2 justify-between">
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 justify-between">
+      <div className="flex flex-col gap-4">
         {segmentsData
           .slice(0, typeFromParams.value === "Multi-city" ? undefined : 1)
           .map((segment, idx) => (
@@ -75,9 +77,9 @@ const FlightSearchSegments = ({
             />
           ))}
       </div>
-      {typeFromParams.value === "Multi-city" && (
+      {typeFromParams.value === "Multi-city" && segmentsData.length < 6 && (
         <button
-          className="flex gap-2 items-center justify-center p-2 rounded-md"
+          className="flex gap-2 items-center justify-center p-2 mt-1 rounded-md"
           onClick={() => {
             setSegmentsData((prev) => [...prev, {}]);
           }}

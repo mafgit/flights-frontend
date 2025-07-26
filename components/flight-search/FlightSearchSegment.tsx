@@ -96,7 +96,11 @@ const FlightSearchSegment = ({
 
   useEffect(() => {
     setReturnFlexibilityDays(departureFlexibilityDays);
-    updateSegment(segmentIdx, "departure_flexibility_days", departureFlexibilityDays);
+    updateSegment(
+      segmentIdx,
+      "departure_flexibility_days",
+      departureFlexibilityDays
+    );
   }, [departureFlexibilityDays]);
 
   // useEffect(() => {
@@ -118,7 +122,7 @@ const FlightSearchSegment = ({
 
   useEffect(() => {
     if (
-      type === "Round-trip" &&
+      type === "Return" &&
       returnDate.day !== undefined &&
       returnDate.day > 0 &&
       returnDate.month !== undefined &&
@@ -131,7 +135,7 @@ const FlightSearchSegment = ({
   }, [returnDate]);
 
   return (
-    <div className="flex gap-6 flex-wrap items-center justify-start">
+    <div className="flex gap-6 gap-y-2 flex-wrap items-center justify-start">
       <div className="flex justify-between items-center grow-[1] shrink-[1]">
         <SearchDropdown
           options={airportOptions}
@@ -173,7 +177,7 @@ const FlightSearchSegment = ({
           flexibilityDays={departureFlexibilityDays}
           setFlexibilityDays={setDepartureFlexibilityDays}
         />
-        {type === "Round-trip" && (
+        {type === "Return" && (
           <DatePicker
             label={"Return"}
             placeholder={"Choose date"}
@@ -197,10 +201,7 @@ const FlightSearchSegment = ({
       </div>
 
       {type === "Multi-city" && numSegments > 1 && (
-        <button
-          className="bg-danger p-[5px] rounded-md"
-          onClick={() => removeSegment(segmentIdx)}
-        >
+        <button className="" onClick={() => removeSegment(segmentIdx)}>
           <FaTrash className="text-foreground text-xs" />
         </button>
       )}

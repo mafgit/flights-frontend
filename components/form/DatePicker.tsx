@@ -145,7 +145,7 @@ const DatePicker = ({
 
       <div
         className={
-          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max rounded-md top-[110%] p-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
+          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max rounded-md top-[110%] py-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -209,7 +209,9 @@ const DatePicker = ({
             ))}
         </ul>
 
-        <div className="h-[1px] w-[90%] bg-dark/20 rounded-full my-1"></div>
+        <div className="w-[90%] mx-auto">
+          <Separator horizontal={true} dark={true} />
+        </div>
 
         <div className="flex flex-col items-center justify-center gap-2 w-[85%] mx-auto">
           <h3 className="text-lg font-semibold">Flexibility Days</h3>
@@ -221,7 +223,7 @@ const DatePicker = ({
                 className={`${
                   flexibilityDays === option
                     ? "bg-primary-shade text-light"
-                    : "bg-light text-primary-shade transition-all duration-150 hover:bg-primary-shade/20"
+                    : "bg-transparent text-primary-shade transition-all duration-150 hover:bg-primary-shade/20"
                 } border-1 border-primary-shade rounded-md p-1`}
               >
                 {option === 0 ? "Today" : "+/- " + option + " days"}

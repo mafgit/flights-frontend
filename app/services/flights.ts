@@ -5,13 +5,12 @@ import { ITripType } from "@/types/ITripType";
 import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
 
 export const searchFlights = async (
-  type: ITripType,
   flights: ISearchFlight[],
-  // totalDuration: number | undefined,
   departureTimes: { min: number; max: number }[],
-  airlineIds: number[]
+  airlineIds: number[],
+  maxTotalDuration: number | undefined
 ) => {
-  console.log('searchFlights', flights)
+  console.log("searchFlights", flights);
   if (flights.length === 0) throw new Error("No segments selected");
 
   let mappedFlights: {
@@ -41,9 +40,9 @@ export const searchFlights = async (
       method: "POST",
       body: JSON.stringify({
         flights: mappedFlights,
-        // totalDuration: totalDuration,
         departureTimes,
         airlineIds,
+        maxTotalDuration: maxTotalDuration,
       }),
       headers: {
         "Content-Type": "application/json",

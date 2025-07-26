@@ -5,10 +5,10 @@ import {
 } from "react-icons/fa6";
 import { IDropdownSelectedOption } from "./IDropdownSelectedOption";
 
-export type ITripType = "One-way" | "Round-trip" | "Multi-city";
+export type ITripType = "One-way" | "Return" | "Multi-city";
 
 export const tripTypeOptions: Required<IDropdownSelectedOption<ITripType>>[] = [
   { label: "One-way", value: "One-way", icon: FaSquareArrowUpRight },
-  { label: "Round-trip", value: "Round-trip", icon: FaRotate },
+  { label: "Return", value: "Return", icon: FaRotate },
   { label: "Multi-city", value: "Multi-city", icon: FaMapLocationDot },
 ];
