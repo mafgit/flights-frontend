@@ -2,8 +2,10 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const FlightSearchButton = ({
   onSearchClick,
+  searchPage,
 }: {
   onSearchClick: () => void;
+  searchPage?: boolean;
 }) => {
   return (
     <button
@@ -16,7 +18,9 @@ const FlightSearchButton = ({
         }
       ></div>
       <FaMagnifyingGlass className="z-[10] transition-all duration-200" />
-      <span className="z-[10] transition-all duration-200">Search Flights</span>
+      <span className="z-[10] transition-all duration-200">
+        {!searchPage ? "Search Flights" : "Update Results"}
+      </span>
     </button>
   );
 };

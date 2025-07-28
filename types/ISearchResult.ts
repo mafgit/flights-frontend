@@ -1,3 +1,5 @@
+import { ISeatClass } from "./ISeatClass";
+
 export interface ISearchResult {
   id: number;
   airline_id: number;
@@ -15,4 +17,5 @@ export interface ISearchResult {
   airline_logo_url: string;
   departure_city: string;
   arrival_city: string;
+  seat_class: ISeatClass;
 }

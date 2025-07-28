@@ -7,13 +7,21 @@ import { ITripType, tripTypeOptions } from "@/types/ITripType";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { useRouter } from "next/navigation";
 import FlightSearchButton from "./FlightSearchButton";
+import PassengerDropdown from "../form/PassengerDropdown";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 
 const FlightSearchForm = ({
   typeFromParams = tripTypeOptions[0],
   segmentsDataFromParams = [{}],
+  passengersFromParams = { adults: 1, children: 0, infants: 0 },
+  searchPage = false,
+  airlinesFromSegments=[],
 }: {
   typeFromParams?: IDropdownSelectedOption<ITripType>;
   segmentsDataFromParams?: Partial<ISearchFlight>[];
+  passengersFromParams?: IPassengersSelectedOption;
+  searchPage?: boolean;
+  airlinesFromSegments?: number[];
 }) => {
   const [segmentsData, setSegmentsData] = useState<Partial<ISearchFlight>[]>(
     segmentsDataFromParams
@@ -23,6 +31,9 @@ const FlightSearchForm = ({
 
   const [selectedTypeOption, setSelectedTypeOption] =
     useState<IDropdownSelectedOption<ITripType>>(typeFromParams);
+
+  const [passengersSelected, setPassengersSelected] =
+    useState<IPassengersSelectedOption>(passengersFromParams);
 
   const router = useRouter();
 
@@ -38,7 +49,6 @@ const FlightSearchForm = ({
         }
 
         if (
-          segment.passengers === undefined ||
           segment.departure_time === undefined ||
           segment.seat_class === undefined
         ) {
@@ -63,24 +73,35 @@ const FlightSearchForm = ({
         return true;
       })
     ) {
-      return alert("Fill all the fields"); // todo: toasts
+      return alert("Fill all the fields"); // todo: toasts, passenger check, etc
     }
 
     router.push(
       "/search?type=" +
         encodeURIComponent(JSON.stringify(selectedTypeOption)) +
+        "&passengers=" +
+        encodeURI(JSON.stringify(passengersSelected)) +
         "&segments=" +
-        encodeURIComponent(JSON.stringify(segmentsData))
+        encodeURIComponent(JSON.stringify(segmentsData)) +
+        "&airlines=" +
+        encodeURIComponent(JSON.stringify(airlinesFromSegments))
     );
   };
 
   return (
     <div className={"w-full flex flex-col gap-4 "}>
-      <Dropdown<ITripType>
-        options={tripTypeOptions}
-        selectedOption={selectedTypeOption}
-        setSelectedOption={setSelectedTypeOption}
-      />
+      <div className="flex gap-2">
+        <Dropdown<ITripType>
+          options={tripTypeOptions}
+          selectedOption={selectedTypeOption}
+          setSelectedOption={setSelectedTypeOption}
+        />
+
+        <PassengerDropdown
+          passengersSelected={passengersSelected}
+          setPassengersSelected={setPassengersSelected}
+        />
+      </div>
 
       <FlightSearchSegments
         typeFromParams={selectedTypeOption}
@@ -88,7 +109,10 @@ const FlightSearchForm = ({
         setSegmentsData={setSegmentsData}
       />
 
-      <FlightSearchButton onSearchClick={onSearchClick} />
+      <FlightSearchButton
+        onSearchClick={onSearchClick}
+        searchPage={searchPage}
+      />
     </div>
   );
 };

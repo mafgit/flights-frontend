@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBan, FaPlaneDeparture } from "react-icons/fa6";
 import { IDepartureTimes } from "@/types/IDepartureTimes";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 
 const MAX_TOTAL_DURATION = 50;
 
@@ -21,6 +22,11 @@ const SearchPage = () => {
   const [results, setResults] = useState<ISearchResult[][]>([]);
   const params = useSearchParams();
   const [segments, setSegments] = useState<ISearchFlight[]>([]);
+  const [passengers, setPassengers] = useState<IPassengersSelectedOption>({
+    adults: 1,
+    children: 0,
+    infants: 0,
+  });
   const [type, setType] = useState<IDropdownSelectedOption<ITripType>>({});
 
   const [departureTimes, setDepartureTimes] = useState<IDepartureTimes[]>([
@@ -30,15 +36,31 @@ const SearchPage = () => {
   const [airlinesSelected, setAirlinesSelected] = useState<number[]>([]);
 
   useEffect(() => {
+    setLoading(true);
+
     let flights = JSON.parse(params.get("segments") || "[]") as ISearchFlight[];
+    // console.log("42", flights.length, type.value);
+    
+    let passengers2 = JSON.parse(
+      params.get("passengers") || "{}"
+    ) as IPassengersSelectedOption;
 
     const tripType = JSON.parse(
       params.get("type") || "{}"
     ) as IDropdownSelectedOption<ITripType>;
 
-    console.log("tripType", tripType);
+    if (flights.length === 0 || !tripType.value) {
+      console.log(63);
+      setLoading(false);
+      return;
+    }
+
+    const airlines = JSON.parse(params.get("airlines") || "[]") as number[];
+    setAirlinesSelected(airlines);
 
     setType({ ...tripType });
+
+    setPassengers(passengers2); // todo: passenger object and number validation
 
     let depTimes: IDepartureTimes[] = new Array(flights.length).fill({
       min: 0,
@@ -46,12 +68,11 @@ const SearchPage = () => {
     });
 
     if (tripType.value === "Return") {
-      if (
-        !flights[0].return_time ||
-        flights[0].return_flexibility_days === undefined
-      ) {
+      if (!flights[0].return_time) {
         // throw new Error("No return time selected for round-trip");
+        setLoading(false);
         alert("No return time or flexibility days selected for round-trip");
+        console.log(73);
         return;
       }
 
@@ -59,14 +80,12 @@ const SearchPage = () => {
         {
           ...flights[0],
           // return_time: undefined,
-          // return_flexibility_days: undefined,
         },
         {
           ...flights[0],
           arrival_airport: flights[0].departure_airport,
           departure_airport: flights[0].arrival_airport,
           departure_time: flights[0].return_time,
-          departure_flexibility_days: flights[0].return_flexibility_days,
         },
       ];
 
@@ -74,31 +93,27 @@ const SearchPage = () => {
     }
 
     setDepartureTimes(depTimes);
-
     setSegments(flights);
-    setDepartureTimes(depTimes);
-  }, [params]);
 
-  useEffect(() => {
-    if (segments.length === 0 || !type.value || airlinesSelected.length === 0) {
-      setLoading(false);
-      return;
-    }
+    //
 
-    setLoading(true);
     searchFlights(
-      segments,
-      departureTimes,
-      airlinesSelected,
+      flights,
+      passengers2,
+      depTimes,
+      airlines,
       totalDuration === MAX_TOTAL_DURATION ? undefined : totalDuration
     )
       .then((results) => {
-        console.debug("results:", results);
         setResults(results ?? []);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [airlinesSelected, departureTimes, totalDuration]);
+  }, [params]);
+
+  // useEffect(() => {
+
+  // }, [departureTimes, totalDuration]);
 
   return (
     <div className="mx-auto flex flex-col items-center">
@@ -128,6 +143,8 @@ const SearchPage = () => {
             <FlightSearchForm
               typeFromParams={type}
               segmentsDataFromParams={segments}
+              searchPage={true}
+              airlinesFromSegments={airlinesSelected}
             />
           )}
         </div>
@@ -158,7 +175,11 @@ const SearchPage = () => {
               </h3>
             ) : (
               results.map((r, i) => (
-                <FlightSearchResult result={r} key={"result-" + i} />
+                <FlightSearchResult
+                  result={r}
+                  key={"result-" + i}
+                  passengers={passengers}
+                />
               ))
             )}
           </div>

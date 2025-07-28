@@ -40,10 +40,10 @@ const PassengerDropdown = ({
 
   return (
     <div
-      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px] grow-[1] shrink-[1] basis-[170px]"
+      className="bg-dropdown/99 text-foreground-opposite rounded-md relative w-[170px] grow-0 shrink-[1] basis-[170px] max-h-[60px]"
       ref={ref}
     >
-      <div className="relative">
+      <div className="relative h-[100px]">
         <label
           className="absolute top-[8px] left-[8px] text-sm text-primary-shade"
           htmlFor={"Passengers"}
@@ -51,7 +51,7 @@ const PassengerDropdown = ({
           {"Passengers"}
         </label>
         <input
-          className="flex items-center justify-between px-2 py-1 gap-2 p-2 pt-[26px] w-full"
+          className="flex items-center justify-between px-2 py-1 gap-2 p-2 pt-[26px] w-full max-h-[100px]"
           placeholder="Choose passengers"
           onChange={() => {}}
           value={
@@ -84,7 +84,7 @@ const PassengerDropdown = ({
 
       <ul
         className={
-          `z-[20] bg-dropdown absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-2 shadow-xl shadow-black/50 ` +
+          `z-[20] bg-dropdown/99 absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-2 shadow-xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")

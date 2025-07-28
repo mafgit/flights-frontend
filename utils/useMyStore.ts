@@ -7,6 +7,10 @@ const useMyStore = create<IStoreState>((set, get) => ({
   role: undefined,
   loading: true,
   hasFetched: false,
+  city: undefined,
+  currency: undefined,
+  timezone: undefined,
+  country_name: undefined,
 
   fetchUser: async () => {
     const { hasFetched } = get();
@@ -24,7 +28,25 @@ const useMyStore = create<IStoreState>((set, get) => ({
       } catch (err) {
         console.log(err);
       } finally {
-        set({ loading: false });
+        let cookies = document.cookie;
+        let country_name = "";
+        let city = "";
+        let currency = "";
+        let timezone = "";
+        cookies.split(";  ").forEach((cookie) => {
+          const [name, value] = cookie.split("=");
+          if (name === "city") city = value;
+          else if (name === "country_name") country_name = value;
+          else if (name === "currency") currency = value;
+          else if (name === "timezone") timezone = value;
+        });
+        set({
+          loading: false,
+          city,
+          country_name,
+          currency,
+          timezone,
+        });
       }
     }
   },

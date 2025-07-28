@@ -3,8 +3,6 @@ import { FaRightLeft, FaTrash } from "react-icons/fa6";
 import SearchDropdown from "../form/SearchDropdown";
 import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
 import DatePicker from "../form/DatePicker";
-import PassengerDropdown from "../form/PassengerDropdown";
-import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import Dropdown from "../form/Dropdown";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISelectedDate } from "@/types/ISelectedDate";
@@ -43,30 +41,16 @@ const FlightSearchSegment = ({
   >(segment.arrival_airport ?? {});
   const [toText, setToText] = useState("");
 
-  const [passengersSelected, setPassengersSelected] =
-    useState<IPassengersSelectedOption>(
-      segment.passengers ?? {
-        adults: 0,
-        children: 0,
-        infants: 0,
-      }
-    );
-
   const [selectedClass, setSelectedClass] = useState<
     Partial<IDropdownSelectedOption<ISeatClass>>
   >(segment.seat_class ?? classOptions[0]);
 
   const [departureDate, setDepartureDate] = useState<ISelectedDate>(
-    segment.departure_time ?? {}
+    segment.departure_time ?? { flexibility_days: 7 }
   );
   const [returnDate, setReturnDate] = useState<ISelectedDate>(
-    segment.return_time ?? {}
+    segment.return_time ?? { flexibility_days: 7 }
   );
-
-  const [departureFlexibilityDays, setDepartureFlexibilityDays] =
-    useState<IFlexibilityDays>(7);
-  const [returnFlexibilityDays, setReturnFlexibilityDays] =
-    useState<IFlexibilityDays>(7);
 
   const swapFromAndTo = () => {
     const temp = selectedToOption;
@@ -85,23 +69,6 @@ const FlightSearchSegment = ({
   useEffect(() => {
     updateSegment(segmentIdx, "arrival_airport", selectedToOption);
   }, [selectedToOption]);
-
-  useEffect(() => {
-    updateSegment(segmentIdx, "passengers", passengersSelected);
-  }, [passengersSelected]);
-
-  useEffect(() => {
-    updateSegment(segmentIdx, "return_flexibility_days", returnFlexibilityDays);
-  }, [returnFlexibilityDays]);
-
-  useEffect(() => {
-    setReturnFlexibilityDays(departureFlexibilityDays);
-    updateSegment(
-      segmentIdx,
-      "departure_flexibility_days",
-      departureFlexibilityDays
-    );
-  }, [departureFlexibilityDays]);
 
   // useEffect(() => {
   //   updateSegment(segmentIdx, "departure_time", departureDate);
@@ -174,8 +141,6 @@ const FlightSearchSegment = ({
           placeholder={"Choose date"}
           setDateSelected={setDepartureDate}
           dateSelected={departureDate}
-          flexibilityDays={departureFlexibilityDays}
-          setFlexibilityDays={setDepartureFlexibilityDays}
         />
         {type === "Return" && (
           <DatePicker
@@ -183,20 +148,15 @@ const FlightSearchSegment = ({
             placeholder={"Choose date"}
             setDateSelected={setReturnDate}
             dateSelected={returnDate}
-            flexibilityDays={returnFlexibilityDays}
-            setFlexibilityDays={setReturnFlexibilityDays}
           />
         )}
-        <PassengerDropdown
-          passengersSelected={passengersSelected}
-          setPassengersSelected={setPassengersSelected}
-        />
 
         <Dropdown<ISeatClass>
           selectedOption={selectedClass}
           setSelectedOption={setSelectedClass}
           options={classOptions}
           placeholder="Select Class"
+          grow={1}
         />
       </div>
 

@@ -3,7 +3,10 @@ import { AIRLINES_BASE_URL } from "./endpoints";
 export const fetchSomeAirlines = async (limit = 0) => {
   try {
     const res = await fetch(
-      AIRLINES_BASE_URL + (limit <= 0 ? "" : `?limit=${limit}`)
+      AIRLINES_BASE_URL + (limit <= 0 ? "" : `?limit=${limit}`),
+      {
+        credentials: "include",
+      }
     );
     const { data } = await res.json();
     return data;

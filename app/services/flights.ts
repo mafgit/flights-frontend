@@ -1,16 +1,16 @@
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { FLIGHTS_BASE_URL } from "./endpoints";
 import { ISeatClass } from "@/types/ISeatClass";
-import { ITripType } from "@/types/ITripType";
 import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 
 export const searchFlights = async (
   flights: ISearchFlight[],
+  passengers: IPassengersSelectedOption,
   departureTimes: { min: number; max: number }[],
   airlineIds: number[],
   maxTotalDuration: number | undefined
 ) => {
-  console.log("searchFlights", flights);
   if (flights.length === 0) throw new Error("No segments selected");
 
   let mappedFlights: {
@@ -20,19 +20,16 @@ export const searchFlights = async (
       year: number;
       month: number;
       day: number;
+      flexibility_days: IFlexibilityDays;
     };
     seat_class: ISeatClass;
-    passengers: { adults: number; children: number; infants: number };
-    departure_flexibility_days: IFlexibilityDays;
   }[] = flights.map((f) => ({
     // todo: validate here too?
     arrival_airport_id: f.arrival_airport.value!,
     departure_airport_id: f.departure_airport.value!,
     departure_time: f.departure_time!,
     seat_class: f.seat_class.value!,
-    passengers: f.passengers!,
     arrival_time: f.return_time,
-    departure_flexibility_days: f.departure_flexibility_days,
   }));
 
   try {
@@ -40,6 +37,7 @@ export const searchFlights = async (
       method: "POST",
       body: JSON.stringify({
         flights: mappedFlights,
+        passengers,
         departureTimes,
         airlineIds,
         maxTotalDuration: maxTotalDuration,
@@ -47,6 +45,7 @@ export const searchFlights = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     const { data } = await res.json();

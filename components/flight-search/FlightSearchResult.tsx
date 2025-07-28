@@ -1,7 +1,9 @@
 import { ISearchResult } from "@/types/ISearchResult";
 import Image from "next/image";
-import { FaClock, FaCreditCard, FaDollarSign, FaMoneyBill, FaPlane } from "react-icons/fa6";
+import { FaClock, FaPlane } from "react-icons/fa6";
 import Separator from "../misc/Separator";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
+import BookButton from "./BookButton";
 
 function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
   let date = new Date(iso);
@@ -20,7 +22,13 @@ function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
   return [day + " " + month, time + " " + am];
 }
 
-const FlightSearchResult = ({ result }: { result: ISearchResult[] }) => {
+const FlightSearchResult = ({
+  result,
+  passengers,
+}: {
+  result: ISearchResult[];
+  passengers: IPassengersSelectedOption;
+}) => {
   return (
     <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-lg shadow-md shadow-gray-900/40">
       <div className="flex flex-col gap-2 items-center justify-center">
@@ -101,12 +109,7 @@ const FlightSearchResult = ({ result }: { result: ISearchResult[] }) => {
           </span>
         </h4>
 
-        <button className="relative bg-primary-shade rounded-md p-2 w-full group flex items-center justify-center">
-          <div className="top-0 left-0 absolute h-full bg-foreground rounded-md z-[5] w-0 transition-all duration-200 group-hover:w-full"></div>
-          <p className="z-[10] transition-all duration-200 group-hover:text-primary-shade flex items-center justify-center gap-[5px]">
-            <FaCreditCard /> <span>Book</span>
-          </p>
-        </button>
+        <BookButton result={result} passengers={passengers} />
       </div>
     </div>
   );

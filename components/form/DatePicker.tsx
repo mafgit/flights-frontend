@@ -1,64 +1,21 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaMinus,
-  FaPlus,
-  FaXmark,
-} from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaXmark } from "react-icons/fa6";
 import { ISelectedDate } from "@/types/ISelectedDate";
 import Separator from "../misc/Separator";
 import { IFlexibilityDays } from "../flight-search/FlightSearchSegment";
-
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-const date = new Date();
-const d = date.getDate();
-const m = date.getMonth() + 1;
-const y = date.getFullYear();
-
-const isValidDate = (dateSelected: ISelectedDate): boolean => {
-  return (
-    dateSelected.day !== undefined &&
-    dateSelected.day >= 1 &&
-    dateSelected.day <= 31 &&
-    dateSelected.month !== undefined &&
-    dateSelected.month >= 1 &&
-    dateSelected.month <= 12 &&
-    dateSelected.year !== undefined &&
-    dateSelected.year >= 2025
-  );
-};
+import { days, isValidDate, months, d, m, y } from "@/utils/datePicker";
 
 const DatePicker = ({
   label,
   placeholder,
   dateSelected,
   setDateSelected,
-  flexibilityDays,
-  setFlexibilityDays,
 }: {
   label: string;
   placeholder: string;
   dateSelected: ISelectedDate;
   setDateSelected: Dispatch<SetStateAction<ISelectedDate>>;
-  flexibilityDays: IFlexibilityDays;
-  setFlexibilityDays: Dispatch<SetStateAction<IFlexibilityDays>>;
 }) => {
   const [opened, setOpened] = useState(false);
   const [onMonth, setOnMonth] = useState(m);
@@ -100,7 +57,7 @@ const DatePicker = ({
 
   return (
     <div
-      className="bg-dropdown text-foreground-opposite rounded-md relative w-[170px] grow-[1] shrink-[1] basis-[170px]"
+      className="bg-dropdown/99 text-foreground-opposite rounded-md relative w-[170px] grow-[1] shrink-[1] basis-[170px]"
       ref={ref}
     >
       <div className="relative">
@@ -134,7 +91,7 @@ const DatePicker = ({
           <button
             className="absolute right-[6px]  top-[20px] font-extralight"
             onClick={() => {
-              setDateSelected({});
+              setDateSelected((d) => ({ flexibility_days: d.flexibility_days }));
               setOpened(false);
             }}
           >
@@ -145,7 +102,7 @@ const DatePicker = ({
 
       <div
         className={
-          `z-[20] bg-dropdown overflow-y-auto absolute transition-all duration-100 ease-in w-max rounded-md top-[110%] py-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
+          `z-[20] bg-dropdown/99 overflow-y-auto absolute transition-all duration-100 ease-in w-max rounded-md top-[110%] py-4 px-4 shadow-2xl shadow-black/50 flex items-center justify-center gap-2 flex-col ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
@@ -189,11 +146,12 @@ const DatePicker = ({
                   );
                 })()}
                 onClick={() => {
-                  setDateSelected({
+                  setDateSelected((d) => ({
+                    ...d,
                     day: i + 1,
                     month: onMonth,
                     year: onYear,
-                  });
+                  }));
                 }}
                 className={
                   "border-gray-300/50 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed border-1 w-[35px] h-[35px] rounded-md flex items-center justify-center not-disabled:cursor-pointer not-disabled:hover:border-primary/80 transition-all duration-100 " +
@@ -218,15 +176,17 @@ const DatePicker = ({
           <div className="text-sm flex flex-wrap justify-center items-center gap-2">
             {([0, 3, 7, 30] as IFlexibilityDays[]).map((option, i) => (
               <button
-                onClick={() => setFlexibilityDays(option)}
+                onClick={() =>
+                  setDateSelected((d) => ({ ...d, flexibility_days: option }))
+                }
                 key={"flexibility-option-" + i}
                 className={`${
-                  flexibilityDays === option
+                  dateSelected.flexibility_days === option
                     ? "bg-primary-shade text-light"
                     : "bg-transparent text-primary-shade transition-all duration-150 hover:bg-primary-shade/20"
                 } border-1 border-primary-shade rounded-md p-1`}
               >
-                {option === 0 ? "Today" : "+/- " + option + " days"}
+                {option === 0 ? "Today" : "+ " + option + "d"}
               </button>
             ))}
           </div>

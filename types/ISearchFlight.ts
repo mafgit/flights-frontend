@@ -12,14 +12,13 @@ export interface ISearchFlight {
     year: number;
     month: number;
     day: number;
+    flexibility_days: IFlexibilityDays;
   };
   return_time?: {
     year: number;
     month: number;
     day: number;
+    flexibility_days: IFlexibilityDays;
   };
   seat_class: IDropdownSelectedOption<ISeatClass>;
-  passengers: { adults: number; children: number; infants: number };
-  departure_flexibility_days: IFlexibilityDays;
-  return_flexibility_days?: IFlexibilityDays;
 }
