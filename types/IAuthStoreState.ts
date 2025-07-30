@@ -1,6 +1,6 @@
 import { IRole } from "./IRole";
 
-export interface IStoreState {
+export interface IAuthStoreState {
   userId?: number;
   role?: IRole;
   loading: boolean;

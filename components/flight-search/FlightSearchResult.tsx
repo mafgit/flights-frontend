@@ -4,23 +4,8 @@ import { FaClock, FaPlane } from "react-icons/fa6";
 import Separator from "../misc/Separator";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import BookButton from "./BookButton";
-
-function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
-  let date = new Date(iso);
-
-  let date2 = date.toLocaleString("en-US", {
-    timeZone:
-      timezoneOfDisplay ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-    day: "numeric",
-    month: "short",
-    // year: 'numeric',
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
-  const [month, day, time, am] = date2.replace(/,/g, "").split(" ");
-  return [day + " " + month, time + " " + am];
-}
+import { getDateAndTime } from "@/utils/getDateAndTime";
+import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
 
 const FlightSearchResult = ({
   result,
@@ -29,6 +14,8 @@ const FlightSearchResult = ({
   result: ISearchResult[];
   passengers: IPassengersSelectedOption;
 }) => {
+  const formatCurrency = useCurrencyFormatter()
+  
   return (
     <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-lg shadow-md shadow-gray-900/40">
       <div className="flex flex-col gap-2 items-center justify-center">
@@ -94,11 +81,12 @@ const FlightSearchResult = ({
 
       <div className="flex flex-col items-center justify-center gap-3">
         <h3 className="font-bold text-xl w-full">
-          {"PKR " +
+          {formatCurrency(
             result.reduce(
               (a: number, b: ISearchResult) => a + b.segment_total_amount,
               0
-            )}
+            )
+          )}
         </h3>
 
         <h4 className="flex items-center justify-center gap-[5px]">

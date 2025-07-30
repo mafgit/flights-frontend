@@ -29,3 +29,14 @@ export const getCart = async () => {
 
   return data;
 };
+
+export const deleteCart = async () => {
+  const res = await fetch(CARTS_BASE_URL + "/delete", {
+    credentials: "include",
+    method: "DELETE",
+  });
+
+  const { data } = await res.json();
+
+  return data;
+};

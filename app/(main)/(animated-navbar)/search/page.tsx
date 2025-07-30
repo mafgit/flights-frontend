@@ -9,7 +9,7 @@ import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchResult } from "@/types/ISearchResult";
 import { ITripType } from "@/types/ITripType";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBan, FaPlaneDeparture } from "react-icons/fa6";
 import { IDepartureTimes } from "@/types/IDepartureTimes";
@@ -22,6 +22,7 @@ const SearchPage = () => {
   const [results, setResults] = useState<ISearchResult[][]>([]);
   const params = useSearchParams();
   const [segments, setSegments] = useState<ISearchFlight[]>([]);
+  const router = useRouter();
   const [passengers, setPassengers] = useState<IPassengersSelectedOption>({
     adults: 1,
     children: 0,
@@ -40,7 +41,7 @@ const SearchPage = () => {
 
     let flights = JSON.parse(params.get("segments") || "[]") as ISearchFlight[];
     // console.log("42", flights.length, type.value);
-    
+
     let passengers2 = JSON.parse(
       params.get("passengers") || "{}"
     ) as IPassengersSelectedOption;
@@ -50,7 +51,7 @@ const SearchPage = () => {
     ) as IDropdownSelectedOption<ITripType>;
 
     if (flights.length === 0 || !tripType.value) {
-      console.log(63);
+      router.replace("/");
       setLoading(false);
       return;
     }
@@ -69,10 +70,9 @@ const SearchPage = () => {
 
     if (tripType.value === "Return") {
       if (!flights[0].return_time) {
-        // throw new Error("No return time selected for round-trip");
+        // alert("No return time or flexibility days selected for round-trip");
+        router.replace("/");
         setLoading(false);
-        alert("No return time or flexibility days selected for round-trip");
-        console.log(73);
         return;
       }
 
@@ -107,9 +107,8 @@ const SearchPage = () => {
       .then((results) => {
         setResults(results ?? []);
       })
-      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [params]);
+  }, [params.toString()]);
 
   // useEffect(() => {
 
@@ -168,7 +167,7 @@ const SearchPage = () => {
           <div className="flex items-center justify-start gap-3 flex-col h-full self-start">
             {loading ? (
               <Loading />
-            ) : results !== undefined && results.length === 0 ? (
+            ) : (!results || results.length === 0) && !loading ? (
               <h3 className="text-2xl font-semibold text-center w-max flex items-center justify-center gap-2">
                 <FaBan className="text-3xl" />
                 <span>No result found</span>

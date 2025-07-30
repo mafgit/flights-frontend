@@ -1,16 +1,8 @@
 "use client";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
-import {
-  Dispatch,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  FaMinus,
-  FaPlus,
-  FaXmark,
-} from "react-icons/fa6";
+import { Dispatch, useEffect, useRef, useState } from "react";
+import { FaMinus, FaPlus, FaXmark } from "react-icons/fa6";
+import Separator from "../misc/Separator";
 
 const PassengerDropdown = ({
   passengersSelected,
@@ -60,11 +52,11 @@ const PassengerDropdown = ({
               passengersSelected.infants >
             0
               ? passengersSelected.adults +
-                "A, " +
+                "a, " +
                 passengersSelected.children +
-                "C, " +
+                "c, " +
                 passengersSelected.infants +
-                "I"
+                "i"
               : ""
           }
           onClick={() => setOpened(!opened)}
@@ -84,19 +76,30 @@ const PassengerDropdown = ({
 
       <ul
         className={
-          `z-[20] bg-dropdown/99 absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-2 shadow-xl shadow-black/50 ` +
+          `z-[20] bg-dropdown/99 absolute transition-all duration-100 ease-in w-max min-w-full rounded-md flex flex-col gap-2 top-[110%] p-3 shadow-xl shadow-black/50 ` +
           (opened
             ? " opacity-100 pointer-events-auto"
             : " opacity-0 pointer-events-none")
         }
       >
-        <div className="flex justify-between items-center">
-          <p className="font-semibold">Adults</p>
+        <div className="flex justify-between items-center gap-2">
+          <p className="font-semibold">
+            Adults{" "}
+            <span className="text-gray-600 font-normal">(&ge;12 age)</span>
+          </p>
           <div className="flex gap-1 items-center justify-center">
             <p className="mr-2 font-semibold">{passengersSelected.adults}</p>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-blue-600 text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (
+                  passengersSelected.adults +
+                    passengersSelected.children +
+                    passengersSelected.infants >=
+                  9
+                )
+                  return;
+
                 setPassengersSelected((p) => ({
                   ...p,
                   adults: p.adults + 1,
@@ -106,8 +109,9 @@ const PassengerDropdown = ({
               <FaPlus />
             </button>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (passengersSelected.adults === 0) return;
                 setPassengersSelected((p) => ({
                   ...p,
                   adults: p.adults - 1,
@@ -121,13 +125,24 @@ const PassengerDropdown = ({
 
         {/*  */}
 
-        <div className="flex justify-between items-center">
-          <p className="font-semibold">Children</p>
+        <div className="flex justify-between items-center gap-2">
+          <p className="font-semibold">
+            Children{" "}
+            <span className="text-gray-600 font-normal">(2-11 age)</span>
+          </p>
           <div className="flex gap-1 items-center justify-center">
             <p className="mr-2 font-semibold">{passengersSelected.children}</p>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-blue-600 text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (
+                  passengersSelected.adults +
+                    passengersSelected.children +
+                    passengersSelected.infants >=
+                  9
+                )
+                  return;
+
                 setPassengersSelected((p) => ({
                   ...p,
                   children: p.children + 1,
@@ -137,8 +152,9 @@ const PassengerDropdown = ({
               <FaPlus />
             </button>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (passengersSelected.children === 0) return;
                 setPassengersSelected((p) => ({
                   ...p,
                   children: p.children - 1,
@@ -152,13 +168,24 @@ const PassengerDropdown = ({
 
         {/*  */}
 
-        <div className="flex justify-between items-center">
-          <p className="font-semibold">Infants</p>
+        <div className="flex justify-between items-center gap-2">
+          <p className="font-semibold">
+            Infants{" "}
+            <span className="text-gray-600 font-normal">(&lt;2 age)</span>
+          </p>
           <div className="flex gap-1 items-center justify-center">
             <p className="mr-2 font-semibold">{passengersSelected.infants}</p>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-blue-600 text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (
+                  passengersSelected.adults +
+                    passengersSelected.children +
+                    passengersSelected.infants >=
+                  9
+                )
+                  return;
+
                 setPassengersSelected((p) => ({
                   ...p,
                   infants: p.infants + 1,
@@ -168,8 +195,9 @@ const PassengerDropdown = ({
               <FaPlus />
             </button>
             <button
-              className="bg-gray-300 rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
+              className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
+                if (passengersSelected.infants === 0) return;
                 setPassengersSelected((p) => ({
                   ...p,
                   infants: p.infants - 1,
@@ -180,6 +208,15 @@ const PassengerDropdown = ({
             </button>
           </div>
         </div>
+
+        <Separator horizontal dark />
+        <ul className="max-w-[220px] flex flex-col list-disc pl-5">
+          <li className="text-sm">You can choose at most 9 passengers.</li>
+          <li className="text-sm">At least one adult is necessary.</li>
+          <li className="text-sm">
+            Each infant must have at least one separate adult.
+          </li>
+        </ul>
       </ul>
     </div>
   );

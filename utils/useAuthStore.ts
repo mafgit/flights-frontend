@@ -1,8 +1,8 @@
 import { fetchMe, logoutUser } from "@/app/services/auth";
 import { create } from "zustand/react";
-import { IStoreState } from "@/types/IStoreState";
+import { IAuthStoreState } from "@/types/IAuthStoreState";
 
-const useMyStore = create<IStoreState>((set, get) => ({
+const useAuthStore = create<IAuthStoreState>((set, get) => ({
   userId: undefined,
   role: undefined,
   loading: true,
@@ -57,4 +57,4 @@ const useMyStore = create<IStoreState>((set, get) => ({
   },
 }));
 
-export default useMyStore;
+export default useAuthStore;

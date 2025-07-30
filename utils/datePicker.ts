@@ -16,7 +16,7 @@ export const months = [
 ];
 export const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-const date = new Date();
+const date = new Date()
 export const d = date.getDate();
 export const m = date.getMonth() + 1;
 export const y = date.getFullYear();

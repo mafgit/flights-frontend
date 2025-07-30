@@ -4,18 +4,20 @@ import Dropdown from "../form/Dropdown";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import FlightSearchSegments from "./FlightSearchSegments";
 import { ITripType, tripTypeOptions } from "@/types/ITripType";
-import { ISearchFlight } from "@/types/ISearchFlight";
+import { ISearchFlight, searchSegmentsSchema } from "@/types/ISearchFlight";
 import { useRouter } from "next/navigation";
 import FlightSearchButton from "./FlightSearchButton";
 import PassengerDropdown from "../form/PassengerDropdown";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
+import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
+import { flattenError, ZodError } from "zod";
 
 const FlightSearchForm = ({
   typeFromParams = tripTypeOptions[0],
   segmentsDataFromParams = [{}],
   passengersFromParams = { adults: 1, children: 0, infants: 0 },
   searchPage = false,
-  airlinesFromSegments=[],
+  airlinesFromSegments = [],
 }: {
   typeFromParams?: IDropdownSelectedOption<ITripType>;
   segmentsDataFromParams?: Partial<ISearchFlight>[];
@@ -39,53 +41,28 @@ const FlightSearchForm = ({
 
   const onSearchClick = () => {
     // todo: validation
-    if (
-      !segmentsData.some((segment) => {
-        if (
-          segment.arrival_airport === undefined ||
-          segment.departure_airport === undefined
-        ) {
-          return false;
-        }
+    try {
+      if (!validatePassengerCounts(passengersSelected.adults, passengersSelected.children, passengersSelected.infants))
+        throw new Error("Invalid number of passengers");
 
-        if (
-          segment.departure_time === undefined ||
-          segment.seat_class === undefined
-        ) {
-          return false;
-        }
+      searchSegmentsSchema.parse(segmentsData);
 
-        if (
-          segment.departure_time.day === undefined ||
-          segment.departure_time.month === undefined ||
-          segment.departure_time.year === undefined
-        ) {
-          return false;
-        }
-
-        if (
-          selectedTypeOption.value === "Return" &&
-          segment.return_time === undefined
-        ) {
-          return false;
-        }
-
-        return true;
-      })
-    ) {
-      return alert("Fill all the fields"); // todo: toasts, passenger check, etc
+      router.push(
+        "/search?type=" +
+          encodeURIComponent(JSON.stringify(selectedTypeOption)) +
+          "&passengers=" +
+          encodeURI(JSON.stringify(passengersSelected)) +
+          "&segments=" +
+          encodeURIComponent(JSON.stringify(segmentsData)) +
+          "&airlines=" +
+          encodeURIComponent(JSON.stringify(airlinesFromSegments))
+      );
+    } catch (err) {
+      if (err instanceof ZodError) {
+        console.log(err.issues);
+        // alert((err as Error).message);
+      }
     }
-
-    router.push(
-      "/search?type=" +
-        encodeURIComponent(JSON.stringify(selectedTypeOption)) +
-        "&passengers=" +
-        encodeURI(JSON.stringify(passengersSelected)) +
-        "&segments=" +
-        encodeURIComponent(JSON.stringify(segmentsData)) +
-        "&airlines=" +
-        encodeURIComponent(JSON.stringify(airlinesFromSegments))
-    );
   };
 
   return (

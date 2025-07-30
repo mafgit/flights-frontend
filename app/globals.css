@@ -86,14 +86,6 @@ input:-webkit-autofill:active {
   border-radius: 10px;
 }
 
-.search-btn:hover > div {
-  width: 100%;
-}
-
-.search-btn:hover {
-  color: var(--primary-shade);
-}
-
 .feature:hover > div:nth-child(1) {
   height: 0;
   max-height: 0;

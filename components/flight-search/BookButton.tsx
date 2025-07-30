@@ -23,7 +23,7 @@ const BookButton = ({
           passengers
         );
 
-        router.push("/book");
+        router.push("/book/cart");
       }}
     >
       <div className="top-0 left-0 absolute h-full bg-foreground rounded-md z-[5] w-0 transition-all duration-200 group-hover:w-full"></div>

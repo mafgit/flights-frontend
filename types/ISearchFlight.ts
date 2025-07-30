@@ -2,6 +2,7 @@ import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment
 import { IDropdownSelectedOption } from "./IDropdownSelectedOption";
 import { ISearchDropdownOption } from "./ISearchDropdownOption";
 import { ISeatClass } from "./ISeatClass";
+import { number, z } from "zod";
 
 export interface ISearchFlight {
   // arrival_airport_id: number;
@@ -22,3 +23,25 @@ export interface ISearchFlight {
   };
   seat_class: IDropdownSelectedOption<ISeatClass>;
 }
+
+const departureSchema = z.object({
+  year: z.number().int().min(2025).max(2050),
+  month: z.number().int().min(1).max(12),
+  day: z.number().int().min(1).max(31),
+  flexibility_days: z.number().int().min(0).max(31),
+});
+
+const searchSegmentSchema = z.object({
+  arrival_airport: z.object({ value: z.number().int().min(1) }),
+  departure_airport: z.object({ value: z.number().int().min(1) }),
+  departure_time: departureSchema,
+  return_time: departureSchema.optional(),
+  seat_class: z.object({
+    value: z.enum(["economy", "business", "first", "premium"]),
+  }),
+});
+// .refine(data => {
+//   new Date(data.departure_time.day, data.)
+// })
+
+export const searchSegmentsSchema = z.array(searchSegmentSchema).min(1).max(6);
