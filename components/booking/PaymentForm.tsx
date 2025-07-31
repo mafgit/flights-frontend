@@ -200,7 +200,7 @@ const PaymentForm = ({}: {}) => {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="w-full mt-8 relative group bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"
+        className="w-full mt-8 relative group bg-blue-500 text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"
       >
         <div className="absolute w-0 h-full z-[5] rounded-md top-0 left-0 bg-foreground transition-all duration-200 group-hover:w-full"></div>
         <FaArrowCircleRight className="z-[10] group-hover:text-primary-shade transition-all duration-200" />

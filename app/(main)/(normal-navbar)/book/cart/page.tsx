@@ -59,8 +59,8 @@ const BookingStep1 = () => {
               Search flights from{" "}
               <Link href="/" className="underline text-primary">
                 Home
-              </Link>
-              . Click "Book" button to add to cart.
+              </Link>{" "}
+              and click on "Book" to add to cart.
             </span>
           </h3>
         ) : (

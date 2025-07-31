@@ -16,8 +16,6 @@ const PassengerForm = ({
   const updatePassengers = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    console.log(e.target.name, "=", e.target.value);
-
     setPassengers(
       passengers.map((p) => {
         if (p.id === passenger.id)
