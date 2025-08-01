@@ -11,6 +11,20 @@ export interface IBookingPassenger {
   passport_number?: string;
 }
 
+function validateDOB(
+  date_of_birth: string,
+  passenger_type: "adult" | "child" | "infant"
+) {
+  const dob = new Date(date_of_birth).getTime();
+  if (isNaN(dob)) return false;
+  const today = new Date().getTime();
+  const age = Math.floor((today - dob) / (365 * 24 * 3600 * 1000));
+  if (passenger_type === "adult") return age >= 12;
+  if (passenger_type === "child") return age < 12 && age >= 2;
+  if (passenger_type === "infant") return age >= 0 && age < 2;
+  return false;
+}
+
 const bookingPassengerSchema = z
   .object({
     full_name: z.string().min(2).max(40),
@@ -22,16 +36,11 @@ const bookingPassengerSchema = z
   })
   .refine(
     ({ date_of_birth, passenger_type }) => {
-      const dob = new Date(date_of_birth).getTime();
-      if (isNaN(dob)) return false;
-      const today = new Date().getTime();
-      const age = Math.floor((today - dob) / (365 * 24 * 3600 * 1000));
-      if (passenger_type === "adult") return age >= 12;
-      if (passenger_type === "child") return age < 12 && age >= 2;
-      if (passenger_type === "infant") return age >= 0 && age < 2;
-      return false;
+      return validateDOB(date_of_birth, passenger_type);
     },
-    { error: "Invalid date of birth" }
+    {
+      error: "Invalid date of birth",
+    }
   );
 
 export const bookingPassengersSchema = z.array(bookingPassengerSchema);

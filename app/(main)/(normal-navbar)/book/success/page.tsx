@@ -5,7 +5,7 @@ import useStepStore from "@/utils/useStepStore";
 import Link from "next/link";
 import { useEffect } from "react";
 
-const CongratulationsPage = () => {
+const SuccessPage = () => {
   const clearFormSteps = useStepStore((s) => s.clearFormSteps);
   const bookedBookingId = useStepStore((s) => s.bookedBookingId);
 
@@ -49,4 +49,4 @@ const CongratulationsPage = () => {
   );
 };
 
-export default CongratulationsPage;
+export default SuccessPage;

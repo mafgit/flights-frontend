@@ -3,8 +3,10 @@ import { FLIGHTS_BASE_URL } from "./endpoints";
 import { ISeatClass } from "@/types/ISeatClass";
 import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
+import { ITripType } from "@/types/ITripType";
 
 export const searchFlights = async (
+  type: ITripType,
   flights: ISearchFlight[],
   passengers: IPassengersSelectedOption,
   departureTimes: { min: number; max: number }[],
@@ -23,14 +25,16 @@ export const searchFlights = async (
       flexibility_days: IFlexibilityDays;
     };
     seat_class: ISeatClass;
-  }[] = flights.map((f) => ({
-    // todo: validate here too?
-    arrival_airport_id: f.arrival_airport.value!,
-    departure_airport_id: f.departure_airport.value!,
-    departure_time: f.departure_time!,
-    seat_class: f.seat_class.value!,
-    arrival_time: f.return_time,
-  }));
+  }[] = flights
+    .slice(0, type === "One-way" ? 1 : type === "Return" ? 2 : undefined)
+    .map((f) => ({
+      // todo: validate here too?
+      arrival_airport_id: f.arrival_airport.value!,
+      departure_airport_id: f.departure_airport.value!,
+      departure_time: f.departure_time!,
+      seat_class: f.seat_class.value!,
+      arrival_time: f.return_time,
+    }));
 
   try {
     const res = await fetch(FLIGHTS_BASE_URL + "/search", {
@@ -38,7 +42,7 @@ export const searchFlights = async (
       body: JSON.stringify({
         flights: mappedFlights,
         passengers,
-        departureTimes,
+        departureTimes: departureTimes.slice(0, mappedFlights.length),
         airlineIds,
         maxTotalDuration: maxTotalDuration,
       }),

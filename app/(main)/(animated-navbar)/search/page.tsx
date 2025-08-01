@@ -98,6 +98,7 @@ const SearchPage = () => {
     //
 
     searchFlights(
+      tripType.value,
       flights,
       passengers2,
       depTimes,
@@ -164,13 +165,21 @@ const SearchPage = () => {
               setAirlinesSelected={setAirlinesSelected}
             />
           )}
-          <div className="flex items-center justify-start gap-3 flex-col h-full self-start">
+          <div className="flex items-center justify-start gap-3 flex-col h-full self-start w-[60%]">
             {loading ? (
               <Loading />
             ) : (!results || results.length === 0) && !loading ? (
-              <h3 className="text-2xl font-semibold text-center w-max flex items-center justify-center gap-2">
-                <FaBan className="text-3xl" />
-                <span>No result found</span>
+              <h3 className="text-center w-max flex items-center justify-center gap-2 flex-col">
+                <FaBan className="text-3xl font-semibold " />
+                <span className="text-2xl font-semibold ">No result found</span>
+                <span>
+                  Your passengers might be too many for available flights or for
+                  the seat class you provided
+                </span>
+                <span>
+                  Or flights may be unavailable within the flexibility period
+                  you provided
+                </span>
               </h3>
             ) : (
               results.map((r, i) => (

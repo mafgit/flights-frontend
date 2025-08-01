@@ -61,7 +61,7 @@ const PaymentForm = ({}: {}) => {
     if (goToNextStep()) {
       // todo: payment
       setBookedBookingId(3);
-      router.replace("/book/congratulations");
+      router.replace("/book/success");
     }
   };
 
