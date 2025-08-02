@@ -3,7 +3,8 @@
 import useAuthStore from "@/utils/useAuthStore";
 
 const useCurrencyFormatter = () => {
-  const currency = useAuthStore((s) => s.currency);
+  // const currency = useAuthStore((s) => s.currency);
+  const currency = 'USD'
 
   return (amount: number) =>
     new Intl.NumberFormat("en-US", {

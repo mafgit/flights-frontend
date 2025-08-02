@@ -4,7 +4,7 @@ import { z } from "zod";
 export interface IBookingPassenger {
   date_of_birth?: string;
   full_name?: string;
-  gender: "m" | "f" | "x";
+  gender: "male" | "female" | "undisclosed";
   nationality?: string;
   id: number;
   passenger_type: "adult" | "child" | "infant";
@@ -29,7 +29,7 @@ const bookingPassengerSchema = z
   .object({
     full_name: z.string().min(2).max(40),
     date_of_birth: z.string().min(8).max(10),
-    gender: z.enum(["m", "f"]),
+    gender: z.enum(["male", "female"]),
     passport_number: z.string().regex(/^[A-Z0-9]{6,10}$/),
     passenger_type: z.enum(["adult", "child", "infant"]),
     nationality: z.enum(countries.map((c) => c.name)),

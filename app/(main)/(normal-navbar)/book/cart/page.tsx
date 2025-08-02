@@ -6,6 +6,7 @@ import BookingSegment from "@/components/booking/BookingSegment";
 import Loading from "@/components/misc/Loading";
 import { IBookingPassenger } from "@/types/IBookingPassenger";
 import { IBookingSegment } from "@/types/IBookingSegment";
+import { ISeatClass } from "@/types/ISeatClass";
 import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
 import useStepStore from "@/utils/useStepStore";
 import Link from "next/link";
@@ -27,7 +28,11 @@ const BookingStep1 = () => {
   const formatCurrency = useCurrencyFormatter();
   const router = useRouter();
   const goToNextStep = useStepStore((s) => s.goToNextStep);
+
   const setPassengersInStore = useStepStore((s) => s.setPassengers);
+  const setTotalAmountInStore = useStepStore((s) => s.setTotalAmount);
+  const setSegmentsInStore = useStepStore((s) => s.setSegments);
+  const totalAmountInStore = useStepStore((s) => s.bookingBody.total_amount);
 
   useEffect(() => {
     clearFormSteps();
@@ -38,6 +43,22 @@ const BookingStep1 = () => {
         setCart(cart);
         setSegments(segments);
         setPassengers(passengers);
+        setTotalAmountInStore(
+          segments.reduce(
+            (acc: number, prev: { segment_total_amount: number }) =>
+              acc + prev.segment_total_amount,
+            0
+          )
+        );
+
+        setSegmentsInStore(
+          segments.map(
+            ({ id, seat_class }: { id: number; seat_class: ISeatClass }) => ({
+              flight_id: id,
+              seat_class,
+            })
+          )
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -51,7 +72,10 @@ const BookingStep1 = () => {
       <div className="py-12 flex items-center justify-center flex-col gap-12 max-w-[1250px] mx-auto">
         {loading ? (
           <Loading />
-        ) : error ? (
+        ) : (error ||
+          !segments ||
+          segments.length === 0 ||
+          passengers.length === 0) ? (
           <h3 className=" text-center w-max flex flex-col items-center justify-center gap-2">
             <FaBan className=" font-semibold  text-3xl" />
             <span className="font-semibold text-2xl">Empty Cart</span>
@@ -85,14 +109,7 @@ const BookingStep1 = () => {
               </div>
 
               <div className="flex items-center justify-center gap-4">
-                <p className="text-3xl">
-                  {formatCurrency(
-                    segments.reduce(
-                      (acc, prev) => acc + prev.segment_total_amount,
-                      0
-                    )
-                  )}
-                </p>
+                <p className="text-3xl">{formatCurrency(totalAmountInStore)}</p>
 
                 <button
                   onClick={() => {
@@ -112,16 +129,14 @@ const BookingStep1 = () => {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-start gap-4 w-full">
-              {segments.length &&
-                passengers.length &&
-                segments.map((segment) => (
-                  <BookingSegment
-                    formatCurrency={formatCurrency}
-                    key={segment.id}
-                    segment={segment}
-                    passengers={passengers}
-                  />
-                ))}
+              {segments.map((segment) => (
+                <BookingSegment
+                  formatCurrency={formatCurrency}
+                  key={segment.id}
+                  segment={segment}
+                  passengers={passengers}
+                />
+              ))}
             </div>
           </>
         )}

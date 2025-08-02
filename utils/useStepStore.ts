@@ -5,8 +5,8 @@ import { IBookingPassenger } from "@/types/IBookingPassenger";
 const useStepStore = create<IStepStoreState>((set, get) => ({
   currentFormStep: 1,
   formStepsCompleted: [],
-  passengers: [],
-  setPassengers: (passengers: IBookingPassenger[]) => set({ passengers }),
+  bookingBody: { passengers: [], segments: [], total_amount: 0 },
+
   goToNextStep: () => {
     const { formStepsCompleted, currentFormStep } = get();
 
@@ -17,6 +17,7 @@ const useStepStore = create<IStepStoreState>((set, get) => ({
 
     return true;
   },
+
   goToPrevStep: () => {
     const { formStepsCompleted, currentFormStep } = get();
 
@@ -24,9 +25,9 @@ const useStepStore = create<IStepStoreState>((set, get) => ({
 
     let setObject = {};
 
-    if (currentFormStep === 2) {
-      setObject = { ...setObject, passengers: [] };
-    }
+    // if (currentFormStep === 2) {
+    //   setObject = { ...setObject, passengers: [] };
+    // }
     set({
       ...setObject,
       formStepsCompleted: formStepsCompleted.filter(
@@ -40,7 +41,11 @@ const useStepStore = create<IStepStoreState>((set, get) => ({
 
   clearFormSteps: () => {
     set({
-      passengers: [],
+      bookingBody: {
+        passengers: [],
+        segments: [],
+        total_amount: 0,
+      },
       formStepsCompleted: [],
       currentFormStep: 1,
     });
@@ -49,6 +54,33 @@ const useStepStore = create<IStepStoreState>((set, get) => ({
   bookedBookingId: undefined,
   setBookedBookingId: (id: number | undefined) => {
     set({ bookedBookingId: id });
+  },
+
+  setPassengers: (passengers) => {
+    set({
+      bookingBody: {
+        ...get().bookingBody,
+        passengers,
+      },
+    });
+  },
+
+  setTotalAmount: (total_amount) => {
+    set({
+      bookingBody: {
+        ...get().bookingBody,
+        total_amount,
+      },
+    });
+  },
+
+  setSegments: (segments) => {
+    set({
+      bookingBody: {
+        ...get().bookingBody,
+        segments,
+      },
+    });
   },
 }));
 

@@ -31,7 +31,8 @@ const BookingStepsWrapper = ({
   };
   useEffect(() => {
     // todo: check why it is sometimes going too much back
-    if (!isValidStep()) {
+    // if (!isValidStep()) {
+    if (false) {
       router.back();
     }
   }, [triedToVisitStep]);

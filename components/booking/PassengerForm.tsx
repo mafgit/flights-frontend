@@ -11,7 +11,7 @@ const PassengerForm = ({
   i: number;
 }) => {
   const setPassengers = useStepStore((s) => s.setPassengers);
-  const passengers = useStepStore((s) => s.passengers);
+  const passengers = useStepStore((s) => s.bookingBody.passengers);
 
   const updatePassengers = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -29,7 +29,10 @@ const PassengerForm = ({
   };
 
   return (
-    <div className="bg-foreground-opposite p-5 py-8 rounded-lg mx-auto">
+    <form
+      autoComplete="on"
+      className="bg-foreground-opposite p-5 py-8 rounded-lg mx-auto"
+    >
       <h3 className="capitalize text-lg font-semibold mb-2">
         {passenger.passenger_type} #{i + 1}
       </h3>
@@ -37,6 +40,7 @@ const PassengerForm = ({
         <div className="flex flex-col gap-1">
           <label htmlFor="full_name">Full Name</label>
           <input
+            id="full_name"
             name="full_name"
             autoComplete="name"
             required
@@ -50,8 +54,9 @@ const PassengerForm = ({
         <div className="flex flex-col gap-1">
           <label htmlFor="date_of_birth">Date of Birth</label>
           <input
+            id="date_of_birth"
             name="date_of_birth"
-            autoComplete="bday-day"
+            autoComplete="bday"
             placeholder="Select date of birth"
             required
             onChange={(e) => updatePassengers(e)}
@@ -64,15 +69,17 @@ const PassengerForm = ({
         <div className="flex flex-col gap-1">
           <label htmlFor="gender">Gender</label>
           <select
+            id="gender"
             className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
             required
             name="gender"
-            value={passenger.gender || "x"}
+            autoComplete="sex"
+            value={passenger.gender || "undisclosed"}
             onChange={(e) => updatePassengers(e)}
           >
-            <option value="x">Not selected</option>
-            <option value="m">Male</option>
-            <option value="f">Female</option>
+            <option value="undisclosed">Not selected</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
         </div>
 
@@ -81,7 +88,8 @@ const PassengerForm = ({
           <input
             name="passport_number"
             required
-            autoComplete="off"
+            id="passport_number"
+            autoComplete="cc-number"
             placeholder="Enter passport number"
             onChange={(e) => updatePassengers(e)}
             value={passenger.passport_number || ""}
@@ -97,7 +105,7 @@ const PassengerForm = ({
             required
             value={passenger.nationality || ""}
             onChange={(e) => updatePassengers(e)}
-            // autoComplete="country"
+            autoComplete="country-name"
           >
             <option value="">Not selected</option>
 
@@ -109,7 +117,7 @@ const PassengerForm = ({
           </select>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

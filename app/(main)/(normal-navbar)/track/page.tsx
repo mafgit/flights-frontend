@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TrackPage = () => {
+const TrackingPage = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const TrackPage = () => {
   )
 }
 
-export default TrackPage
+export default TrackingPage

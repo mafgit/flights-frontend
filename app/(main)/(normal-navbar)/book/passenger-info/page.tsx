@@ -3,15 +3,15 @@ import PassengerFormsSection from "@/components/booking/PassengerFormsSection";
 import Separator from "@/components/misc/Separator";
 import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
 import useStepStore from "@/utils/useStepStore";
-import React, { FormEvent, useEffect } from "react";
+import React, { FormEvent, MouseEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaUsers } from "react-icons/fa6";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
 import { bookingPassengersSchema } from "@/types/IBookingPassenger";
 
-const BookingStep2 = () => {
-  const passengers = useStepStore((s) => s.passengers);
+const PassengerInfoStep = () => {
+  const passengers = useStepStore((s) => s.bookingBody.passengers);
   const goToNextStep = useStepStore((s) => s.goToNextStep);
   const goToPrevStep = useStepStore((s) => s.goToPrevStep);
   const router = useRouter();
@@ -20,8 +20,8 @@ const BookingStep2 = () => {
     if (passengers.length === 0) router.back();
   }, [passengers]);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    // e.preventDefault();
     try {
       let infants = 0,
         children = 0,
@@ -34,19 +34,18 @@ const BookingStep2 = () => {
       });
 
       let totalPassengers = adults + children + infants;
-      
+
       // --------------- validation --------------
 
-      if (!validatePassengerCounts(adults, children, infants))
-        throw new Error("Invalid number of passengers");
+      // if (!validatePassengerCounts(adults, children, infants))
+      //   throw new Error("Invalid number of passengers");
 
-      bookingPassengersSchema
-        .min(totalPassengers)
-        .max(totalPassengers)
-        .parse(passengers);
-      
-        // ------------------------------------------
+      // bookingPassengersSchema
+      //   .min(totalPassengers)
+      //   .max(totalPassengers)
+      //   .parse(passengers);
 
+      // ------------------------------------------
 
       if (goToNextStep()) {
         router.push("/book/payment-info");
@@ -75,7 +74,7 @@ const BookingStep2 = () => {
             <span>Passenger Details</span>
           </h1>
         </div>
-        <form className="flex flex-col mt-4">
+        <div className="flex flex-col mt-4">
           <PassengerFormsSection
             type="adult"
             passengers={passengers.filter((p) => p.passenger_type === "adult")}
@@ -108,8 +107,8 @@ const BookingStep2 = () => {
           )}
 
           <button
-            type="submit"
-            onClick={handleSubmit}
+            // type="submit"
+            onClick={handleClick}
             className="w-full mt-8 relative group bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"
           >
             <div className="absolute w-0 h-full z-[5] rounded-md top-0 left-0 bg-foreground transition-all duration-200 group-hover:w-full"></div>
@@ -118,10 +117,10 @@ const BookingStep2 = () => {
               Proceed to Payment Details
             </span>
           </button>
-        </form>
+        </div>
       </div>
     </BookingStepsWrapper>
   );
 };
 
-export default BookingStep2;
+export default PassengerInfoStep;
