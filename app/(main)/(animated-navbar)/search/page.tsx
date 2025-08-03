@@ -38,6 +38,7 @@ const SearchPage = () => {
   ]);
   const [totalDuration, setTotalDuration] = useState(MAX_TOTAL_DURATION);
   const [airlinesSelected, setAirlinesSelected] = useState<number[]>([]);
+  const [bg, setBg] = useState("/hero.jpg");
   const formatCurrency = useCurrencyFormatter();
 
   useEffect(() => {
@@ -96,6 +97,16 @@ const SearchPage = () => {
       depTimes = [departureTimes[0], departureTimes[0]];
     }
 
+    let i = Math.floor(Math.random() * flights.length);
+    if (flights[i].departure_airport.city) {
+      const imgs = findByCity(
+        flights[i].departure_airport.city,
+        flights[i].departure_airport.country
+      );
+
+      if (imgs.length > 0) setBg(imgs[0].image_url);
+    }
+
     setDepartureTimes(depTimes);
     setSegments(flights);
 
@@ -126,7 +137,7 @@ const SearchPage = () => {
         id="hero"
         className="w-full py-12"
         style={{
-          backgroundImage: "url(/hero.jpg)",
+          backgroundImage: `url(${bg})`,
           backgroundPosition: "center 150%",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
