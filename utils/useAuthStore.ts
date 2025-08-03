@@ -2,6 +2,9 @@ import { fetchMe, logoutUser } from "@/app/services/auth";
 import { create } from "zustand/react";
 import { IAuthStoreState } from "@/types/IAuthStoreState";
 import { getCookie } from "./cookies";
+import { fetchAirportOptions } from "@/app/services/airports";
+import { ITripType } from "@/types/ITripType";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 
 const useAuthStore = create<IAuthStoreState>((set, get) => ({
   userId: undefined,
@@ -48,6 +51,139 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
   logout: async () => {
     await logoutUser();
     window.location.reload();
+  },
+
+  // search
+
+  segments: [],
+
+  airportOptions: [],
+
+  passengers: {
+    adults: 1,
+    children: 0,
+    infants: 0,
+  },
+
+  type: "One-way" as ITripType,
+
+  initializeSearch: async () => {
+    const airports = await fetchAirportOptions();
+    const valueToSet = airports.map((a) => ({
+      value: a.id,
+      code: a.code,
+      city: a.city,
+      country: a.country,
+    }));
+
+    const date = new Date();
+
+    set({
+      airportOptions: valueToSet,
+      segments: [
+        {
+          departure_airport: valueToSet.find((a) => a.city === get().city),
+          departure_time: {
+            day: date.getDate() + 1,
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+            flexibility_days: 7,
+          },
+          seat_class: "economy",
+        },
+      ],
+    });
+  },
+
+  updateSegment: (segmentIdx: number, field: any, value: any) => {
+    set({
+      segments: get().segments.map((segment, i) => {
+        if (i === segmentIdx) {
+          return {
+            ...segment,
+            [field]: value,
+          };
+        } else {
+          return segment;
+        }
+      }),
+    });
+  },
+
+  removeSegment: (segmentIdx: number) => {
+    set({ segments: get().segments.filter((_, i) => i !== segmentIdx) });
+  },
+
+  addSegment: () => {
+    const old = [...get().segments];
+    const last = old.slice(-1)[0];
+
+    set({
+      segments: [
+        ...old,
+        {
+          departure_airport: last.arrival_airport,
+          departure_time: last.return_time ?? last.departure_time,
+          seat_class: last.seat_class,
+        },
+      ],
+    });
+  },
+
+  setType: (type: ITripType) => set({ type }),
+  changePassengerCount(
+    change: 1 | -1 | "reset",
+    type?: "adult" | "child" | "infant"
+  ) {
+    if (change === "reset") {
+      set({
+        passengers: {
+          adults: 1,
+          children: 0,
+          infants: 0,
+        },
+      });
+
+      return;
+    }
+
+    if (type === undefined) return;
+
+    const old: IPassengersSelectedOption = { ...get().passengers };
+    let newKey: keyof IPassengersSelectedOption =
+      type === "adult" ? "adults" : type === "child" ? "children" : "infants";
+
+    set({
+      passengers: {
+        ...old,
+        [newKey]: old[newKey] + change,
+      },
+    });
+  },
+
+  setPassengers: (passengers: IPassengersSelectedOption) => {
+    set({
+      passengers,
+    });
+  },
+
+  swapFromAndTo: (segmentIdx: number) => {
+    const old = [...get().segments];
+    const temp = old[segmentIdx].departure_airport;
+
+    set({
+      segments: old.map((s, i) => {
+        if (i === segmentIdx) {
+          return {
+            ...s,
+            departure_airport: s.arrival_airport,
+            arrival_airport: temp,
+          };
+        } else {
+          return s;
+        }
+      }),
+    });
   },
 }));
 

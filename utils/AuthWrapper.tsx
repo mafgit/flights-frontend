@@ -16,11 +16,12 @@ const AuthWrapper = ({
   const role = useAuthStore((state) => state.role);
   const loading = useAuthStore((state) => state.loading);
   const fetchUser = useAuthStore((state) => state.fetchUser);
+  const initializeSearch = useAuthStore((state) => state.initializeSearch);
 
   const router = useRouter();
 
   useEffect(() => {
-    fetchUser();
+    fetchUser().finally(() => initializeSearch());
   }, []);
 
   useEffect(() => {

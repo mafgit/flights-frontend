@@ -9,6 +9,7 @@ import { ISelectedDate } from "@/types/ISelectedDate";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISeatClass } from "@/types/ISeatClass";
 import { ITripType } from "@/types/ITripType";
+import useAuthStore from "@/utils/useAuthStore";
 
 export type IFlexibilityDays = 0 | 3 | 7 | 30;
 
@@ -31,75 +32,11 @@ const FlightSearchSegment = ({
   updateSegment: (segmentIdx: number, field: any, value: any) => void;
   removeSegment: (segmentIdx: number) => void;
 }) => {
-  const [selectedFromOption, setSelectedFromOption] = useState<
-    Partial<ISearchDropdownOption>
-  >(segment.departure_airport ?? {});
   const [fromText, setFromText] = useState("");
 
-  const [selectedToOption, setSelectedToOption] = useState<
-    Partial<ISearchDropdownOption>
-  >(segment.arrival_airport ?? {});
   const [toText, setToText] = useState("");
 
-  const [selectedClass, setSelectedClass] = useState<
-    Partial<IDropdownSelectedOption<ISeatClass>>
-  >(segment.seat_class ?? classOptions[0]);
-
-  const [departureDate, setDepartureDate] = useState<ISelectedDate>(
-    segment.departure_time ?? { flexibility_days: 7 }
-  );
-  const [returnDate, setReturnDate] = useState<ISelectedDate>(
-    segment.return_time ?? { flexibility_days: 7 }
-  );
-
-  const swapFromAndTo = () => {
-    const temp = { ...selectedToOption };
-    setSelectedToOption(selectedFromOption);
-    setSelectedFromOption(temp);
-  };
-
-  useEffect(() => {
-    updateSegment(segmentIdx, "seat_class", selectedClass);
-  }, [selectedClass]);
-
-  useEffect(() => {
-    updateSegment(segmentIdx, "departure_airport", selectedFromOption);
-  }, [selectedFromOption]);
-
-  useEffect(() => {
-    updateSegment(segmentIdx, "arrival_airport", selectedToOption);
-  }, [selectedToOption]);
-
-  // useEffect(() => {
-  //   updateSegment(segmentIdx, "departure_time", departureDate);
-  // }, [departureDate]);
-
-  useEffect(() => {
-    if (
-      departureDate.day !== undefined &&
-      departureDate.day > 0 &&
-      departureDate.month !== undefined &&
-      departureDate.month >= 0 &&
-      departureDate.year !== undefined &&
-      departureDate.year >= 2025
-    ) {
-      updateSegment(segmentIdx, "departure_time", departureDate);
-    }
-  }, [departureDate]);
-
-  useEffect(() => {
-    if (
-      type === "Return" &&
-      returnDate.day !== undefined &&
-      returnDate.day > 0 &&
-      returnDate.month !== undefined &&
-      returnDate.month >= 0 &&
-      returnDate.year !== undefined &&
-      returnDate.year >= 2025
-    ) {
-      updateSegment(segmentIdx, "return_time", returnDate);
-    }
-  }, [returnDate]);
+  const swapFromAndTo = useAuthStore((s) => s.swapFromAndTo);
 
   return (
     <div className="flex gap-6 gap-y-2 flex-wrap items-center justify-start">
@@ -108,16 +45,18 @@ const FlightSearchSegment = ({
           options={airportOptions}
           searchText={fromText}
           setSearchText={setFromText}
-          selectedOption={selectedFromOption}
-          setSelectedOption={setSelectedFromOption}
+          selectedOption={segment.departure_airport ?? {}}
+          setSelectedOption={(value) =>
+            updateSegment(segmentIdx, "departure_airport", value)
+          }
           label={"From"}
           placeholder={"Airport, city or country"}
         />
 
         <button
           className="p-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!selectedFromOption.value && !selectedToOption.value}
-          onClick={swapFromAndTo}
+          disabled={!segment.departure_airport && !segment.arrival_airport}
+          onClick={() => swapFromAndTo(segmentIdx)}
         >
           <FaRightLeft />
         </button>
@@ -126,8 +65,10 @@ const FlightSearchSegment = ({
           options={airportOptions}
           searchText={toText}
           setSearchText={setToText}
-          selectedOption={selectedToOption}
-          setSelectedOption={setSelectedToOption}
+          selectedOption={segment.arrival_airport ?? {}}
+          setSelectedOption={(value) =>
+            updateSegment(segmentIdx, "arrival_airport", value)
+          }
           label={"To"}
           placeholder={"Airport, city or country"}
         />
@@ -139,23 +80,40 @@ const FlightSearchSegment = ({
         <DatePicker
           label={"Departure"}
           placeholder={"Choose date"}
-          setDateSelected={setDepartureDate}
-          dateSelected={departureDate}
+          setDateSelected={(value) =>
+            updateSegment(segmentIdx, "departure_time", value)
+          }
+          dateSelected={segment.departure_time ?? { flexibility_days: 7 }}
         />
         {type === "Return" && (
           <DatePicker
             label={"Return"}
             placeholder={"Choose date"}
-            setDateSelected={setReturnDate}
-            dateSelected={returnDate}
+            setDateSelected={(value) => {
+              if (
+                type === "Return" &&
+                value?.day !== undefined &&
+                value?.day > 0 &&
+                value?.month !== undefined &&
+                value?.month >= 0 &&
+                value?.year !== undefined &&
+                value?.year >= 2025
+              ) {
+                updateSegment(segmentIdx, "return_time", value);
+              }
+            }}
+            dateSelected={segment.return_time ?? { flexibility_days: 7 }}
           />
         )}
 
         <Dropdown<ISeatClass>
-          selectedOption={selectedClass}
-          setSelectedOption={setSelectedClass}
+          selectedOption={segment.seat_class || "economy"}
+          setSelectedOption={(value: ISeatClass) =>
+            updateSegment(segmentIdx, "seat_class", value)
+          }
           options={classOptions}
           placeholder="Select Class"
+          heading={'Seat Class'}
           grow={1}
         />
       </div>

@@ -32,7 +32,7 @@ export const searchFlights = async (
       arrival_airport_id: f.arrival_airport.value!,
       departure_airport_id: f.departure_airport.value!,
       departure_time: f.departure_time!,
-      seat_class: f.seat_class.value!,
+      seat_class: f.seat_class,
       arrival_time: f.return_time,
     }));
 

@@ -15,7 +15,7 @@ const DatePicker = ({
   label: string;
   placeholder: string;
   dateSelected: ISelectedDate;
-  setDateSelected: Dispatch<SetStateAction<ISelectedDate>>;
+  setDateSelected: (value: ISelectedDate) => void;
 }) => {
   const [opened, setOpened] = useState(false);
   const [onMonth, setOnMonth] = useState(m);
@@ -91,7 +91,7 @@ const DatePicker = ({
           <button
             className="absolute right-[6px]  top-[20px] font-extralight"
             onClick={() => {
-              setDateSelected((d) => ({ flexibility_days: d.flexibility_days }));
+              setDateSelected({ flexibility_days: 7 });
               setOpened(false);
             }}
           >
@@ -146,12 +146,12 @@ const DatePicker = ({
                   );
                 })()}
                 onClick={() => {
-                  setDateSelected((d) => ({
-                    ...d,
+                  setDateSelected({
+                    ...dateSelected,
                     day: i + 1,
                     month: onMonth,
                     year: onYear,
-                  }));
+                  });
                 }}
                 className={
                   "border-gray-300/50 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed border-1 w-[35px] h-[35px] rounded-md flex items-center justify-center not-disabled:cursor-pointer not-disabled:hover:border-primary/80 transition-all duration-100 " +
@@ -177,7 +177,7 @@ const DatePicker = ({
             {([0, 3, 7, 30] as IFlexibilityDays[]).map((option, i) => (
               <button
                 onClick={() =>
-                  setDateSelected((d) => ({ ...d, flexibility_days: option }))
+                  setDateSelected({ ...dateSelected, flexibility_days: option })
                 }
                 key={"flexibility-option-" + i}
                 className={`${

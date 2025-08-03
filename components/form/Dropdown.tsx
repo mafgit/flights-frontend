@@ -8,16 +8,25 @@ const Dropdown = <T,>({
   setSelectedOption,
   options,
   placeholder = "Select an option",
+  heading,
   grow = 0,
 }: {
   options: Required<IDropdownSelectedOption<T>>[];
-  selectedOption: IDropdownSelectedOption<T>;
-  setSelectedOption: Dispatch<React.SetStateAction<IDropdownSelectedOption<T>>>;
+  selectedOption: T;
+  setSelectedOption: (type: T) => void;
   placeholder?: string;
+  heading: string;
   grow?: number;
 }) => {
   const [opened, setOpened] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [selectedOptionState, setSelectedOptionState] = useState<
+    Required<IDropdownSelectedOption<T>>
+  >(options[1]);
+
+  useEffect(() => {
+    setSelectedOptionState(options.find((o) => o.value === selectedOption)!);
+  }, [selectedOption]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -43,19 +52,19 @@ const Dropdown = <T,>({
           className="absolute top-[8px] left-[8px] text-sm text-primary-shade"
           htmlFor={""}
         >
-          {"Trip Type"}
+          {heading}
         </label>
 
         <button
           className="flex items-center justify-between px-2 py-1 gap-2 p-2 pt-[28px] w-full max-h-[100px]"
           onClick={() => setOpened(!opened)}
         >
-          {selectedOption.value !== undefined ? (
+          {selectedOptionState?.value !== undefined ? (
             <div className="flex items-center gap-2">
-              {selectedOption.icon && (
-                <selectedOption.icon className="text-primary text-sm" />
+              {selectedOptionState?.icon && (
+                <selectedOptionState.icon className="text-primary text-sm" />
               )}
-              <span>{selectedOption.label}</span>
+              <span>{selectedOptionState.label}</span>
             </div>
           ) : (
             <span className="text-label">{placeholder}</span>
@@ -80,7 +89,11 @@ const Dropdown = <T,>({
             key={String(option.value)}
             className="rounded-md bg-dropdown/99 flex items-center justify-start gap-2 px-2 py-1 cursor-pointer w-full h-full hover:brightness-90 transition-all duration-100 ease-in"
             onClick={() => {
-              setSelectedOption(option);
+              console.log(option.value);
+
+              setSelectedOption(
+                options.find((o) => o.value === option.value)!.value
+              );
               setOpened(false);
             }}
           >

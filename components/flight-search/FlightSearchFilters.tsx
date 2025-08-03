@@ -53,7 +53,7 @@ const SearchFilters = ({
   // }, [departureTimes]);
 
   return (
-    <div className="min-h-full bg-foreground-opposite min-w-[300px] rounded-lg px-5 py-6 flex flex-col gap-6 items-center justify-start  shadow-md shadow-gray-900/40">
+    <div className="min-h-full bg-foreground-opposite min-w-[300px] w-[20%] rounded-lg px-5 py-6 flex flex-col gap-6 items-center justify-start  shadow-md shadow-gray-900/40">
       <h3 className="text-2xl font-bold">Filters</h3>
 
       <div className="flex flex-col items-center justify-center w-full px-1 gap-3">

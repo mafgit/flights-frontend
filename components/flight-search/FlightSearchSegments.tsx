@@ -1,69 +1,41 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import FlightSearchSegment from "./FlightSearchSegment";
-import { ISearchFlight } from "@/types/ISearchFlight";
-import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
-import { ITripType } from "@/types/ITripType";
 import { seatClassOptions } from "@/types/ISeatClass";
+import useAuthStore from "@/utils/useAuthStore";
 
-const FlightSearchSegments = ({
-  typeFromParams,
-  segmentsData,
-  setSegmentsData,
-  airportOptions,
-}: {
-  typeFromParams: IDropdownSelectedOption<ITripType>;
-  segmentsData: Partial<ISearchFlight>[];
-  setSegmentsData: Dispatch<SetStateAction<Partial<ISearchFlight>[]>>;
-  airportOptions: ISearchDropdownOption[];
-}) => {
-  const updateSegment = (segmentIdx: number, field: any, value: any) => {
-    setSegmentsData((prev) => {
-      return prev.map((segment, i) => {
-        if (i === segmentIdx) {
-          return {
-            ...segment,
-            [field]: value,
-          };
-        } else {
-          return segment;
-        }
-      });
-    });
-  };
-
-  const removeSegment = (segmentIdx: number) => {
-    setSegmentsData((prev) => {
-      return prev.filter((_, i) => i !== segmentIdx);
-    });
-  };
+const FlightSearchSegments = () => {
+  const airportOptions = useAuthStore((s) => s.airportOptions);
+  const segmentsData = useAuthStore((s) => s.segments);
+  const addSegment = useAuthStore((s) => s.addSegment);
+  const updateSegment = useAuthStore((s) => s.updateSegment);
+  const removeSegment = useAuthStore((s) => s.removeSegment);
+  const type = useAuthStore((s) => s.type);
 
   return (
     <div className="flex flex-col gap-2 justify-between">
       <div className="flex flex-col gap-4">
         {segmentsData
-          // .slice(0, typeFromParams.value === "Multi-city" ? undefined : 1)
+          .slice(0, type === "Multi-city" ? undefined : 1)
           .map((segment, idx) => (
             <FlightSearchSegment
               key={idx}
-              type={typeFromParams.value!}
+              type={type}
               airportOptions={airportOptions}
               classOptions={seatClassOptions}
               segmentIdx={idx}
               segment={segment}
               updateSegment={updateSegment}
-              numSegments={segmentsData.length}
               removeSegment={removeSegment}
+              numSegments={segmentsData.length}
             />
           ))}
       </div>
-      {typeFromParams.value === "Multi-city" && segmentsData.length < 6 && (
+      {type === "Multi-city" && segmentsData.length < 6 && (
         <button
           className="flex gap-2 items-center justify-center p-2 mt-1 rounded-md"
           onClick={() => {
-            setSegmentsData((prev) => [...prev, {}]);
+            addSegment();
           }}
         >
           <FaPlus />

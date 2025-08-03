@@ -1,20 +1,14 @@
 "use client";
-import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
-import { Dispatch, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaMinus, FaPlus, FaXmark } from "react-icons/fa6";
 import Separator from "../misc/Separator";
+import useAuthStore from "@/utils/useAuthStore";
 
-const PassengerDropdown = ({
-  passengersSelected,
-  setPassengersSelected,
-}: {
-  passengersSelected: IPassengersSelectedOption;
-  setPassengersSelected: Dispatch<
-    React.SetStateAction<IPassengersSelectedOption>
-  >;
-}) => {
+const PassengerDropdown = ({}: {}) => {
   const [opened, setOpened] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const passengersSelected = useAuthStore((s) => s.passengers);
+  const changePassengerCount = useAuthStore((s) => s.changePassengerCount);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -65,7 +59,7 @@ const PassengerDropdown = ({
           <button
             className="absolute right-[6px]  top-[20px] font-extralight"
             onClick={() => {
-              setPassengersSelected({ adults: 0, children: 0, infants: 0 });
+              changePassengerCount("reset");
               setOpened(false);
             }}
           >
@@ -99,11 +93,7 @@ const PassengerDropdown = ({
                   9
                 )
                   return;
-
-                setPassengersSelected((p) => ({
-                  ...p,
-                  adults: p.adults + 1,
-                }));
+                changePassengerCount(1, "adult");
               }}
             >
               <FaPlus />
@@ -112,10 +102,7 @@ const PassengerDropdown = ({
               className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
                 if (passengersSelected.adults === 0) return;
-                setPassengersSelected((p) => ({
-                  ...p,
-                  adults: p.adults - 1,
-                }));
+                changePassengerCount(-1, "adult");
               }}
             >
               <FaMinus />
@@ -142,11 +129,7 @@ const PassengerDropdown = ({
                   9
                 )
                   return;
-
-                setPassengersSelected((p) => ({
-                  ...p,
-                  children: p.children + 1,
-                }));
+                changePassengerCount(1, "child");
               }}
             >
               <FaPlus />
@@ -155,10 +138,7 @@ const PassengerDropdown = ({
               className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
                 if (passengersSelected.children === 0) return;
-                setPassengersSelected((p) => ({
-                  ...p,
-                  children: p.children - 1,
-                }));
+                changePassengerCount(-1, "child");
               }}
             >
               <FaMinus />
@@ -186,10 +166,7 @@ const PassengerDropdown = ({
                 )
                   return;
 
-                setPassengersSelected((p) => ({
-                  ...p,
-                  infants: p.infants + 1,
-                }));
+                changePassengerCount(1, "infant");
               }}
             >
               <FaPlus />
@@ -198,10 +175,7 @@ const PassengerDropdown = ({
               className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
                 if (passengersSelected.infants === 0) return;
-                setPassengersSelected((p) => ({
-                  ...p,
-                  infants: p.infants - 1,
-                }));
+                changePassengerCount(-1, "adult");
               }}
             >
               <FaMinus />

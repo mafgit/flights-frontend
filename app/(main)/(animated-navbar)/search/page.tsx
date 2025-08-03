@@ -17,6 +17,7 @@ import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import Image from "next/image";
 import { findByCity } from "@/utils/cityImages";
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
+import useAuthStore from "@/utils/useAuthStore";
 
 const MAX_TOTAL_DURATION = 50;
 
@@ -26,12 +27,6 @@ const SearchPage = () => {
   const params = useSearchParams();
   const [segments, setSegments] = useState<ISearchFlight[]>([]);
   const router = useRouter();
-  const [passengers, setPassengers] = useState<IPassengersSelectedOption>({
-    adults: 1,
-    children: 0,
-    infants: 0,
-  });
-  const [type, setType] = useState<IDropdownSelectedOption<ITripType>>({});
 
   const [departureTimes, setDepartureTimes] = useState<IDepartureTimes[]>([
     { min: 0, max: 24 },
@@ -40,6 +35,12 @@ const SearchPage = () => {
   const [airlinesSelected, setAirlinesSelected] = useState<number[]>([]);
   const [bg, setBg] = useState("/hero.jpg");
   const formatCurrency = useCurrencyFormatter();
+
+  const setType = useAuthStore((s) => s.setType);
+  const type = useAuthStore((s) => s.type);
+
+  const passengers = useAuthStore((s) => s.passengers);
+  const setPassengers = useAuthStore((s) => s.setPassengers);
 
   useEffect(() => {
     setLoading(true);
@@ -51,11 +52,9 @@ const SearchPage = () => {
       params.get("passengers") || "{}"
     ) as IPassengersSelectedOption;
 
-    const tripType = JSON.parse(
-      params.get("type") || "{}"
-    ) as IDropdownSelectedOption<ITripType>;
+    const tripType = (params.get("type") as ITripType) || "One-way";
 
-    if (flights.length === 0 || !tripType.value) {
+    if (flights.length === 0 || !tripType) {
       router.replace("/");
       setLoading(false);
       return;
@@ -64,7 +63,7 @@ const SearchPage = () => {
     const airlines = JSON.parse(params.get("airlines") || "[]") as number[];
     setAirlinesSelected(airlines);
 
-    setType({ ...tripType });
+    setType(tripType);
 
     setPassengers(passengers2); // todo: passenger object and number validation
 
@@ -73,7 +72,7 @@ const SearchPage = () => {
       max: 24,
     });
 
-    if (tripType.value === "Return") {
+    if (tripType === "Return") {
       if (!flights[0].return_time) {
         // alert("No return time or flexibility days selected for round-trip");
         router.replace("/");
@@ -113,7 +112,7 @@ const SearchPage = () => {
     //
 
     searchFlights(
-      tripType.value,
+      tripType,
       flights,
       passengers2,
       depTimes,
@@ -154,11 +153,8 @@ const SearchPage = () => {
         </h1>
         <div className="w-full p-4 max-w-[1300px] mx-auto">
           {" "}
-          {type.value && segments && segments.length > 0 && (
+          {type && segments && segments.length > 0 && (
             <FlightSearchForm
-              typeFromParams={type}
-              segmentsDataFromParams={segments}
-              passengersFromParams={passengers}
               searchPage={true}
               airlinesFromSegments={airlinesSelected}
             />
@@ -168,7 +164,7 @@ const SearchPage = () => {
       {/* <div className="w-full h-[1px] rounded-full bg-foreground/20 mt-4 mb-0 bg-gradient-to-r from-foreground-opposite via-foreground/30 to-foreground-opposite"></div> */}
 
       <div className="w-full">
-        <div className="flex gap-6 h-full items-center justify-start w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto">
+        <div className="flex gap-6 h-full items-center justify-between w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto">
           {segments.length && departureTimes.length ? (
             <SearchFilters
               segments={segments}
@@ -182,7 +178,7 @@ const SearchPage = () => {
             />
           ) : null}
 
-          <div className="flex items-center justify-start gap-3 flex-col h-full self-start w-[60%]">
+          <div className="flex items-center justify-start gap-3 flex-col h-full self-start w-[50%]">
             {loading ? (
               <Loading />
             ) : (!results || results.length === 0) && !loading ? (
