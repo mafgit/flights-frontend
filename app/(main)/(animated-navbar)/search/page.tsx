@@ -169,7 +169,7 @@ const SearchPage = () => {
 
       <div className="w-full">
         <div className="flex gap-6 h-full items-center justify-start w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto">
-          {segments.length && departureTimes.length && (
+          {segments.length && departureTimes.length ? (
             <SearchFilters
               segments={segments}
               setTotalDuration={setTotalDuration}
@@ -180,7 +180,7 @@ const SearchPage = () => {
               airlinesSelected={airlinesSelected}
               setAirlinesSelected={setAirlinesSelected}
             />
-          )}
+          ) : null}
 
           <div className="flex items-center justify-start gap-3 flex-col h-full self-start w-[60%]">
             {loading ? (

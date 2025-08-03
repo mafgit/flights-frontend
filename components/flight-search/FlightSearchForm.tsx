@@ -60,9 +60,18 @@ const FlightSearchForm = ({
 
       if (segmentsDataFromParams === undefined) {
         console.log("setting 1");
+        const date = new Date();
 
         setSegmentsData([
-          { departure_airport: valueToSet.find((a) => a.city === city) },
+          {
+            departure_airport: valueToSet.find((a) => a.city === city),
+            departure_time: {
+              day: date.getDate(),
+              month: date.getMonth() + 1,
+              year: date.getFullYear(),
+              flexibility_days: 7,
+            },
+          },
         ]);
       }
     });

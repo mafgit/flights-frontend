@@ -39,6 +39,9 @@ const Cities = () => {
                 const { image_url, city, country, id, label } = images[0];
                 return (
                   <div
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                     className="rounded-lg relative z-[5] max-w-[300px] h-[300px] shadow-xl shadow-background/80 group transition-all duration-200 ease-in-out"
                     key={`image-${id}-${city}`}
                   >
