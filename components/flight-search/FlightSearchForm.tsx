@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "../form/Dropdown";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import FlightSearchSegments from "./FlightSearchSegments";
@@ -10,11 +10,14 @@ import FlightSearchButton from "./FlightSearchButton";
 import PassengerDropdown from "../form/PassengerDropdown";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
-import { flattenError, ZodError } from "zod";
+import { ZodError } from "zod";
+import useAuthStore from "@/utils/useAuthStore";
+import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
+import { fetchAirportOptions } from "@/app/services/airports";
 
 const FlightSearchForm = ({
   typeFromParams = tripTypeOptions[0],
-  segmentsDataFromParams = [{}],
+  segmentsDataFromParams = undefined,
   passengersFromParams = { adults: 1, children: 0, infants: 0 },
   searchPage = false,
   airlinesFromSegments = [],
@@ -25,11 +28,11 @@ const FlightSearchForm = ({
   searchPage?: boolean;
   airlinesFromSegments?: number[];
 }) => {
-  const [segmentsData, setSegmentsData] = useState<Partial<ISearchFlight>[]>(
-    segmentsDataFromParams
-  );
+  console.log(segmentsDataFromParams);
 
-  // console.trace('typeFromParams', typeFromParams)
+  const [segmentsData, setSegmentsData] = useState<Partial<ISearchFlight>[]>([
+    {},
+  ]);
 
   const [selectedTypeOption, setSelectedTypeOption] =
     useState<IDropdownSelectedOption<ITripType>>(typeFromParams);
@@ -37,12 +40,44 @@ const FlightSearchForm = ({
   const [passengersSelected, setPassengersSelected] =
     useState<IPassengersSelectedOption>(passengersFromParams);
 
+  const [airportOptions, setAirportOptions] = useState<ISearchDropdownOption[]>(
+    []
+  );
+
   const router = useRouter();
+  const city = useAuthStore((state) => state.city);
+
+  useEffect(() => {
+    fetchAirportOptions().then((airports) => {
+      const valueToSet = airports.map((a) => ({
+        value: a.id,
+        code: a.code,
+        city: a.city,
+        country: a.country,
+      }));
+
+      setAirportOptions(valueToSet);
+
+      if (segmentsDataFromParams === undefined) {
+        console.log("setting 1");
+
+        setSegmentsData([
+          { departure_airport: valueToSet.find((a) => a.city === city) },
+        ]);
+      }
+    });
+  }, []);
 
   const onSearchClick = () => {
     // todo: validation
     try {
-      if (!validatePassengerCounts(passengersSelected.adults, passengersSelected.children, passengersSelected.infants))
+      if (
+        !validatePassengerCounts(
+          passengersSelected.adults,
+          passengersSelected.children,
+          passengersSelected.infants
+        )
+      )
         throw new Error("Invalid number of passengers");
 
       searchSegmentsSchema.parse(segmentsData);
@@ -80,16 +115,24 @@ const FlightSearchForm = ({
         />
       </div>
 
-      <FlightSearchSegments
-        typeFromParams={selectedTypeOption}
-        segmentsData={segmentsData}
-        setSegmentsData={setSegmentsData}
-      />
-
-      <FlightSearchButton
-        onSearchClick={onSearchClick}
-        searchPage={searchPage}
-      />
+      {airportOptions.length > 0 &&
+      segmentsData.length > 0 &&
+      segmentsData[0].departure_airport ? (
+        <>
+          <FlightSearchSegments
+            typeFromParams={selectedTypeOption}
+            segmentsData={segmentsData}
+            setSegmentsData={setSegmentsData}
+            airportOptions={airportOptions}
+          />
+          <FlightSearchButton
+            onSearchClick={onSearchClick}
+            searchPage={searchPage}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

@@ -53,7 +53,7 @@ const FlightSearchSegment = ({
   );
 
   const swapFromAndTo = () => {
-    const temp = selectedToOption;
+    const temp = { ...selectedToOption };
     setSelectedToOption(selectedFromOption);
     setSelectedFromOption(temp);
   };

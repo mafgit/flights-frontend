@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
+import AuthWrapper from "@/utils/AuthWrapper";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -48,10 +49,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} antialiased`}>
-        {/* <div className="pt-[50px]"></div> */}
-        {children}
-        <div className="pt-[50px]"></div>
-        <Footer />
+        <AuthWrapper allowedRoles={['all']}>
+          {/* <div className="pt-[50px]"></div> */}
+          {children}
+          <div className="pt-[50px]"></div>
+          <Footer />
+        </AuthWrapper>
       </body>
     </html>
   );

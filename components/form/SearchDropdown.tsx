@@ -22,6 +22,8 @@ const SearchDropdown = ({
     React.SetStateAction<Partial<ISearchDropdownOption>>
   >;
 }) => {
+  // console.log("final", selectedOption);
+
   const [opened, setOpened] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [shownOptions, setShownOptions] = useState<ISearchDropdownOption[]>([]);

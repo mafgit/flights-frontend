@@ -1,6 +1,7 @@
 import { fetchMe, logoutUser } from "@/app/services/auth";
 import { create } from "zustand/react";
 import { IAuthStoreState } from "@/types/IAuthStoreState";
+import { getCookie } from "./cookies";
 
 const useAuthStore = create<IAuthStoreState>((set, get) => ({
   userId: undefined,
@@ -28,18 +29,11 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
       } catch (err) {
         console.log(err);
       } finally {
-        let cookies = document.cookie;
-        let country_name = "";
-        let city = "";
-        let currency = "";
-        let timezone = "";
-        cookies.split(";  ").forEach((cookie) => {
-          const [name, value] = cookie.split("=");
-          if (name === "city") city = value;
-          else if (name === "country_name") country_name = value;
-          else if (name === "currency") currency = value;
-          else if (name === "timezone") timezone = value;
-        });
+        const city = getCookie("city");
+        const country_name = getCookie("country_name");
+        const currency = getCookie("currency");
+        const timezone = getCookie("timezone");
+
         set({
           loading: false,
           city,

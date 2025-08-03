@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import FlightSearchSegment from "./FlightSearchSegment";
-import { fetchAirportOptions } from "@/app/services/airports";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchDropdownOption } from "@/types/ISearchDropdownOption";
 import { ITripType } from "@/types/ITripType";
@@ -13,15 +12,13 @@ const FlightSearchSegments = ({
   typeFromParams,
   segmentsData,
   setSegmentsData,
+  airportOptions,
 }: {
   typeFromParams: IDropdownSelectedOption<ITripType>;
   segmentsData: Partial<ISearchFlight>[];
   setSegmentsData: Dispatch<SetStateAction<Partial<ISearchFlight>[]>>;
+  airportOptions: ISearchDropdownOption[];
 }) => {
-  const [airportOptions, setAirportOptions] = useState<ISearchDropdownOption[]>(
-    []
-  );
-
   const updateSegment = (segmentIdx: number, field: any, value: any) => {
     setSegmentsData((prev) => {
       return prev.map((segment, i) => {
@@ -43,26 +40,11 @@ const FlightSearchSegments = ({
     });
   };
 
-  useEffect(() => {
-    fetchAirportOptions().then((airports) => {
-      setAirportOptions(
-        airports.map(
-          (a: { code: string; city: string; country: string; id: number }) => ({
-            value: a.id,
-            code: a.code,
-            city: a.city,
-            country: a.country,
-          })
-        )
-      );
-    });
-  }, []);
-
   return (
     <div className="flex flex-col gap-2 justify-between">
       <div className="flex flex-col gap-4">
         {segmentsData
-          .slice(0, typeFromParams.value === "Multi-city" ? undefined : 1)
+          // .slice(0, typeFromParams.value === "Multi-city" ? undefined : 1)
           .map((segment, idx) => (
             <FlightSearchSegment
               key={idx}
