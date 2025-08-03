@@ -2,7 +2,6 @@ import { IBookingPassenger } from "./IBookingPassenger";
 import { ISeatClass } from "./ISeatClass";
 
 export interface IStepStoreState {
-  formStepsCompleted: number[];
   currentFormStep: number;
   goToNextStep: () => boolean;
   goToPrevStep: () => boolean;
@@ -27,5 +26,4 @@ export interface IStepStoreState {
   setTotalAmount: (amount: number) => void;
   clearFormSteps: () => void;
   bookedBookingId?: number;
-  setBookedBookingId: (id: number | undefined) => void;
 }

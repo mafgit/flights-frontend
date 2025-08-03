@@ -152,3 +152,15 @@ input {
   outline: none !important;
   border: none !important;
 } */
+
+legend {
+  float: none !important;
+  /* margin-bottom: 10px; */
+  top: 30px;
+  position: relative;
+  font-size: 1.25em;
+  font-weight: bold;
+  padding: 0;
+  display: block;
+  border: none;
+}

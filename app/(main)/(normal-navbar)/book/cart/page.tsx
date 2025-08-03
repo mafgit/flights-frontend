@@ -22,7 +22,6 @@ const BookingStep1 = () => {
   const [segments, setSegments] = useState<IBookingSegment[]>([]);
   const [error, setError] = useState(false);
   const [passengers, setPassengers] = useState<IBookingPassenger[]>([]);
-  const setBookedBookingId = useStepStore((s) => s.setBookedBookingId);
   const clearFormSteps = useStepStore((s) => s.clearFormSteps);
   const [loading, setLoading] = useState(true);
   const formatCurrency = useCurrencyFormatter();
@@ -36,7 +35,6 @@ const BookingStep1 = () => {
 
   useEffect(() => {
     clearFormSteps();
-    setBookedBookingId(undefined);
     setLoading(true);
     getCart()
       .then(({ segments, passengers, cart }) => {

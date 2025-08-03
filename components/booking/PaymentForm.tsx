@@ -22,8 +22,7 @@ const PaymentForm = ({}: {}) => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const goToNextStep = useStepStore((s) => s.goToNextStep);
-  const setBookedBookingId = useStepStore((s) => s.setBookedBookingId);
+  const clearFormSteps = useStepStore((s) => s.clearFormSteps);
   const bookingBody = useStepStore((s) => s.bookingBody);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -45,6 +44,9 @@ const PaymentForm = ({}: {}) => {
     });
 
     if (error) setMessage(error.message || "An unexpected error occurred");
+    else {
+      clearFormSteps();
+    }
     setLoading(false);
     // const schema = z
     //   .object({
@@ -64,12 +66,6 @@ const PaymentForm = ({}: {}) => {
     // // --------------- validation --------------
     // schema.parse(body);
     // // ------------------------------------------
-
-    // if (goToNextStep()) {
-    //   // todo: payment
-    //   setBookedBookingId(3);
-    //   router.replace("/book/success");
-    // }
   };
 
   const formatCurrency = useCurrencyFormatter();
@@ -78,27 +74,17 @@ const PaymentForm = ({}: {}) => {
     <form
       id="payment-form"
       onSubmit={handleSubmit}
-      className="bg-foreground-opposite py-6 px-6 rounded-lg"
+      className="bg-foreground-opposite w-[400px] mt-8 py-6 px-6 rounded-lg"
     >
-      <div className="flex items-center justify-center gap-4">
-        {/* <button
-          className="bg-danger px-2 py-1 flex items-center justify-center rounded-md gap-1 mr-auto"
-          onClick={() => {
-            if (goToPrevStep()) {
-              router.back();
-            }
-          }}
-        >
-          <FaArrowCircleLeft />
-          <span>Back</span>
-        </button> */}
+      {/* <div className="flex items-center justify-center gap-4">
         <h1 className="text-2xl font-bold flex items-center justify-center gap-2 mr-auto text-center mx-auto mb-6">
           <FaCreditCard className="text-primary" />
           <span>Payment Details</span>
         </h1>
-      </div>
+      </div> */}
       <PaymentElement
         id="payment-element"
+        className=""
         options={{
           // wallets: {
           //   applePay: 'never',

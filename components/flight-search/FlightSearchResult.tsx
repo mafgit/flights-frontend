@@ -16,6 +16,8 @@ const FlightSearchResult = ({
 }) => {
   const formatCurrency = useCurrencyFormatter()
   
+  console.log(result);
+  
   return (
     <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-lg shadow-md shadow-gray-900/40">
       <div className="flex flex-col gap-2 items-center justify-center">

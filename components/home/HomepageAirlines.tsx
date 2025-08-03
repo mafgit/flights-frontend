@@ -14,7 +14,7 @@ const HomepageAirlines = () => {
   }, []);
 
   return (
-    <div className=" p-8 py-8 mt-4 flex items-center justify-center gap-6 flex-col">
+    <div className=" p-8 py-8 flex items-center justify-center gap-6 flex-col">
       <h2 className="font-bold text-2xl text-foreground border-b-2 border-primary">
         Fly all over the world!
       </h2>

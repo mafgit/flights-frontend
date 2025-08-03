@@ -20,8 +20,9 @@ const PassengerInfoStep = () => {
     if (passengers.length === 0) router.back();
   }, [passengers]);
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault();
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
     try {
       let infants = 0,
         children = 0,
@@ -37,13 +38,13 @@ const PassengerInfoStep = () => {
 
       // --------------- validation --------------
 
-      // if (!validatePassengerCounts(adults, children, infants))
-      //   throw new Error("Invalid number of passengers");
+      if (!validatePassengerCounts(adults, children, infants))
+        throw new Error("Invalid number of passengers");
 
-      // bookingPassengersSchema
-      //   .min(totalPassengers)
-      //   .max(totalPassengers)
-      //   .parse(passengers);
+      bookingPassengersSchema
+        .min(totalPassengers)
+        .max(totalPassengers)
+        .parse(passengers);
 
       // ------------------------------------------
 
@@ -63,7 +64,7 @@ const PassengerInfoStep = () => {
             type="button"
             className="bg-danger px-2 py-1 flex items-center justify-center rounded-md gap-1"
             onClick={() => {
-              goToPrevStep();
+              if (goToPrevStep()) router.back();
             }}
           >
             <FaArrowCircleLeft />
@@ -74,7 +75,11 @@ const PassengerInfoStep = () => {
             <span>Passenger Details</span>
           </h1>
         </div>
-        <div className="flex flex-col mt-4">
+        <form
+          autoComplete="on"
+          className="flex flex-col mt-4"
+          onSubmit={handleSubmit}
+        >
           <PassengerFormsSection
             type="adult"
             passengers={passengers.filter((p) => p.passenger_type === "adult")}
@@ -107,8 +112,7 @@ const PassengerInfoStep = () => {
           )}
 
           <button
-            // type="submit"
-            onClick={handleClick}
+            type="submit"
             className="w-full mt-8 relative group bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"
           >
             <div className="absolute w-0 h-full z-[5] rounded-md top-0 left-0 bg-foreground transition-all duration-200 group-hover:w-full"></div>
@@ -117,7 +121,7 @@ const PassengerInfoStep = () => {
               Proceed to Payment Details
             </span>
           </button>
-        </div>
+        </form>
       </div>
     </BookingStepsWrapper>
   );

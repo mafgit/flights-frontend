@@ -10,7 +10,7 @@ import Separator from "../misc/Separator";
 const BookingSegment = ({
   segment,
   passengers,
-  formatCurrency
+  formatCurrency,
 }: {
   segment: IBookingSegment;
   passengers: IBookingPassenger[];
@@ -99,7 +99,9 @@ const BookingSegment = ({
         />
       </div>
 
-      <h2 className=" w-full p-2 bg-background rounded-md text-center">Segment Total: {formatCurrency(segment.segment_total_amount)}</h2>
+      <h2 className=" w-full p-2 bg-background rounded-md text-center">
+        Segment Total: {formatCurrency(segment.segment_total_amount)}
+      </h2>
     </div>
   );
 };

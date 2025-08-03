@@ -29,13 +29,10 @@ const PassengerForm = ({
   };
 
   return (
-    <form
-      autoComplete="on"
-      className="bg-foreground-opposite p-5 py-8 rounded-lg mx-auto"
-    >
-      <h3 className="capitalize text-lg font-semibold mb-2">
+    <fieldset className="bg-foreground-opposite p-5 py-8 pt-[40px] rounded-lg mx-auto">
+      <legend className="capitalize text-lg font-semibold mb-2">
         {passenger.passenger_type} #{i + 1}
-      </h3>
+      </legend>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="full_name">Full Name</label>
@@ -117,7 +114,7 @@ const PassengerForm = ({
           </select>
         </div>
       </div>
-    </form>
+    </fieldset>
   );
 };
 

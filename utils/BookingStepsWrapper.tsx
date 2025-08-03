@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useStepStore from "./useStepStore";
+import Loading from "@/components/misc/Loading";
 
 const BookingStepsWrapper = ({
   step: triedToVisitStep,
@@ -12,32 +13,32 @@ const BookingStepsWrapper = ({
   children: ReactNode;
 }) => {
   const router = useRouter();
-  const formStepsCompleted = useStepStore((s) => s.formStepsCompleted);
+  const currentFormStep = useStepStore((s) => s.currentFormStep);
 
   const isValidStep = () => {
-    // console.log("triedToVisit", triedToVisitStep);
-    // console.log(
-    //   "allowed",
-    //   triedToVisitStep === 1 ||
-    //     formStepsCompleted.includes(triedToVisitStep - 1)
-    // );
+    console.log("triedToVisit", triedToVisitStep);
 
     return (
-      triedToVisitStep > 0 &&
-      triedToVisitStep < 5 &&
-      (triedToVisitStep === 1 ||
-        formStepsCompleted.includes(triedToVisitStep - 1))
+      currentFormStep === triedToVisitStep ||
+      Math.abs(triedToVisitStep - currentFormStep) === 1
     );
+
+    // return (
+    //   triedToVisitStep > 0 &&
+    //   triedToVisitStep < 5 &&
+    //   (triedToVisitStep === 1 ||
+    //     formStepsCompleted.includes(triedToVisitStep - 1))
+    // );
   };
   useEffect(() => {
     // todo: check why it is sometimes going too much back
-    // if (!isValidStep()) {
-    if (false) {
-      router.back();
+    // if (false) {
+    if (!isValidStep()) {
+      router.replace("/book/cart");
     }
   }, [triedToVisitStep]);
 
-  return true ? children : <></>;
+  return isValidStep() ? children : <Loading />;
 };
 
 export default BookingStepsWrapper;
