@@ -42,9 +42,13 @@ const FlightSearchSegment = ({
     <div className="flex gap-6 gap-y-2 flex-wrap items-center justify-start">
       <div className="flex justify-between items-center grow-[1] shrink-[1]">
         <SearchDropdown
+          // options={airportOptions.filter(
+          //   (a) => a.value !== segment.arrival_airport?.value
+          // )}
           options={airportOptions}
           searchText={fromText}
           setSearchText={setFromText}
+          otherOption={segment.arrival_airport}
           selectedOption={segment.departure_airport ?? {}}
           setSelectedOption={(value) =>
             updateSegment(segmentIdx, "departure_airport", value)
@@ -62,7 +66,15 @@ const FlightSearchSegment = ({
         </button>
 
         <SearchDropdown
-          options={airportOptions}
+          options={
+            // segment.departure_airport && segment.departure_airport.value
+            //   ? airportOptions.filter(
+            //       (a) => a.value !== segment.departure_airport.value
+            //     )
+            //   : airportOptions
+            airportOptions
+          }
+          otherOption={segment.departure_airport}
           searchText={toText}
           setSearchText={setToText}
           selectedOption={segment.arrival_airport ?? {}}
@@ -113,7 +125,7 @@ const FlightSearchSegment = ({
           }
           options={classOptions}
           placeholder="Select Class"
-          heading={'Seat Class'}
+          heading={"Seat Class"}
           grow={1}
         />
       </div>

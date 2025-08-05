@@ -16,7 +16,7 @@ const BookingStepsWrapper = ({
   const currentFormStep = useStepStore((s) => s.currentFormStep);
 
   const isValidStep = () => {
-    console.log("triedToVisit", triedToVisitStep);
+    // console.log("triedToVisit", triedToVisitStep);
 
     return (
       currentFormStep === triedToVisitStep ||
@@ -30,6 +30,7 @@ const BookingStepsWrapper = ({
     //     formStepsCompleted.includes(triedToVisitStep - 1))
     // );
   };
+
   useEffect(() => {
     // todo: check why it is sometimes going too much back
     // if (false) {
@@ -38,7 +39,13 @@ const BookingStepsWrapper = ({
     }
   }, [triedToVisitStep]);
 
-  return isValidStep() ? children : <Loading />;
+  return isValidStep() ? (
+    children
+  ) : (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loading />
+    </div>
+  );
 };
 
 export default BookingStepsWrapper;

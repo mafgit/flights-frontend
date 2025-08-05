@@ -11,6 +11,7 @@ const SearchDropdown = ({
   options,
   label,
   placeholder,
+  otherOption,
 }: {
   label: string;
   options: ISearchDropdownOption[];
@@ -21,6 +22,7 @@ const SearchDropdown = ({
   setSelectedOption: Dispatch<
     React.SetStateAction<Partial<ISearchDropdownOption>>
   >;
+  otherOption?: Partial<ISearchDropdownOption>;
 }) => {
   // console.log("final", selectedOption);
 
@@ -44,8 +46,14 @@ const SearchDropdown = ({
   }, []);
 
   useEffect(() => {
-    setShownOptions(options);
-  }, [options]);
+    let newOptions = [...options];
+    // if (otherOption && otherOption.value)
+    //   newOptions = newOptions.filter((o) => o.value !== otherOption.value);
+    setShownOptions(newOptions);
+  }, [
+    options,
+    // , otherOption
+  ]);
 
   useEffect(() => {
     const text = searchText.trim().toLowerCase();
@@ -57,16 +65,22 @@ const SearchDropdown = ({
       }
 
       timeoutRef.current = setTimeout(() => {
-        setShownOptions(
-          options.filter((o) =>
-            (o.city + " (" + o.code + "), " + o.country)
-              .toLowerCase()
-              .includes(text)
-          )
+        let newOptions = options.filter((o) =>
+          (o.city + " (" + o.code + "), " + o.country)
+            .toLowerCase()
+            .includes(text)
         );
+
+        if (otherOption?.value) {
+          newOptions = newOptions.filter((o) => o.value !== otherOption.value);
+        }
+
+        setShownOptions(newOptions);
       }, 400);
+    } else {
+      setShownOptions(options.filter((o) => o.value !== otherOption?.value));
     }
-  }, [searchText]);
+  }, [searchText, otherOption]);
 
   return (
     <div

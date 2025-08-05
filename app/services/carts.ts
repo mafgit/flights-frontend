@@ -6,8 +6,6 @@ export const addCart = async (
   flights: { flightId: number; seatClass: ISeatClass }[],
   passengers: IPassengersSelectedOption
 ) => {
-  console.log(passengers);
-  
   const res = await fetch(CARTS_BASE_URL + "/add", {
     method: "POST",
     body: JSON.stringify({ flights, passengers }),

@@ -1,4 +1,8 @@
-export function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
+export function getDateAndTime(
+  iso: string,
+  year = false,
+  timezoneOfDisplay?: string
+) {
   let date = new Date(iso);
 
   let date2 = date.toLocaleString("en-US", {
@@ -6,11 +10,14 @@ export function getDateAndTime(iso: string, timezoneOfDisplay?: string) {
       timezoneOfDisplay ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     day: "numeric",
     month: "short",
-    // year: 'numeric',
+    // year:"numeric",
     hour: "numeric",
     minute: "2-digit",
   });
 
   const [month, day, time, am] = date2.replace(/,/g, "").split(" ");
-  return [day + " " + month, time + " " + am];
+  return [
+    day + " " + month + (year ? ", " + date.getFullYear() : ""),
+    time + " " + am,
+  ];
 }

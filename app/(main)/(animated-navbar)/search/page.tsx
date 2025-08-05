@@ -180,7 +180,7 @@ const SearchPage = () => {
 
           <div className="flex items-center justify-start gap-3 flex-col h-full self-start w-[50%]">
             {loading ? (
-              <Loading />
+              <Loading message="Searching Flights" />
             ) : (!results || results.length === 0) && !loading ? (
               <h3 className="text-center w-max flex items-center justify-center gap-2 flex-col">
                 <FaBan className="text-3xl font-semibold " />
@@ -208,11 +208,11 @@ const SearchPage = () => {
           <div className="flex flex-col gap-4 items-center justify-start h-full self-start">
             {segments.length &&
               segments.map((s) => {
-                if (!s.departure_airport.city) return null;
+                if (!s.arrival_airport.city) return null;
 
                 const images = findByCity(
-                  s.departure_airport.city,
-                  s.departure_airport.country
+                  s.arrival_airport.city,
+                  s.arrival_airport.country
                 );
 
                 if (images.length === 0) return null;

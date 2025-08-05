@@ -3,12 +3,10 @@
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
 import Loading from "@/components/misc/Loading";
 import Separator from "@/components/misc/Separator";
-import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
-import useStepStore from "@/utils/useStepStore";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const stripePromise = loadStripe(
@@ -17,7 +15,6 @@ const stripePromise = loadStripe(
 
 const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
-  const router = useRouter();
   const [status, setStatus] = useState("loading");
   const formatCurrency = useCurrencyFormatter();
   const [details, setDetails] = useState<{
@@ -38,24 +35,56 @@ const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
   // }, []);
 
   useEffect(() => {
-    if (!stripe || !clientSecret) {
-      return;
+    if (!clientSecret) {
+      return setStatus("error");
     }
 
+    if (!stripe) {
+      return setStatus("loading");
+    }
+
+    setStatus("loading");
     stripe
       .retrievePaymentIntent(clientSecret)
-      .then(({ paymentIntent }) => {
-        console.log("paymentIntent", paymentIntent);
+      .then(async ({ paymentIntent }) => {
         if (paymentIntent) {
-          setDetails({
-            amount: paymentIntent.amount / 100,
-            currency: paymentIntent.currency,
-            receipt_email: paymentIntent.receipt_email as string,
-            booking_id: parseInt(
-              (paymentIntent as any).metadata?.booking_id || 0
-            ),
-          });
+          let booking_id = 0;
+
+          if (paymentIntent.status === "succeeded") {
+            try {
+              const r = await fetch(
+                "http://localhost:5000/api/payments/get-booking-data-after-success",
+                {
+                  credentials: "include",
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    payment_intent_id: paymentIntent.id,
+                  }),
+                }
+              );
+
+              const data = await r.json();
+              booking_id = data.booking_id;
+            } catch (err) {
+              console.log(err);
+              setStatus("error");
+              return;
+            }
+
+            setDetails({
+              amount: paymentIntent.amount / 100,
+              currency: paymentIntent.currency,
+              receipt_email: paymentIntent.receipt_email as string,
+              booking_id,
+            });
+          }
+
           setStatus(paymentIntent.status);
+        } else {
+          setStatus("error");
         }
       })
       .catch((err) => {
@@ -64,16 +93,12 @@ const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
       });
   }, [stripe, clientSecret]);
 
-  useEffect(() => {
-    console.log(status);
-  }, [status]);
-
-  if (status === "loading") return <Loading />;
-
   return (
     <div className="py-8 flex items-center justify-center">
       <div className="p-6 bg-foreground-opposite rounded-lg flex flex-col gap-3 text-center">
-        {status === "succeeded" ? (
+        {status === "loading" ? (
+          <Loading message="Fetching Details" />
+        ) : status === "succeeded" ? (
           <>
             <h2 className="gap-2 font-bold flex flex-col">
               <span className="text-primary text-3xl">Success!</span>{" "}
@@ -104,12 +129,12 @@ const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
             <div className="text-lg flex flex-col gap-3">
               <p>Booking details are sent to your email</p>
               <div className="flex flex-col gap-2">
-                <p>You can check your booking here</p>
+                <p>You can view your booking here</p>
                 <Link
-                  href={"/track?id=" + details.booking_id}
+                  href={"/view?id=" + details.booking_id}
                   className="bg-primary-shade text-lg text-foreground p-2 rounded-md w-full"
                 >
-                  Track Booking
+                  View Booking
                 </Link>
               </div>
             </div>
@@ -137,33 +162,6 @@ const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
       </div>
     </div>
   );
-
-  // <div className="py-8 flex items-center justify-center">
-  //   <div className="bg-foreground-opposite p-8 rounded-lg mx-auto max-w-[500px] flex items-center justify-center flex-col text-center gap-4">
-  //     <h1 className="text-3xl font-bold">
-  //       <span className="text-primary">Congratulations!</span> Your booking is
-  //       confirmed!
-  //     </h1>
-  //     <p className="text-lg">
-  //       Your booking id:{" "}
-  //       <span className=" bg-blue-500 p-2 rounded-md">{bookedBookingId}</span>
-  //     </p>
-  //     <li className="text-lg list-disc self-start text-left">
-  //       Details are sent to your email{" "}
-  //       <span className=" bg-blue-500 p-2 rounded-md">abcd@abcd.com</span>
-  //     </li>
-  //     <li className="text-lg  list-disc self-start text-left">
-  //       You can track your booking here using your booking id:
-  //     </li>
-  //     <Link
-  //       href={"/track/" + bookedBookingId}
-  //       className="bg-primary-shade text-lg text-foreground p-2 rounded-md w-full"
-  //     >
-  //       Track Booking
-  //     </Link>
-  //   </div>
-  // </div>
-  // );
 };
 
 const SuccessPageWrapper = () => {

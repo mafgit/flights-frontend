@@ -42,7 +42,7 @@ const AuthWrapper = ({
     }
   }, [role, loading]);
 
-  return loading ? <Loading /> : <div>{children}</div>;
+  return loading ? <div className="min-h-screen flex items-center justify-center"><Loading /></div> : <div>{children}</div>;
 };
 
 export default AuthWrapper;

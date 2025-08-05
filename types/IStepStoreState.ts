@@ -25,5 +25,6 @@ export interface IStepStoreState {
   ) => void;
   setTotalAmount: (amount: number) => void;
   clearFormSteps: () => void;
-  bookedBookingId?: number;
+  clientSecret: string;
+  setClientSecret: (secret: string) => void;
 }

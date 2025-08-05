@@ -5,10 +5,11 @@ import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
 import useStepStore from "@/utils/useStepStore";
 import React, { FormEvent, MouseEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUsers } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa6";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
 import { bookingPassengersSchema } from "@/types/IBookingPassenger";
+import useAuthStore from "@/utils/useAuthStore";
 
 const PassengerInfoStep = () => {
   const passengers = useStepStore((s) => s.bookingBody.passengers);
@@ -16,11 +17,15 @@ const PassengerInfoStep = () => {
   const goToPrevStep = useStepStore((s) => s.goToPrevStep);
   const router = useRouter();
 
+  const bookingBody = useStepStore((s) => s.bookingBody);
+  const setClientSecret = useStepStore((s) => s.setClientSecret);
+  const userId = useAuthStore((s) => s.userId);
+
   useEffect(() => {
     if (passengers.length === 0) router.back();
   }, [passengers]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
@@ -48,8 +53,43 @@ const PassengerInfoStep = () => {
 
       // ------------------------------------------
 
-      if (goToNextStep()) {
-        router.push("/book/payment-info");
+      try {
+        // setLoading(true);
+        // console.log("BODY", bookingBody);
+
+        console.log("sending create booking intent");
+
+        const res = await fetch(
+          "http://localhost:5000/api/bookings/create-booking-intent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              ...bookingBody,
+              user_id: userId,
+              booking_id: undefined,
+              receipt_email: "abc@abc.com",
+            }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to create payment intent");
+        }
+
+        const { clientSecret } = await res.json();
+        setClientSecret(clientSecret);
+
+        if (goToNextStep()) {
+          router.push("/book/payment-info");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        // setLoading(false);
       }
     } catch (err) {
       console.log(err);

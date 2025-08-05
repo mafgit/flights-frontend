@@ -2,11 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
-import { FaHome, FaMapMarker } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import {
   FaCartFlatbed,
   FaLockOpen,
   FaPlaneDeparture,
+  FaScroll,
 } from "react-icons/fa6";
 
 const Navbar = ({ animate = false }: { animate?: boolean }) => {
@@ -70,8 +71,8 @@ const Navbar = ({ animate = false }: { animate?: boolean }) => {
           </Link>
 
           <ul className="flex gap-4 items-center justify-center">
-            <NavItem href="/track" name="Track">
-              <FaMapMarker className="text-sm" />
+            <NavItem href="/view" name="Bookings">
+              <FaScroll className="text-sm" />
             </NavItem>
 
             <NavItem href="/book/cart" name="Cart">

@@ -1,21 +1,16 @@
 "use client";
 import useStepStore from "@/utils/useStepStore";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import z from "zod";
-import { FaArrowCircleRight } from "react-icons/fa";
-import Separator from "@/components/misc/Separator";
+import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { countries } from "@/utils/countryList";
 import {
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { PaymentWalletOption } from "@stripe/stripe-js";
 import { FaCreditCard } from "react-icons/fa6";
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
 
-const PaymentForm = ({}: {}) => {
+const PaymentForm = () => {
   const stripe = useStripe();
 
   const elements = useElements();

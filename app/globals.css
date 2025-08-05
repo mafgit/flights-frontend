@@ -166,3 +166,18 @@ legend {
   display: block;
   border: none;
 }
+
+@keyframes loadingAnim {
+  from {
+    border-color: var(--color-primary);
+    color: var(--primary);
+  }
+  to {
+    color: var(--foreground);
+    border-color: var(--foreground);
+  }
+}
+
+.loading-anim {
+  animation: loadingAnim 0.5s infinite alternate ease-in;
+}
