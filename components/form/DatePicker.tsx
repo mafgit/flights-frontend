@@ -5,21 +5,25 @@ import { ISelectedDate } from "@/types/ISelectedDate";
 import Separator from "../misc/Separator";
 import { IFlexibilityDays } from "../flight-search/FlightSearchSegment";
 import { days, isValidDate, months, d, m, y } from "@/utils/datePicker";
+import useAuthStore from "@/utils/useAuthStore";
 
 const DatePicker = ({
   label,
   placeholder,
+  segmentIdx,
   dateSelected,
   setDateSelected,
 }: {
   label: string;
   placeholder: string;
+  segmentIdx: number;
   dateSelected: ISelectedDate;
   setDateSelected: (value: ISelectedDate) => void;
 }) => {
   const [opened, setOpened] = useState(false);
   const [onMonth, setOnMonth] = useState(m);
   const [onYear, setOnYear] = useState(y);
+  const segments = useAuthStore((s) => s.segments);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -67,6 +71,9 @@ const DatePicker = ({
         >
           {label}
         </label>
+        <span className="absolute bottom-[10px] right-[10px] text-xs">
+          +{dateSelected.flexibility_days}d
+        </span>
         <input
           autoComplete="off"
           type="text"
@@ -89,7 +96,7 @@ const DatePicker = ({
         />
         {opened && (
           <button
-            className="absolute right-[6px]  top-[20px] font-extralight"
+            className="absolute right-[6px]  top-[15px] font-extralight"
             onClick={() => {
               setDateSelected({ flexibility_days: 30 });
               setOpened(false);
@@ -139,6 +146,29 @@ const DatePicker = ({
               <button
                 key={"date-" + i}
                 disabled={(() => {
+                  if (
+                    label === "Return" &&
+                    segments[segmentIdx].departure_time
+                  ) {
+                    const { day, month, year, flexibility_days } =
+                      segments[segmentIdx].departure_time;
+
+                    const d = new Date(year, month, day);
+                    const r = new Date(onYear, onMonth, i + 1);
+                    if (r < d) return true;
+                  }
+
+                  if (
+                    label === "Departure" &&
+                    segments[segmentIdx].return_time
+                  ) {
+                    const { day, month, year, flexibility_days } =
+                      segments[segmentIdx].return_time;
+
+                    const r = new Date(year, month, day);
+                    const d = new Date(onYear, onMonth, i + 1);
+                    if (r < d) return true;
+                  }
                   return (
                     onYear < y ||
                     (i + 1 < d && onMonth <= m && onYear <= y) ||

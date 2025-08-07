@@ -98,6 +98,12 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
             year: date.getFullYear(),
             flexibility_days: 30,
           },
+          return_time: {
+            day: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+            flexibility_days: 30,
+          },
           seat_class: "any",
         },
       ],

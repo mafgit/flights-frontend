@@ -1,34 +1,54 @@
+"use client";
+import { getCityImages } from "@/app/services/flights";
 import { ISearchFlight } from "@/types/ISearchFlight";
-import { findByCity } from "@/utils/cityImages";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 
 const SearchImages = ({ segments }: { segments: Partial<ISearchFlight>[] }) => {
+  const [images, setImages] = useState<
+    { city: string; image_url: string; country: string }[]
+  >([]);
+
+  useEffect(() => {
+    if (
+      segments.length === 0 ||
+      segments.some(
+        (s) =>
+          s.arrival_airport === undefined ||
+          s.arrival_airport.city === undefined ||
+          s.arrival_airport.country === undefined
+      )
+    )
+      return;
+
+    getCityImages(
+      segments.map((s) => ({
+        city: s.arrival_airport!.city!,
+        country: s.arrival_airport!.country!,
+      }))
+    )
+      .then((images) => {
+        console.log(images);
+        setImages(images);
+      })
+      .catch((e) => console.log(e));
+  }, [segments]);
+
   return (
     <div className="flex flex-col gap-4 items-center justify-start h-full self-start">
-      {segments.length &&
-        segments.map((s) => {
-          if (!s?.arrival_airport?.city) return null;
-
-          const images = findByCity(
-            s.arrival_airport.city
-            // , s.arrival_airport.country
-          );
-
-          if (images.length === 0) return null;
-
-          const { image_url, city, country, id, label } = images[0];
-
+      {images.length > 0 ? (
+        images.map((image, i) => {
           return (
             <div
               className="rounded-lg relative z-[5] w-full h-[150px] shadow-xl shadow-background/80 "
-              key={`image-${id}-${city}`}
+              key={`image-${i}`}
             >
               <Image
-                src={image_url}
+                src={image.image_url}
                 height={1000}
                 width={1000}
-                alt={label}
+                alt={image.city}
                 className="w-full h-full z-[5] object-cover rounded-lg "
               />
 
@@ -40,16 +60,21 @@ const SearchImages = ({ segments }: { segments: Partial<ISearchFlight>[] }) => {
                     <span>
                       <FaLocationDot className="text-primary" />
                     </span>
-                    <span className="tracking-widest uppercase">{city}</span>
+                    <span className="tracking-widest uppercase">
+                      {image.city}
+                    </span>
                     <span className="text-light/90 tracking-widest uppercase text-sm">
-                      {country}
+                      {image.country}
                     </span>
                   </h3>
                 </div>
               </div>
             </div>
           );
-        })}
+        })
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

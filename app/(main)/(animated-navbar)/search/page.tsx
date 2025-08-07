@@ -1,6 +1,6 @@
 "use client";
 
-import { searchFlights } from "@/app/services/flights";
+import { getCityImages, searchFlights } from "@/app/services/flights";
 import Loading from "@/components/misc/Loading";
 import SearchFilters from "@/components/flight-search/FlightSearchFilters";
 import FlightSearchForm from "@/components/flight-search/FlightSearchForm";
@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { FaBan, FaPlaneDeparture } from "react-icons/fa6";
 import { IDepartureTimes } from "@/types/IDepartureTimes";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
-import { findByCity } from "@/utils/cityImages";
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
 import useAuthStore from "@/utils/useAuthStore";
 import SearchImages from "@/components/flight-search/SearchImages";
@@ -28,6 +27,9 @@ const SearchPage = () => {
   const segments = useAuthStore((s) => s.segments);
   const setSegments = useAuthStore((s) => s.setSegments);
   const initializedSearch = useAuthStore((s) => s.initializedSearch);
+  const [segmentsForReturn, setSegmentsForReturn] = useState<ISearchFlight[]>(
+    []
+  );
   const router = useRouter();
 
   const [departureTimes, setDepartureTimes] = useState<IDepartureTimes[]>([
@@ -97,21 +99,20 @@ const SearchPage = () => {
         },
       ];
 
+      setSegmentsForReturn(flights);
       depTimes = [departureTimes[0], departureTimes[0]];
     }
 
-    let i = Math.floor(Math.random() * flights.length);
-    if (flights[i].departure_airport.city) {
-      const imgs = findByCity(
-        flights[i].departure_airport.city,
-        flights[i].departure_airport.country
-      );
-
-      if (imgs.length > 0) setBg(imgs[0].image_url);
-    }
-
     setDepartureTimes(depTimes);
-    //
+
+    getCityImages([
+      {
+        city: flights[0].departure_airport.city!,
+        country: flights[0].departure_airport.country!,
+      },
+    ]).then((images) => {
+      setBg(images[0].image_url);
+    });
 
     searchFlights(
       tripType,
@@ -125,7 +126,7 @@ const SearchPage = () => {
         setResults(results ?? []);
       })
       .finally(() => setLoading(false));
-  }, [initializedSearch]);
+  }, [initializedSearch, params]);
 
   // useEffect(() => {
 
@@ -207,7 +208,9 @@ const SearchPage = () => {
             )}
           </div>
 
-          <SearchImages segments={segments} />
+          <SearchImages
+            segments={type === "Return" ? segmentsForReturn : segments}
+          />
         </div>
       </div>
     </div>

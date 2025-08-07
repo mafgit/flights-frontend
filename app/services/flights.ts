@@ -4,7 +4,6 @@ import { ISeatClass } from "@/types/ISeatClass";
 import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import { ITripType } from "@/types/ITripType";
-import { NextRouter } from "next/router";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const searchFlights = async (
@@ -15,6 +14,8 @@ export const searchFlights = async (
   airlineIds: number[],
   maxTotalDuration: number | undefined
 ) => {
+  console.log(type);
+  
   if (flights.length === 0) throw new Error("No segments selected");
 
   let mappedFlights: {
@@ -80,4 +81,32 @@ export const goToSearchPage = (
       "&airlines=" +
       encodeURIComponent(JSON.stringify(airlinesFromSegments))
   );
+};
+
+export const getCities = async () => {
+  const res = await fetch(FLIGHTS_BASE_URL + "/cities", {
+    credentials: "include",
+  });
+  const { data } = await res.json();
+  return data;
+};
+
+export const getCityImages = async (
+  cities: {
+    city: string;
+    country: string;
+  }[]
+): Promise<{ city: string; country: string; image_url: string }[]> => {
+  const res = await fetch(FLIGHTS_BASE_URL + `/city-images`, {
+    credentials: "include",
+    method: "POST",
+    body: JSON.stringify({ cities }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  console.log(108, data);
+
+  return data.data;
 };

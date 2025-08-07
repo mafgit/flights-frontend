@@ -45,6 +45,7 @@ const FlightSearchSegment = ({
           // options={airportOptions.filter(
           //   (a) => a.value !== segment.arrival_airport?.value
           // )}
+          segmentIdx={segmentIdx}
           options={airportOptions}
           searchText={fromText}
           setSearchText={setFromText}
@@ -66,6 +67,7 @@ const FlightSearchSegment = ({
         </button>
 
         <SearchDropdown
+          segmentIdx={segmentIdx}
           options={
             // segment.departure_airport && segment.departure_airport.value
             //   ? airportOptions.filter(
@@ -92,15 +94,20 @@ const FlightSearchSegment = ({
         <DatePicker
           label={"Departure"}
           placeholder={"Choose date"}
-          setDateSelected={(value) =>
-            updateSegment(segmentIdx, "departure_time", value)
-          }
+          segmentIdx={segmentIdx}
+          setDateSelected={(value) => {
+            // if (segment.departure_time?.day !== undefined && segment.departure_time.month > 0 && segment.departure_time.year !== undefined)
+            // if (new Date(segment.departure_time.year, segment.departure_time.month, segment.departure_time.day))
+            updateSegment(segmentIdx, "departure_time", value);
+            // updateSegment(segmentIdx, "return_time", value);
+          }}
           dateSelected={segment.departure_time ?? { flexibility_days: 30 }}
         />
         {type === "Return" && (
           <DatePicker
             label={"Return"}
             placeholder={"Choose date"}
+            segmentIdx={segmentIdx}
             setDateSelected={(value) => {
               if (
                 type === "Return" &&

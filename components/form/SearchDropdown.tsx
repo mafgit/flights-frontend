@@ -11,12 +11,14 @@ const SearchDropdown = ({
   options,
   label,
   placeholder,
+  segmentIdx,
   otherOption,
 }: {
   label: string;
   options: ISearchDropdownOption[];
   selectedOption: Partial<ISearchDropdownOption>;
   searchText: string;
+  segmentIdx: number;
   placeholder: string;
   setSearchText: Dispatch<React.SetStateAction<string>>;
   setSelectedOption: Dispatch<
