@@ -45,7 +45,7 @@ const FlightSearchResult = ({
                   <SeatClassSpan seatClass={segment.seat_class} />
                 </div>
 
-                <div className="flex items-center justify-between gap-4 basis-[350px] shrink-0 grow-[1]">
+                <div className="flex items-center justify-between gap-4 basis-[300px] shrink-0 grow-[1]">
                   <div className="flex flex-col items-center justify-center gap-1 shrink-[1] grow-[1] basis-[100px] text-center">
                     <p className="font-semibold w-max">
                       {segment.departure_city}
@@ -59,11 +59,11 @@ const FlightSearchResult = ({
                   </div>
 
                   <div className="flex items-center justify-center gap-1">
-                    <div className="basis-[40px] shrink-0 grow-[1] h-[1px] rounded-full bg-primary/50"></div>
+                    <div className="basis-[30px] shrink-0 grow-[1] h-[1px] rounded-full bg-primary/50"></div>
                     <p className="text-sm w-[30px] text-center">
                       {segment.duration + "h"}
                     </p>
-                    <div className="basis-[40px] grow-[1] shrink-0 h-[1px] rounded-full bg-primary/50"></div>
+                    <div className="basis-[30px] grow-[1] shrink-0 h-[1px] rounded-full bg-primary/50"></div>
                     <FaPlane className="text-xs text-primary ml-[1px]" />
                   </div>
 
@@ -83,14 +83,27 @@ const FlightSearchResult = ({
 
       <Separator />
 
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center justify-center gap-3 wrap-anywhere text-center">
         <h3 className="font-bold text-xl w-full">
-          {formatCurrency(
-            result.reduce(
-              (a: number, b: ISearchResult) => a + b.segment_total_amount,
-              0
-            )
-          )}
+          {(() => {
+            let cost = formatCurrency(
+              result.reduce(
+                (a: number, b: ISearchResult) => a + b.segment_total_amount,
+                0
+              )
+            );
+
+            const splitted = cost.toString().split(".");
+            return (
+              <>
+                <span>{splitted[0]}</span>
+                {splitted.length === 2 ? (
+                  <span className="text-sm opacity-80">.{splitted[1]}</span>
+                ) : null}
+              </>
+            );
+            return cost;
+          })()}
         </h3>
 
         <h4 className="flex items-center justify-center gap-[5px]">

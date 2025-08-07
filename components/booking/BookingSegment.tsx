@@ -102,7 +102,7 @@ const BookingSegment = ({
         />
       </div>
 
-      <h2 className=" w-full p-2 bg-background rounded-md text-center">
+      <h2 className=" w-full p-2 bg-[#515151] rounded-md text-center">
         Segment Total: {formatCurrency(segment.segment_total_amount)}
       </h2>
     </div>

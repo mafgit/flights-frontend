@@ -26,25 +26,25 @@ const FlightDetails = ({
       <div className="">
         <div className="flex justify-between items-center gap-2 p-1">
           <p>City:</p>
-          <p className="text-primary">{city}</p>
+          <p className="text-primary text-right capitalize">{city}</p>
         </div>
         <div className="flex justify-between items-center gap-2 p-1">
           <p>Airport Name:</p>
-          <p className="text-primary">{airport_name}</p>
+          <p className="text-primary text-right capitalize">{airport_name}</p>
         </div>
         <div className="flex justify-between items-center gap-2 p-1">
           <p>Airport Code:</p>
-          <p className="text-primary">{airport_code}</p>
+          <p className="text-primary text-right capitalize">{airport_code}</p>
         </div>
         {seat_class ? (
           <div className="flex justify-between items-center gap-2 p-1">
             <p>Seat Class:</p>
-            <p className="text-primary">{seat_class}</p>
+            <p className="text-primary text-right capitalize">{seat_class}</p>
           </div>
         ) : null}
         <div className="flex justify-between items-center gap-2 p-1">
           <p>Time:</p>
-          <p className="text-primary w-max">
+          <p className="text-primary text-right capitalize w-max">
             {(() => {
               const [date, t] = getDateAndTime(time, true);
               return date + " " + t;

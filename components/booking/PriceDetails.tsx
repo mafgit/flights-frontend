@@ -13,24 +13,24 @@ const PriceDetails = ({ segment }: { segment: IViewSegment }) => {
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Base Amount:</p>
-        <p className="text-primary">{formatCurrency(segment.base_amount)}</p>
+        <p className="text-primary text-right capitalize">{formatCurrency(segment.base_amount)}</p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Tax Amount:</p>
-        <p className="text-primary">{formatCurrency(segment.tax_amount)}</p>
+        <p className="text-primary text-right capitalize">{formatCurrency(segment.tax_amount)}</p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Surcharge Amount:</p>
-        <p className="text-primary">
+        <p className="text-primary text-right capitalize">
           {formatCurrency(segment.surcharge_amount)}
         </p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Total Amount:</p>
-        <p className="text-primary">{formatCurrency(segment.total_amount)}</p>
+        <p className="text-primary text-right capitalize">{formatCurrency(segment.total_amount)}</p>
       </div>
     </div>
   );

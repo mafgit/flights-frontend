@@ -49,7 +49,7 @@ const PaymentInfoStep = () => {
                 // theme: 'stripe',
                 variables: {
                   colorPrimary: "#e99700",
-                  colorBackground: "#1f1f1f",
+                  colorBackground: "#515151",
                   colorText: "#f7f7f7",
                   colorTextSecondary: "#ffb223",
                 },

@@ -1,11 +1,11 @@
 import React from "react";
 
-const Feature = () => {
+const Feature = ({ imgUrl }: { imgUrl: string }) => {
   return (
     <div className="feature transition-all duration-200 ease-in-out w-[350px] h-[250px] flex flex-col  rounded-lg bg-foreground-opposite shadow-lg/30 shadow-black/40">
       <div className="h-[150px] max-h-[150px] w-full rounded-t-lg transition-all duration-200 ease-in-out">
         <img
-          src="/feature.avif"
+          src={imgUrl}
           width={350}
           height={150}
           className="transition-all duration-200 ease-in-out w-[350px] h-[150px] object-cover bg-foreground rounded-t-lg pointer-events-none"

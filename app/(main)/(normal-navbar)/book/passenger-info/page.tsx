@@ -3,13 +3,14 @@ import PassengerFormsSection from "@/components/booking/PassengerFormsSection";
 import Separator from "@/components/misc/Separator";
 import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
 import useStepStore from "@/utils/useStepStore";
-import React, { FormEvent, MouseEvent, useEffect } from "react";
+import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaUsers } from "react-icons/fa6";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
 import { bookingPassengersSchema } from "@/types/IBookingPassenger";
 import useAuthStore from "@/utils/useAuthStore";
+import z from "zod";
 
 const PassengerInfoStep = () => {
   const passengers = useStepStore((s) => s.bookingBody.passengers);
@@ -20,6 +21,8 @@ const PassengerInfoStep = () => {
   const bookingBody = useStepStore((s) => s.bookingBody);
   const setClientSecret = useStepStore((s) => s.setClientSecret);
   const userId = useAuthStore((s) => s.userId);
+
+  const [receiptEmail, setReceiptEmail] = useState("");
 
   useEffect(() => {
     if (passengers.length === 0) router.back();
@@ -51,6 +54,8 @@ const PassengerInfoStep = () => {
         .max(totalPassengers)
         .parse(passengers);
 
+      z.email().parse(receiptEmail);
+
       // ------------------------------------------
 
       try {
@@ -71,7 +76,7 @@ const PassengerInfoStep = () => {
               ...bookingBody,
               user_id: userId,
               booking_id: undefined,
-              receipt_email: "abc@abc.com",
+              receipt_email: receiptEmail,
             }),
           }
         );
@@ -150,6 +155,22 @@ const PassengerInfoStep = () => {
               />
             </>
           )}
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="receipt-email" className=" text-lg font-semibold">
+              Receipt Email
+            </label>
+            <input
+              className="bg-[#515151] p-2 rounded-md text-light"
+              type="email"
+              required
+              name="receipt-email"
+              id="receipt-email"
+              placeholder="Enter your receipt email"
+              onChange={(e) => setReceiptEmail(e.target.value)}
+              value={receiptEmail}
+            />
+          </div>
 
           <button
             type="submit"

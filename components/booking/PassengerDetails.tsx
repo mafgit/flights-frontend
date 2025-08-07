@@ -11,27 +11,33 @@ const PassengerDetails = ({ segment }: { segment: IViewSegment }) => {
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Full Name:</p>
-        <p className="text-primary">{segment.full_name}</p>
+        <p className="text-primary text-right capitalize">
+          {segment.full_name}
+        </p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Passenger Type:</p>
-        <p className="text-primary">{segment.passenger_type}</p>
+        <p className="text-primary text-right capitalize">
+          {segment.passenger_type}
+        </p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Gender:</p>
-        <p className="text-primary">{segment.gender}</p>
+        <p className="text-primary text-right capitalize">{segment.gender}</p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Nationality:</p>
-        <p className="text-primary">{segment.nationality}</p>
+        <p className="text-primary text-right capitalize">
+          {segment.nationality}
+        </p>
       </div>
 
       <div className="flex justify-between items-center gap-2 p-1">
         <p>Date of Birth:</p>
-        <p className="text-primary">
+        <p className="text-primary text-right capitalize">
           {getDateAndTime(segment.date_of_birth, true)[0]}
         </p>
       </div>
