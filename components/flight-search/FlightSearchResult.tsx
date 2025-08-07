@@ -6,6 +6,7 @@ import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import BookButton from "./BookButton";
 import { getDateAndTime } from "@/utils/getDateAndTime";
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
+import SeatClassSpan from "./SeatClassSpan";
 
 const FlightSearchResult = ({
   result,
@@ -14,10 +15,8 @@ const FlightSearchResult = ({
   result: ISearchResult[];
   passengers: IPassengersSelectedOption;
 }) => {
-  const formatCurrency = useCurrencyFormatter()
-  
-  console.log(result);
-  
+  const formatCurrency = useCurrencyFormatter();
+
   return (
     <div className="flex gap-6 bg-foreground-opposite p-4 px-6 rounded-lg shadow-md shadow-gray-900/40 w-full items-center justify-between">
       <div className="flex flex-col gap-2 items-center justify-center">
@@ -35,13 +34,16 @@ const FlightSearchResult = ({
               className="flex gap-4 items-center justify-between w-full"
             >
               <div className="flex items-center justify-center gap-5 grow-[1] basis-[350px]">
-                <Image
-                  height={40}
-                  width={40}
-                  src={segment.airline_logo_url || "/pia.webp"}
-                  alt="airline-logo"
-                  className="min-w-[40px] min-h-[40px] w-[40px] h-[40px] object-cover bg-foreground rounded-full"
-                />
+                <div className="flex items-center justify-center flex-col gap-3 w-full basis-[70px] shrink-0 grow-[1]">
+                  <Image
+                    height={40}
+                    width={40}
+                    src={segment.airline_logo_url || "/pia.webp"}
+                    alt="airline-logo"
+                    className="min-w-[40px] min-h-[40px] w-[40px] h-[40px] object-cover bg-foreground rounded-full"
+                  />
+                  <SeatClassSpan seatClass={segment.seat_class} />
+                </div>
 
                 <div className="flex items-center justify-between gap-4 basis-[350px] shrink-0 grow-[1]">
                   <div className="flex flex-col items-center justify-center gap-1 shrink-[1] grow-[1] basis-[100px] text-center">

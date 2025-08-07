@@ -5,6 +5,7 @@ import { getCookie } from "./cookies";
 import { fetchAirportOptions } from "@/app/services/airports";
 import { ITripType } from "@/types/ITripType";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
+import { ISearchFlight } from "@/types/ISearchFlight";
 
 const useAuthStore = create<IAuthStoreState>((set, get) => ({
   userId: undefined,
@@ -65,7 +66,14 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
     infants: 0,
   },
 
+  initializedSearch: false,
+
   type: "One-way" as ITripType,
+
+  setSegments: (segments: ISearchFlight[]) => {
+    console.trace("setSegments");
+    set({ segments });
+  },
 
   initializeSearch: async () => {
     const airports = await fetchAirportOptions();
@@ -79,23 +87,26 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
     const date = new Date();
 
     set({
+      initializedSearch: true,
       airportOptions: valueToSet,
       segments: [
         {
           departure_airport: valueToSet.find((a) => a.city === get().city),
           departure_time: {
-            day: date.getDate() + 1,
+            day: date.getDate(),
             month: date.getMonth() + 1,
             year: date.getFullYear(),
-            flexibility_days: 7,
+            flexibility_days: 30,
           },
-          seat_class: "economy",
+          seat_class: "any",
         },
       ],
     });
   },
 
   updateSegment: (segmentIdx: number, field: any, value: any) => {
+    console.trace("updateSegment");
+
     set({
       segments: get().segments.map((segment, i) => {
         if (i === segmentIdx) {

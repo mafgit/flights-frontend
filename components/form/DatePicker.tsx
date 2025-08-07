@@ -91,7 +91,7 @@ const DatePicker = ({
           <button
             className="absolute right-[6px]  top-[20px] font-extralight"
             onClick={() => {
-              setDateSelected({ flexibility_days: 7 });
+              setDateSelected({ flexibility_days: 30 });
               setOpened(false);
             }}
           >

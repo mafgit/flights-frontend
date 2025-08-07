@@ -95,7 +95,7 @@ const FlightSearchSegment = ({
           setDateSelected={(value) =>
             updateSegment(segmentIdx, "departure_time", value)
           }
-          dateSelected={segment.departure_time ?? { flexibility_days: 7 }}
+          dateSelected={segment.departure_time ?? { flexibility_days: 30 }}
         />
         {type === "Return" && (
           <DatePicker
@@ -114,12 +114,12 @@ const FlightSearchSegment = ({
                 updateSegment(segmentIdx, "return_time", value);
               }
             }}
-            dateSelected={segment.return_time ?? { flexibility_days: 7 }}
+            dateSelected={segment.return_time ?? { flexibility_days: 30 }}
           />
         )}
 
         <Dropdown<ISeatClass>
-          selectedOption={segment.seat_class || "economy"}
+          selectedOption={segment.seat_class || "any"}
           setSelectedOption={(value: ISeatClass) =>
             updateSegment(segmentIdx, "seat_class", value)
           }

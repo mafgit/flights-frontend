@@ -23,6 +23,7 @@ export interface IAuthStoreState {
   removeSegment: (segmentIdx: number) => void;
   updateSegment: (segmentIdx: number, field: any, value: any) => void;
   initializeSearch: () => Promise<void>;
+  initializedSearch: boolean;
   changePassengerCount: (
     change: 1 | -1 | "reset",
     type?: "adult" | "child" | "infant"
@@ -30,4 +31,5 @@ export interface IAuthStoreState {
   setType: (type: ITripType) => void;
   setPassengers: (passengers: IPassengersSelectedOption) => void;
   swapFromAndTo: (segmentIdx: number) => void;
+  setSegments: (segments: ISearchFlight[]) => void;
 }

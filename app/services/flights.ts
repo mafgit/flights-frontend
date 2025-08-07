@@ -4,6 +4,8 @@ import { ISeatClass } from "@/types/ISeatClass";
 import { IFlexibilityDays } from "@/components/flight-search/FlightSearchSegment";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import { ITripType } from "@/types/ITripType";
+import { NextRouter } from "next/router";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const searchFlights = async (
   type: ITripType,
@@ -59,4 +61,23 @@ export const searchFlights = async (
     console.log(err);
     return [];
   }
+};
+
+export const goToSearchPage = (
+  router: AppRouterInstance,
+  tripType: ITripType,
+  passengersSelected: IPassengersSelectedOption,
+  segmentsData: Partial<ISearchFlight>[],
+  airlinesFromSegments: number[]
+) => {
+  router.push(
+    "/search?type=" +
+      tripType +
+      "&passengers=" +
+      encodeURI(JSON.stringify(passengersSelected)) +
+      "&segments=" +
+      encodeURIComponent(JSON.stringify(segmentsData)) +
+      "&airlines=" +
+      encodeURIComponent(JSON.stringify(airlinesFromSegments))
+  );
 };

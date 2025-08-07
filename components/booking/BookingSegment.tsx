@@ -6,6 +6,7 @@ import Image from "next/image";
 import { FaPlane } from "react-icons/fa6";
 import BookingPriceSection from "./BookingPriceSection";
 import Separator from "../misc/Separator";
+import SeatClassSpan from "../flight-search/SeatClassSpan";
 
 const BookingSegment = ({
   segment,
@@ -31,14 +32,16 @@ const BookingSegment = ({
   return (
     <div className="flex flex-col gap-4 items-center justify-between w-max rounded-lg bg-foreground-opposite p-4 px-5  shadow-md shadow-gray-900/40">
       <div className="flex items-center justify-center gap-5">
-        <Image
-          height={40}
-          width={40}
-          src={segment.airline_logo_url || "/pia.webp"}
-          alt="airline-logo"
-          className="min-w-[40px] min-h-[40px] w-[40px] h-[40px] object-cover bg-foreground rounded-full"
-        />
-
+        <div className="flex flex-col gap-2 items-center justify-center">
+          <Image
+            height={40}
+            width={40}
+            src={segment.airline_logo_url || "/pia.webp"}
+            alt="airline-logo"
+            className="min-w-[40px] min-h-[40px] w-[40px] h-[40px] object-cover bg-foreground rounded-full"
+          />
+          <SeatClassSpan seatClass={segment.seat_class} />
+        </div>
         <div className="flex items-center justify-between gap-4 basis-[290px] shrink-0 grow-[1]">
           <div className="flex flex-col items-center justify-center gap-1 shrink-[1] grow-[1] basis-[100px] text-center">
             <p className="font-semibold w-max">{segment.departure_city}</p>

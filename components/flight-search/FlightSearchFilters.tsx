@@ -25,7 +25,7 @@ const SearchFilters = ({
   airlinesSelected,
   setAirlinesSelected,
 }: {
-  segments: ISearchFlight[];
+  segments: Partial<ISearchFlight>[];
   totalDuration: number;
   setTotalDuration: Dispatch<SetStateAction<number>>;
   MAX_TOTAL_DURATION: number | undefined;
@@ -89,8 +89,8 @@ const SearchFilters = ({
                   <h4 className="flex items-center justify-center gap-[5px]">
                     <FaPlaneDeparture className="text-sm" />
                     <span>
-                      {segment.departure_airport.code} -{" "}
-                      {segment.arrival_airport.code}:
+                      {segment.departure_airport?.code} -{" "}
+                      {segment.arrival_airport?.code}:
                     </span>
                   </h4>
                   <p className="text-gray-300">

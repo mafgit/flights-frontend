@@ -19,6 +19,8 @@ const Cities = () => {
   const formatCurrency = useCurrencyFormatter();
   const city = useAuthStore((s) => s.city);
   const loading = useAuthStore((s) => s.loading);
+  const updateSegment = useAuthStore((s) => s.updateSegment);
+  const airportOptions = useAuthStore((s) => s.airportOptions);
 
   return (
     <div className="max-w-[1300px] p-8 py-8 mx-auto flex items-center justify-center gap-6 flex-col">
@@ -40,6 +42,11 @@ const Cities = () => {
                 return (
                   <div
                     onClick={() => {
+                      updateSegment(
+                        0,
+                        "arrival_airport",
+                        airportOptions.find((a) => a.city === city)
+                      );
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="rounded-lg relative z-[5] max-w-[300px] h-[300px] shadow-xl shadow-background/80 group transition-all duration-200 ease-in-out"

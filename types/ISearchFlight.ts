@@ -35,7 +35,7 @@ const searchSegmentSchema = z.object({
   departure_airport: z.object({ value: z.number().int().min(1) }),
   departure_time: departureSchema,
   return_time: departureSchema.optional(),
-  seat_class: z.enum(["economy", "business", "first", "premium"]),
+  seat_class: z.enum(["any", "economy", "business", "first", "premium"]),
 });
 // .refine(data => {
 //   new Date(data.departure_time.day, data.)

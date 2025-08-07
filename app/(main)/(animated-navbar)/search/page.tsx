@@ -5,7 +5,6 @@ import Loading from "@/components/misc/Loading";
 import SearchFilters from "@/components/flight-search/FlightSearchFilters";
 import FlightSearchForm from "@/components/flight-search/FlightSearchForm";
 import FlightSearchResult from "@/components/flight-search/FlightSearchResult";
-import { IDropdownSelectedOption } from "@/types/IDropdownSelectedOption";
 import { ISearchFlight } from "@/types/ISearchFlight";
 import { ISearchResult } from "@/types/ISearchResult";
 import { ITripType } from "@/types/ITripType";
@@ -25,7 +24,10 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<ISearchResult[][]>([]);
   const params = useSearchParams();
-  const [segments, setSegments] = useState<ISearchFlight[]>([]);
+  // const [segments, setSegments] = useState<ISearchFlight[]>([]);
+  const segments = useAuthStore((s) => s.segments);
+  const setSegments = useAuthStore((s) => s.setSegments);
+  const initializedSearch = useAuthStore((s) => s.initializedSearch);
   const router = useRouter();
 
   const [departureTimes, setDepartureTimes] = useState<IDepartureTimes[]>([
@@ -43,10 +45,12 @@ const SearchPage = () => {
   const setPassengers = useAuthStore((s) => s.setPassengers);
 
   useEffect(() => {
+    if (!initializedSearch) return;
+
     setLoading(true);
 
     let flights = JSON.parse(params.get("segments") || "[]") as ISearchFlight[];
-    // console.log("42", flights.length, type.value);
+    setSegments(flights);
 
     let passengers2 = JSON.parse(
       params.get("passengers") || "{}"
@@ -107,8 +111,6 @@ const SearchPage = () => {
     }
 
     setDepartureTimes(depTimes);
-    setSegments(flights);
-
     //
 
     searchFlights(
@@ -123,7 +125,7 @@ const SearchPage = () => {
         setResults(results ?? []);
       })
       .finally(() => setLoading(false));
-  }, [params.toString()]);
+  }, [initializedSearch]);
 
   // useEffect(() => {
 
@@ -164,7 +166,7 @@ const SearchPage = () => {
       {/* <div className="w-full h-[1px] rounded-full bg-foreground/20 mt-4 mb-0 bg-gradient-to-r from-foreground-opposite via-foreground/30 to-foreground-opposite"></div> */}
 
       <div className="w-full">
-        <div className="flex gap-6 h-full items-center justify-between w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto">
+        <div className="flex gap-6 h-full items-start justify-between w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto place-self-start">
           {segments.length && departureTimes.length ? (
             <SearchFilters
               segments={segments}
@@ -208,7 +210,7 @@ const SearchPage = () => {
           <div className="flex flex-col gap-4 items-center justify-start h-full self-start">
             {segments.length &&
               segments.map((s) => {
-                if (!s.arrival_airport.city) return null;
+                if (!s?.arrival_airport?.city) return null;
 
                 const images = findByCity(
                   s.arrival_airport.city,

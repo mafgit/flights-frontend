@@ -10,6 +10,7 @@ import PassengerDropdown from "../form/PassengerDropdown";
 import { validatePassengerCounts } from "@/utils/validatePassengerCounts";
 import { ZodError } from "zod";
 import useAuthStore from "@/utils/useAuthStore";
+import { goToSearchPage } from "@/app/services/flights";
 
 const FlightSearchForm = ({
   searchPage = false,
@@ -25,9 +26,9 @@ const FlightSearchForm = ({
   const tripType = useAuthStore((s) => s.type);
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(segmentsData);
-  }, [segmentsData]);
+  // useEffect(() => {
+  //   console.log(segmentsData);
+  // }, [segmentsData]);
 
   const onSearchClick = () => {
     // todo: validation
@@ -45,16 +46,23 @@ const FlightSearchForm = ({
 
       searchSegmentsSchema.parse(segmentsData);
 
-      router.push(
-        "/search?type=" +
-          tripType +
-          "&passengers=" +
-          encodeURI(JSON.stringify(passengersSelected)) +
-          "&segments=" +
-          encodeURIComponent(JSON.stringify(segmentsData)) +
-          "&airlines=" +
-          encodeURIComponent(JSON.stringify(airlinesFromSegments))
+      goToSearchPage(
+        router,
+        tripType,
+        passengersSelected,
+        segmentsData,
+        airlinesFromSegments
       );
+      // router.push(
+      //   "/search?type=" +
+      //     tripType +
+      //     "&passengers=" +
+      //     encodeURI(JSON.stringify(passengersSelected)) +
+      //     "&segments=" +
+      //     encodeURIComponent(JSON.stringify(segmentsData)) +
+      //     "&airlines=" +
+      //     encodeURIComponent(JSON.stringify(airlinesFromSegments))
+      // );
     } catch (err) {
       if (err instanceof ZodError) {
         console.log(err.issues);
