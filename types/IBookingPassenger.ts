@@ -2,11 +2,12 @@ import { countries } from "@/utils/countryList";
 import { z } from "zod";
 
 export interface IBookingPassenger {
+  i?: number;
   date_of_birth?: string;
   full_name?: string;
   gender: "male" | "female" | "undisclosed";
   nationality?: string;
-  id: number;
+  id?: number;
   passenger_type: "adult" | "child" | "infant";
   passport_number?: string;
 }

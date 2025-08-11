@@ -9,6 +9,8 @@ const PassengerFormsSection = ({
   type: "adult" | "child" | "infant";
   passengers: IBookingPassenger[];
 }) => {
+  console.log(type, passengers, '---------------');
+  
   return (
     <div className="w-max py-4 mx-auto">
       <h2 className="font-bold text-xl mb-3 text-center">
@@ -20,11 +22,11 @@ const PassengerFormsSection = ({
       </h2>
 
       <div className="flex flex-wrap gap-4 justify-center items-center w-full">
-        {passengers.map((p, i) => (
+        {passengers.map((p, j) => (
           <PassengerForm
             passenger={p}
-            i={i}
-            key={"passenger-form-" + type + "-" + i}
+            j={j}
+            key={"passenger-form-" + type + "-" + j}
           />
         ))}
       </div>

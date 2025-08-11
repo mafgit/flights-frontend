@@ -1,6 +1,7 @@
 "use client";
 
 import useCurrencyFormatter from "@/app/hooks/useCurrencyFormatter";
+import { getAutoBookingData } from "@/app/services/auth";
 import { deleteCart, getCart } from "@/app/services/carts";
 import BookingSegment from "@/components/booking/BookingSegment";
 import Loading from "@/components/misc/Loading";
@@ -8,6 +9,7 @@ import { IBookingPassenger } from "@/types/IBookingPassenger";
 import { IBookingSegment } from "@/types/IBookingSegment";
 import { ISeatClass } from "@/types/ISeatClass";
 import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
+import useAuthStore from "@/utils/useAuthStore";
 import useStepStore from "@/utils/useStepStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,30 +19,43 @@ import { FaBan, FaTrash } from "react-icons/fa6";
 
 const BookingStep1 = () => {
   const [cart, setCart] = useState<
-    { id: number; session_id: string } | undefined
+    | {
+        id: number;
+        session_id: string;
+        adults: number;
+        children: number;
+        infants: number;
+      }
+    | undefined
   >(undefined);
   const [segments, setSegments] = useState<IBookingSegment[]>([]);
   const [error, setError] = useState(false);
-  const [passengers, setPassengers] = useState<IBookingPassenger[]>([]);
   const clearFormSteps = useStepStore((s) => s.clearFormSteps);
   const [loading, setLoading] = useState(true);
   const formatCurrency = useCurrencyFormatter();
   const router = useRouter();
   const goToNextStep = useStepStore((s) => s.goToNextStep);
 
-  const setPassengersInStore = useStepStore((s) => s.setPassengers);
   const setTotalAmountInStore = useStepStore((s) => s.setTotalAmount);
   const setSegmentsInStore = useStepStore((s) => s.setSegments);
   const totalAmountInStore = useStepStore((s) => s.bookingBody.total_amount);
+
+  const setReceiptEmail = useStepStore((s) => s.setReceiptEmail);
+  const receiptEmail = useStepStore((s) => s.receiptEmail);
+  const passengers = useStepStore((s) => s.bookingBody.passengers);
+
+  const userId = useAuthStore((s) => s.userId);
+  const setPassengers = useStepStore((s) => s.setPassengers);
+  const role = useAuthStore((s) => s.role);
 
   useEffect(() => {
     clearFormSteps();
     setLoading(true);
     getCart()
-      .then(({ segments, passengers, cart }) => {
+      .then(({ segments, cart }) => {
         setCart(cart);
         setSegments(segments);
-        setPassengers(passengers);
+        // setPassengers(passengers);
         setTotalAmountInStore(
           segments.reduce(
             (acc: number, prev: { segment_total_amount: number }) =>
@@ -70,10 +85,7 @@ const BookingStep1 = () => {
       <div className="py-12 flex items-center justify-center flex-col gap-12 max-w-[1250px] mx-auto">
         {loading ? (
           <Loading />
-        ) : (error ||
-          !segments ||
-          segments.length === 0 ||
-          passengers.length === 0) ? (
+        ) : error || !segments || segments.length === 0 ? (
           <h3 className=" text-center w-max flex flex-col items-center justify-center gap-2">
             <FaBan className=" font-semibold  text-3xl" />
             <span className="font-semibold text-2xl">Empty Cart</span>
@@ -112,8 +124,66 @@ const BookingStep1 = () => {
                 <button
                   onClick={() => {
                     if (goToNextStep()) {
-                      setPassengersInStore(passengers);
-                      router.push("/book/passenger-info");
+                      if (userId && userId > 0 && role && cart) {
+                        getAutoBookingData().then(
+                          ({ email, passengers: defaultPassengers }) => {
+                            console.log("///", defaultPassengers);
+
+                            setReceiptEmail(email);
+                            const pass: IBookingPassenger[] = [];
+                            const basicPassenger: IBookingPassenger = {
+                              gender: "undisclosed",
+                              date_of_birth: "",
+                              full_name: "",
+                              nationality: "",
+                              passport_number: "",
+                              passenger_type: "adult",
+                            };
+
+                            for (let i = 0; i < cart.adults; i++) {
+                              pass.push({
+                                ...basicPassenger,
+                                passenger_type: "adult",
+                                i: i,
+                              });
+                            }
+
+                            for (let i = 0; i < cart.children; i++) {
+                              pass.push({
+                                ...basicPassenger,
+                                passenger_type: "child",
+                                i: i + cart.adults,
+                              });
+                            }
+
+                            for (let i = 0; i < cart.infants; i++) {
+                              pass.push({
+                                ...basicPassenger,
+                                passenger_type: "infant",
+                                i: i + cart.adults + cart.children,
+                              });
+                            }
+
+                            const toSet: IBookingPassenger[] = [];
+                            for (let i = 0; i < pass.length; i++) {
+                              let idx = defaultPassengers.findIndex(
+                                (p) =>
+                                  p.passenger_type === pass[i].passenger_type
+                              );
+
+                              if (idx !== -1) {
+                                toSet.push(defaultPassengers[idx]);
+                                defaultPassengers.splice(idx, 1);
+                              } else {
+                                toSet.push(pass[i]);
+                              }
+                            }
+
+                            setPassengers(toSet);
+                            router.push("/book/passenger-info");
+                          }
+                        );
+                      }
                     }
                   }}
                   className="relative group bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"
@@ -127,14 +197,20 @@ const BookingStep1 = () => {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-start gap-4 w-full">
-              {segments.map((segment) => (
-                <BookingSegment
-                  formatCurrency={formatCurrency}
-                  key={segment.id}
-                  segment={segment}
-                  passengers={passengers}
-                />
-              ))}
+              {cart
+                ? segments.map((segment) => (
+                    <BookingSegment
+                      formatCurrency={formatCurrency}
+                      key={segment.id}
+                      segment={segment}
+                      passengers={{
+                        adults: cart.adults,
+                        children: cart.children,
+                        infants: cart.infants,
+                      }}
+                    />
+                  ))
+                : null}
             </div>
           </>
         )}

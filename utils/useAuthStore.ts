@@ -6,11 +6,12 @@ import { fetchAirportOptions } from "@/app/services/airports";
 import { ITripType } from "@/types/ITripType";
 import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 import { ISearchFlight } from "@/types/ISearchFlight";
+import { IRole } from "@/types/IRole";
 
 const useAuthStore = create<IAuthStoreState>((set, get) => ({
   userId: undefined,
   role: undefined,
-  loading: true,
+  loading: false,
   hasFetched: false,
   city: undefined,
   currency: undefined,
@@ -47,6 +48,13 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
         });
       }
     }
+  },
+
+  setUser: (userId: number, role: IRole) => {
+    set({
+      role,
+      userId,
+    });
   },
 
   logout: async () => {

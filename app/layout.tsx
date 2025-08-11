@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} antialiased`}>
-        <AuthWrapper allowedRoles={['all']}>
+        <AuthWrapper>
           {/* <div className="pt-[50px]"></div> */}
           {children}
           <div className="pt-[50px]"></div>

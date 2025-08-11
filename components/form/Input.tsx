@@ -6,10 +6,18 @@ const Input = (props: {
   placeholder: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   value: string | number;
-  required?: boolean
+  required?: boolean;
 }) => {
   return (
-    <input value={props.value} onChange={props.onChange} type={props.type} id={props.id} placeholder={props.placeholder} required={props.required ?? true}/>
+    <input
+      className="bg-[#515151] p-2 text-light rounded-md"
+      value={props.value}
+      onChange={props.onChange}
+      type={props.type}
+      id={props.id}
+      placeholder={props.placeholder}
+      required={props.required ?? true}
+    />
   );
 };
 

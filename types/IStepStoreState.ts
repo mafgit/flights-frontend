@@ -27,4 +27,6 @@ export interface IStepStoreState {
   clearFormSteps: () => void;
   clientSecret: string;
   setClientSecret: (secret: string) => void;
+  receiptEmail: string;
+  setReceiptEmail: (email: string) => void;
 }

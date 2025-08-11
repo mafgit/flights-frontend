@@ -19,6 +19,7 @@ const PaymentForm = () => {
   const router = useRouter();
   const clearFormSteps = useStepStore((s) => s.clearFormSteps);
   const bookingBody = useStepStore((s) => s.bookingBody);
+  const receiptEmail = useStepStore((s) => s.receiptEmail);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ const PaymentForm = () => {
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/book/success`,
-        receipt_email: "abc@abc.com",
+        receipt_email: receiptEmail,
       },
     });
 

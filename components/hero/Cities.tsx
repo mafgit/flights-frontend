@@ -25,9 +25,11 @@ const Cities = () => {
 
   useEffect(() => {
     if (city) {
-      getCities().then((c) => {
-        setCities(c);
-      });
+      getCities()
+        .then((c) => {
+          setCities(c);
+        })
+        .catch((err) => console.log(err));
     }
   }, [city]);
 

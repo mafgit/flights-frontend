@@ -11,7 +11,7 @@ const FormField = (props: {
   required?: boolean
 }) => {
   return (
-    <div className="">
+    <div className="flex flex-col gap-1 ">
       <label htmlFor={props.id}>{props.label}</label>
       <Input
         type={props.type}

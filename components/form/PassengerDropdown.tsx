@@ -175,7 +175,7 @@ const PassengerDropdown = ({}: {}) => {
               className="bg-danger text-white rounded-md w-[22px] h-[22px] flex items-center justify-center text-xs"
               onClick={() => {
                 if (passengersSelected.infants === 0) return;
-                changePassengerCount(-1, "adult");
+                changePassengerCount(-1, "infant");
               }}
             >
               <FaMinus />

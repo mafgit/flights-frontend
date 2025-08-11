@@ -7,6 +7,7 @@ import { FaPlane } from "react-icons/fa6";
 import BookingPriceSection from "./BookingPriceSection";
 import Separator from "../misc/Separator";
 import SeatClassSpan from "../flight-search/SeatClassSpan";
+import { IPassengersSelectedOption } from "@/types/IPassengersSelectedOption";
 
 const BookingSegment = ({
   segment,
@@ -14,20 +15,11 @@ const BookingSegment = ({
   formatCurrency,
 }: {
   segment: IBookingSegment;
-  passengers: IBookingPassenger[];
+  passengers: IPassengersSelectedOption;
   formatCurrency: (amount: number) => string;
 }) => {
   const [departureDate, departureTime] = getDateAndTime(segment.departure_time);
   const [arrivalDate, arrivalTime] = getDateAndTime(segment.arrival_time);
-
-  let adults = 0,
-    infants = 0,
-    children = 0;
-  passengers.forEach((p) => {
-    if (p.passenger_type === "infant") infants++;
-    else if (p.passenger_type === "child") children++;
-    else adults++;
-  });
 
   return (
     <div className="flex flex-col gap-4 items-center justify-between w-max rounded-lg bg-foreground-opposite p-4 px-5  shadow-md shadow-gray-900/40">
@@ -72,9 +64,9 @@ const BookingSegment = ({
           adultAmount={segment.adult_base_amount}
           childAmount={segment.child_base_amount}
           infantAmount={segment.infant_base_amount}
-          adultCount={adults}
-          childCount={children}
-          infantCount={infants}
+          adultCount={passengers.adults}
+          childCount={passengers.children}
+          infantCount={passengers.infants}
           formatCurrency={formatCurrency}
           sectionHeading="Base Amount"
         />
@@ -83,9 +75,9 @@ const BookingSegment = ({
           adultAmount={segment.tax_amount}
           childAmount={segment.tax_amount}
           infantAmount={segment.tax_amount}
-          adultCount={adults}
-          childCount={children}
-          infantCount={infants}
+          adultCount={passengers.adults}
+          childCount={passengers.children}
+          infantCount={passengers.infants}
           formatCurrency={formatCurrency}
           sectionHeading="Tax Amount"
         />
@@ -94,9 +86,9 @@ const BookingSegment = ({
           adultAmount={segment.surcharge_amount}
           childAmount={segment.surcharge_amount}
           infantAmount={segment.surcharge_amount}
-          adultCount={adults}
-          childCount={children}
-          infantCount={infants}
+          adultCount={passengers.adults}
+          childCount={passengers.children}
+          infantCount={passengers.infants}
           formatCurrency={formatCurrency}
           sectionHeading="Surcharge Amount"
         />

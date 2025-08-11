@@ -5,10 +5,10 @@ import React, { ChangeEvent } from "react";
 
 const PassengerForm = ({
   passenger,
-  i,
+  j,
 }: {
   passenger: IBookingPassenger;
-  i: number;
+  j: number;
 }) => {
   const setPassengers = useStepStore((s) => s.setPassengers);
   const passengers = useStepStore((s) => s.bookingBody.passengers);
@@ -17,8 +17,8 @@ const PassengerForm = ({
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setPassengers(
-      passengers.map((p) => {
-        if (p.id === passenger.id)
+      passengers.map((p, i) => {
+        if (i === passenger.i)
           return {
             ...p,
             [e.target.name]: e.target.value,
@@ -31,7 +31,7 @@ const PassengerForm = ({
   return (
     <fieldset className="bg-foreground-opposite p-5 py-8 pt-[40px] rounded-lg mx-auto">
       <legend className="capitalize text-lg font-semibold mb-2">
-        {passenger.passenger_type} #{i + 1}
+        {passenger.passenger_type} #{j + 1}
       </legend>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
@@ -44,7 +44,7 @@ const PassengerForm = ({
             placeholder="Enter full name"
             onChange={(e) => updatePassengers(e)}
             value={passenger.full_name || ""}
-            className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
+            className="w-[185px] bg-[#515151] text-light px-3 py-2 rounded-md"
           />
         </div>
 
@@ -59,7 +59,7 @@ const PassengerForm = ({
             onChange={(e) => updatePassengers(e)}
             value={passenger.date_of_birth || ""}
             type="date"
-            className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
+            className="w-[185px] bg-[#515151] text-light px-3 py-2 rounded-md"
           />
         </div>
 
@@ -67,7 +67,7 @@ const PassengerForm = ({
           <label htmlFor="gender">Gender</label>
           <select
             id="gender"
-            className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
+            className="w-[185px] bg-[#515151] text-light px-3 py-2 rounded-md"
             required
             name="gender"
             autoComplete="sex"
@@ -90,14 +90,14 @@ const PassengerForm = ({
             placeholder="Enter passport number"
             onChange={(e) => updatePassengers(e)}
             value={passenger.passport_number || ""}
-            className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
+            className="w-[185px] bg-[#515151] text-light px-3 py-2 rounded-md"
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="nationality">Nationality</label>
           <select
-            className="w-[185px] bg-foreground text-background px-3 py-2 rounded-md"
+            className="w-[185px] bg-[#515151] text-light px-3 py-2 rounded-md"
             name="nationality"
             required
             value={passenger.nationality || ""}

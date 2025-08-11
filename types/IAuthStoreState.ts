@@ -10,6 +10,8 @@ export interface IAuthStoreState {
   loading: boolean;
   hasFetched: boolean;
   fetchUser: () => Promise<void>;
+  logout: () => void;
+  setUser: (userId: number, role: IRole) => void;
   city?: string;
   country_name?: string;
   currency?: string;

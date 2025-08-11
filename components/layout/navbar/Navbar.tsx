@@ -1,8 +1,10 @@
 "use client";
+import useAuthStore from "@/utils/useAuthStore";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import {
   FaCartFlatbed,
   FaLockOpen,
@@ -13,6 +15,8 @@ import {
 const Navbar = ({ animate = false }: { animate?: boolean }) => {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(animate ? false : true);
+  const role = useAuthStore((s) => s.role);
+  const logout = useAuthStore((s) => s.logout);
 
   useEffect(() => {
     if (animate) {
@@ -79,9 +83,31 @@ const Navbar = ({ animate = false }: { animate?: boolean }) => {
               <FaCartFlatbed className="text-sm" />
             </NavItem>
 
-            <NavItem href="/login" name="Login">
-              <FaLockOpen className="text-sm" />
-            </NavItem>
+            {!role ? (
+              <NavItem href="/login" name="Login">
+                <FaLockOpen className="text-sm" />
+              </NavItem>
+            ) : (
+              <div className="relative group">
+                <Image
+                  className="rounded-md w-[20px] h-[20px] object-cover cursor-pointer"
+                  src="/user.svg"
+                  alt="user"
+                  width={100}
+                  height={100}
+                />
+
+                <div className="pt-[20px] group-hover:pointer-events-auto group-hover:opacity-100 transition-all duration-200 ease-in-out pointer-events-none opacity-0 absolute top-[50%] rounded-md right-0 w-max h-max p-1 flex items-center justify-center">
+                  <button
+                    onClick={() => logout()}
+                    className="cursor-pointer flex gap-1 bg-dropdown items-center justify-center rounded-md text-dark px-2 py-1"
+                  >
+                    <FaSignOutAlt />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </ul>
         </div>
       </div>

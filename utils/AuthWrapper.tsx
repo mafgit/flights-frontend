@@ -10,7 +10,7 @@ const AuthWrapper = ({
   allowedRoles,
   children,
 }: {
-  allowedRoles: (IRole | "all")[];
+  allowedRoles?: (IRole | "all")[];
   children: React.ReactNode;
 }) => {
   const role = useAuthStore((state) => state.role);
@@ -20,29 +20,35 @@ const AuthWrapper = ({
 
   const router = useRouter();
 
+  const isAllowed = () => {
+    if (allowedRoles === undefined || allowedRoles.includes("all")) return true;
+
+    if (allowedRoles.length === 0 && !role) return true;
+
+    if (role && allowedRoles.includes(role)) return true;
+
+    return false;
+  };
+
   useEffect(() => {
-    fetchUser().finally(() => initializeSearch());
+    if (allowedRoles === undefined)
+      fetchUser().finally(() => initializeSearch());
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      if (allowedRoles.length === 0 && !role) return;
-      if (
-        allowedRoles.includes("all") ||
-        (role && allowedRoles.includes(role))
-      ) {
-        return;
-      }
-
-      if (window.history.state && window.history.state.idx > 0) {
-        router.back();
-      } else {
-        router.push("/"); // todo: or replace
-      }
-    }
+    if (!loading)
+      if (!isAllowed())
+        if (window.history.state && window.history.state.idx > 0) router.back();
+        else router.push("/"); // todo: or replace
   }, [role, loading]);
 
-  return loading ? <div className="min-h-screen flex items-center justify-center"><Loading /></div> : <div>{children}</div>;
+  return loading ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loading />
+    </div>
+  ) : isAllowed() ? (
+    <div>{children}</div>
+  ) : null;
 };
 
 export default AuthWrapper;

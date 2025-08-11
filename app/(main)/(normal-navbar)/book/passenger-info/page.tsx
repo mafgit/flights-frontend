@@ -3,7 +3,7 @@ import PassengerFormsSection from "@/components/booking/PassengerFormsSection";
 import Separator from "@/components/misc/Separator";
 import BookingStepsWrapper from "@/utils/BookingStepsWrapper";
 import useStepStore from "@/utils/useStepStore";
-import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaUsers } from "react-icons/fa6";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
@@ -21,8 +21,8 @@ const PassengerInfoStep = () => {
   const bookingBody = useStepStore((s) => s.bookingBody);
   const setClientSecret = useStepStore((s) => s.setClientSecret);
   const userId = useAuthStore((s) => s.userId);
-
-  const [receiptEmail, setReceiptEmail] = useState("");
+  const setReceiptEmail = useStepStore((s) => s.setReceiptEmail);
+  const receiptEmail = useStepStore((s) => s.receiptEmail);
 
   useEffect(() => {
     if (passengers.length === 0) router.back();
@@ -127,7 +127,16 @@ const PassengerInfoStep = () => {
         >
           <PassengerFormsSection
             type="adult"
-            passengers={passengers.filter((p) => p.passenger_type === "adult")}
+            passengers={(() => {
+              const result = [];
+              for (let i = 0; i < passengers.length; i++) {
+                if (passengers[i].passenger_type === "adult") {
+                  result.push({ ...passengers[i], i: i });
+                }
+              }
+
+              return result;
+            })()}
           />
 
           {passengers.some((p) => p.passenger_type === "child") && (
@@ -136,9 +145,16 @@ const PassengerInfoStep = () => {
               <Separator horizontal />
               <PassengerFormsSection
                 type="child"
-                passengers={passengers.filter(
-                  (p) => p.passenger_type === "child"
-                )}
+                passengers={(() => {
+                  const result = [];
+                  for (let i = 0; i < passengers.length; i++) {
+                    if (passengers[i].passenger_type === "child") {
+                      result.push({ ...passengers[i], i: i });
+                    }
+                  }
+
+                  return result;
+                })()}
               />
             </>
           )}
@@ -149,9 +165,16 @@ const PassengerInfoStep = () => {
 
               <PassengerFormsSection
                 type="infant"
-                passengers={passengers.filter(
-                  (p) => p.passenger_type === "infant"
-                )}
+                passengers={(() => {
+                  const result = [];
+                  for (let i = 0; i < passengers.length; i++) {
+                    if (passengers[i].passenger_type === "infant") {
+                      result.push({ ...passengers[i], i: i });
+                    }
+                  }
+
+                  return result;
+                })()}
               />
             </>
           )}
@@ -167,8 +190,8 @@ const PassengerInfoStep = () => {
               name="receipt-email"
               id="receipt-email"
               placeholder="Enter your receipt email"
-              onChange={(e) => setReceiptEmail(e.target.value)}
               value={receiptEmail}
+              onChange={(e) => setReceiptEmail(e.target.value)}
             />
           </div>
 

@@ -55,6 +55,11 @@ const useStepStore = create<IStepStoreState>((set, get) => ({
 
   clientSecret: "",
   setClientSecret: (secret) => set({ clientSecret: secret }),
+
+  receiptEmail: "",
+  setReceiptEmail: (email: string) => {
+    set({ receiptEmail: email });
+  },
 }));
 
 export default useStepStore;
