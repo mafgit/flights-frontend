@@ -143,6 +143,15 @@ const useAuthStore = create<IAuthStoreState>((set, get) => ({
     const old = [...get().segments];
     const last = old.slice(-1)[0];
 
+    console.log("useauth", [
+      ...old,
+      {
+        departure_airport: last.arrival_airport,
+        departure_time: last.return_time ?? last.departure_time,
+        seat_class: last.seat_class,
+      },
+    ]);
+
     set({
       segments: [
         ...old,

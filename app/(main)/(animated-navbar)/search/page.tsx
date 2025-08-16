@@ -128,9 +128,14 @@ const SearchPage = () => {
       .finally(() => setLoading(false));
   }, [initializedSearch, params]);
 
-  // useEffect(() => {
-
-  // }, [departureTimes, totalDuration]);
+  useEffect(() => {
+    setDepartureTimes(
+      new Array(segments.length).fill({
+        min: 0,
+        max: 24,
+      })
+    );
+  }, [segments]);
 
   return (
     <div className="mx-auto flex flex-col items-center">
@@ -168,7 +173,7 @@ const SearchPage = () => {
 
       <div className="w-full">
         <div className="flex gap-6 h-full items-start justify-between w-full min-h-[100px] mt-8 max-w-[1300px] mx-auto place-self-start">
-          {segments.length && departureTimes.length ? (
+          {segments.length && departureTimes.length && segments.length === departureTimes.length ? (
             <SearchFilters
               segments={segments}
               setTotalDuration={setTotalDuration}

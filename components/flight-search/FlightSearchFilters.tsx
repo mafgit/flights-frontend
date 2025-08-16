@@ -48,9 +48,9 @@ const SearchFilters = ({
     });
   }, []);
 
-  // useEffect(() => {
-  //   console.log("asd", departureTimes);
-  // }, [departureTimes]);
+  useEffect(() => {
+    console.log("asd", departureTimes.length, segments.length, departureTimes);
+  }, [departureTimes]);
 
   return (
     <div className="min-h-full bg-foreground-opposite min-w-[300px] w-[20%] rounded-lg px-5 py-6 flex flex-col gap-6 items-center justify-start  shadow-md shadow-gray-900/40">

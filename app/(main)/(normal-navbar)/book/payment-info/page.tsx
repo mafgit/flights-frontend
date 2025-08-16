@@ -21,7 +21,7 @@ const PaymentInfoStep = () => {
 
   return (
     <BookingStepsWrapper step={3}>
-      <div className="max-w-[1300px] mx-auto py-12 w-max">
+      <div className="max-w-[1300px] mx-auto py-12 pt-[100px]  w-max">
         <div className="flex items-center justify-center gap-4">
           <button
             className="bg-danger px-2 py-1 flex items-center justify-center rounded-md gap-1 mr-auto"

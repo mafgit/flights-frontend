@@ -94,7 +94,7 @@ const SuccessPage = ({ clientSecret }: { clientSecret: string }) => {
   }, [stripe, clientSecret]);
 
   return (
-    <div className="py-8 flex items-center justify-center">
+    <div className="py-8 pt-[100px] flex items-center justify-center">
       <div className="p-6 bg-foreground-opposite rounded-lg flex flex-col gap-3 text-center">
         {status === "loading" ? (
           <Loading message="Fetching Details" />

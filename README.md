@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flights
+> Fake flights booking fullstack webapp
 
-## Getting Started
+### Features
+- Search flights:
+    - Choose type of journey (One-way, Return trip, Multi-city)
+    - Choose seat class (economy, premium, first class, business)
+    - Choose number of passengers from each category (adults, children and infants)
+    - Choose departure and arrival dates along with flexibility days
+- Book flights:
+    - View details in cart
+    - Enter passenger details
+    - Enter payment details
+- View booking
+- Login to store added passengers and receipt email
 
-First, run the development server:
+### Screenshots
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![1](readme-images/1.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![2](readme-images/2.png)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![3](readme-images/3.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![4](readme-images/4.png)
 
-## Learn More
+![5](readme-images/5.png)
 
-To learn more about Next.js, take a look at the following resources:
+![6](readme-images/6.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![7](readme-images/7.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![8](readme-images/8.png)
 
-## Deploy on Vercel
+![9](readme-images/9.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
