@@ -112,7 +112,7 @@ const Navbar = ({ animate = false }: { animate?: boolean }) => {
         </div>
       </div>
 
-      {!animate && <div className="pt-[55px]"></div>}
+      {!animate && <div className="pt-[20px]"></div>}
     </>
   );
 };

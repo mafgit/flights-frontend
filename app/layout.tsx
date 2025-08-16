@@ -50,9 +50,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.variable} antialiased`}>
         <AuthWrapper>
-          {/* <div className="pt-[50px]"></div> */}
           {children}
-          <div className="pt-[50px]"></div>
+          <div className="pt-[20px]"></div>
           <Footer />
         </AuthWrapper>
       </body>
