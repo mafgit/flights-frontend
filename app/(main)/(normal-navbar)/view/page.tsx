@@ -52,7 +52,7 @@ const ViewBookingPage = () => {
   };
 
   return (
-    <div className="max-w-[1300px] mx-auto">
+    <div className="max-w-[1300px] pt-[50px] mx-auto">
       <div className="flex items-center justify-center flex-col gap-5 my-8">
         <h1 className="text-3xl font-bold">
           <span className="text-primary">View Booking</span> By Entering ID

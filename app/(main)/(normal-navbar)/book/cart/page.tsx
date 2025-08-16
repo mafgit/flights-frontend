@@ -82,7 +82,7 @@ const BookingStep1 = () => {
 
   return (
     <BookingStepsWrapper step={1}>
-      <div className="py-12 flex items-center justify-center flex-col gap-12 max-w-[1250px] mx-auto">
+      <div className="py-12 pt-[100px] flex items-center justify-center flex-col gap-12 max-w-[1250px] mx-auto">
         {loading ? (
           <Loading />
         ) : error || !segments || segments.length === 0 ? (
@@ -122,68 +122,68 @@ const BookingStep1 = () => {
                 <p className="text-3xl">{formatCurrency(totalAmountInStore)}</p>
 
                 <button
-                  onClick={() => {
-                    if (goToNextStep()) {
-                      if (userId && userId > 0 && role && cart) {
-                        getAutoBookingData().then(
-                          ({ email, passengers: defaultPassengers }) => {
-                            console.log("///", defaultPassengers);
+                  onClick={async () => {
+                    if (goToNextStep() && cart) {
+                      const pass: IBookingPassenger[] = [];
+                      const basicPassenger: IBookingPassenger = {
+                        gender: "undisclosed",
+                        date_of_birth: "",
+                        full_name: "",
+                        nationality: "",
+                        passport_number: "",
+                        passenger_type: "adult",
+                      };
 
-                            setReceiptEmail(email);
-                            const pass: IBookingPassenger[] = [];
-                            const basicPassenger: IBookingPassenger = {
-                              gender: "undisclosed",
-                              date_of_birth: "",
-                              full_name: "",
-                              nationality: "",
-                              passport_number: "",
-                              passenger_type: "adult",
-                            };
-
-                            for (let i = 0; i < cart.adults; i++) {
-                              pass.push({
-                                ...basicPassenger,
-                                passenger_type: "adult",
-                                i: i,
-                              });
-                            }
-
-                            for (let i = 0; i < cart.children; i++) {
-                              pass.push({
-                                ...basicPassenger,
-                                passenger_type: "child",
-                                i: i + cart.adults,
-                              });
-                            }
-
-                            for (let i = 0; i < cart.infants; i++) {
-                              pass.push({
-                                ...basicPassenger,
-                                passenger_type: "infant",
-                                i: i + cart.adults + cart.children,
-                              });
-                            }
-
-                            const toSet: IBookingPassenger[] = [];
-                            for (let i = 0; i < pass.length; i++) {
-                              let idx = defaultPassengers.findIndex(
-                                (p) =>
-                                  p.passenger_type === pass[i].passenger_type
-                              );
-
-                              if (idx !== -1) {
-                                toSet.push(defaultPassengers[idx]);
-                                defaultPassengers.splice(idx, 1);
-                              } else {
-                                toSet.push(pass[i]);
-                              }
-                            }
-
-                            setPassengers(toSet);
-                            router.push("/book/passenger-info");
-                          }
-                        );
+                      for (let i = 0; i < cart.adults; i++) {
+                        pass.push({
+                          ...basicPassenger,
+                          passenger_type: "adult",
+                          i: i,
+                        });
                       }
+
+                      for (let i = 0; i < cart.children; i++) {
+                        pass.push({
+                          ...basicPassenger,
+                          passenger_type: "child",
+                          i: i + cart.adults,
+                        });
+                      }
+
+                      for (let i = 0; i < cart.infants; i++) {
+                        pass.push({
+                          ...basicPassenger,
+                          passenger_type: "infant",
+                          i: i + cart.adults + cart.children,
+                        });
+                      }
+
+                      let toSet: IBookingPassenger[] = [];
+
+                      if (userId && userId > 0 && role) {
+                        const { email, passengers: defaultPassengers } =
+                          await getAutoBookingData();
+
+                        setReceiptEmail(email);
+
+                        for (let i = 0; i < pass.length; i++) {
+                          let idx = defaultPassengers.findIndex(
+                            (p) => p.passenger_type === pass[i].passenger_type
+                          );
+
+                          if (idx !== -1) {
+                            toSet.push(defaultPassengers[idx]);
+                            defaultPassengers.splice(idx, 1);
+                          } else {
+                            toSet.push(pass[i]);
+                          }
+                        }
+                      } else {
+                        toSet = [...pass];
+                      }
+
+                      setPassengers(toSet);
+                      router.push("/book/passenger-info");
                     }
                   }}
                   className="relative group bg-primary-shade text-white rounded-md flex items-center justify-center gap-2 text-lg p-2 px-3 font-semibold"

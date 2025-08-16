@@ -107,8 +107,8 @@ const SearchPage = () => {
 
     getCityImages([
       {
-        city: flights[0].departure_airport.city!,
-        country: flights[0].departure_airport.country!,
+        city: flights[0].arrival_airport.city!,
+        country: flights[0].arrival_airport.country!,
       },
     ]).then((images) => {
       setBg(images[0].image_url);
